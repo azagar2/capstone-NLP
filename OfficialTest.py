@@ -4,6 +4,9 @@ from nltk.corpus import stopwords
 from nltk.tokenize import PunktSentenceTokenizer
 from nltk.tree import Tree
 import json
+import itertools
+import re
+from nltk.corpus import wordnet
 
 
 # STOP WORDS
@@ -13,29 +16,37 @@ stop_words = set(stopwords.words('english'))
 def main():
 
     # IMPORT DATA FROM JSON FILE
-    with open('data.json') as json_data:
+    with open('music.json') as json_data:
         data = json.load(json_data)
 
     # Master arrays
-    #master_titles =
+    allSets = []
 
     # Go through all data (titles for now)
-    for event in data[8:9]:
+    for event in data[7:10]:
         print(event['title'])
         title = event['title']
         category = event['category_key']
         print(category)
-        example_sentence = event['description']
-        example_sentence = example_sentence.lower()
+        example_sentence = event['description'].lower()
+        example_sentence = re.sub('[^a-zA-Z ]', " ", example_sentence)
 
         # Use Punkt Tokenizer - TITLE
-        process_title(title)
+        #process_title(title)
 
         # Use Punkt Tokenizer - CONTENT
         custom_sent_tokenizer = PunktSentenceTokenizer(example_sentence)
         tokenized = custom_sent_tokenizer.tokenize(example_sentence)
-        process_content(tokenized)
 
+        allSets.append(process_content(tokenized))
+
+
+    for s in allSets:
+        print(s)
+
+    for x in itertools.combinations(allSets, 2):
+        print(x[0] & x[1])
+    #print([x for x in itertools.combinations(allSets, 2)])
 
 #################################
 
@@ -64,10 +75,6 @@ def process_title(title):
         if subtree.label() != 'S':
             named_entities_false.append(list(subtree))
 
-
-    # print(named_entities)
-    # print(named_entities_false)
-
     # Matching from both lists
     for group in named_entities_false:
         if len(group) == 0:
@@ -91,7 +98,7 @@ def process_title(title):
 
 
     # print(named_entities)
-    # print(named_entities_false)
+
     if len(master_titles) > 0:
         print(set(master_titles))
 
@@ -112,42 +119,15 @@ def process_content(tokenized):
             chunked = chunkParser.parse(tagged)
             chunked2 = chunkParser2.parse(tagged)
             chunked3 = chunkParser3.parse(tagged)
-            #chunked.draw()
 
-            # if len(tokenized) == 1:
-            #     chunked.draw()
-
-            #for subtree in chunked.subtrees(filter=lambda t: t.label() == 'Chunk'):
-                # print(list(subtree))
-
-            # print(parseSubtree(chunked.subtrees(filter=lambda t: t.label() == 'Chunk')))
-            #
-            # print('+++++++++++++++++++')
-            #
-            # print(parseSubtree(chunked2.subtrees(filter=lambda t: t.label() == 'Chunk')))
-
-            #for subtree in chunked2.subtrees(filter=lambda t: t.label() == 'Chunk'):
-                # print(list(subtree))
-
-            # print('+++++++++++++++++++')
-
-            #for subtree in chunked3.subtrees(filter=lambda t: t.label() == 'Chunk'):
-                #print(list(subtree))
-
-            #print(parseSubtree(chunked3.subtrees(filter=lambda t: t.label() == 'Chunk')))
 
             chunkedList = parseSubtree(chunked.subtrees(filter=lambda t: t.label() == 'Chunk'))
             chunked2List = parseSubtree(chunked2.subtrees(filter=lambda t: t.label() == 'Chunk'))
             chunked3List = parseSubtree(chunked3.subtrees(filter=lambda t: t.label() == 'Chunk'))
 
             uniqueTags = set(chunkedList + chunked2List + chunked3List)
-            print(uniqueTags)
-
-            print('=====================')
-
-
-
-            print('========********=========')
+            #print(uniqueTags)
+            return uniqueTags
 
 
     except Exception as e:
