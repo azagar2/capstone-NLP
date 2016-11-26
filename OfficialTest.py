@@ -46,6 +46,7 @@ def main():
 
     for x in itertools.combinations(allSets, 2):
         print(x[0] & x[1])
+
     #print([x for x in itertools.combinations(allSets, 2)])
 
 #################################
@@ -126,7 +127,6 @@ def process_content(tokenized):
             chunked3List = parseSubtree(chunked3.subtrees(filter=lambda t: t.label() == 'Chunk'))
 
             uniqueTags = set(chunkedList + chunked2List + chunked3List)
-            #print(uniqueTags)
             return uniqueTags
 
 
@@ -143,25 +143,36 @@ def parseSubtree(subtrees):
         phrase = []
         if len(treeList) == 1:
             masterList.append(treeList[0][0])
+            #masterList += addSynonyms(treeList[0][0])
         else:
             for t in treeList:
                 phrase.append(t[0])
                 masterList.append(t[0])
-            masterList.append(" ".join(phrase))
+                #masterList += addSynonyms(t[0])
+            masterList.append("_".join(phrase))
+
+
+    masterList = list(set(masterList))
+    for m in masterList:
+        masterList += addSynonyms(m)
+
+    # print(masterList)
     return(masterList)
 
-def addSynonyms(wordList):
+def addSynonyms(word):
 
-    biggerList = []
+    synonyms = []
+    for syn in wordnet.synsets(word):
+        for l in syn.lemmas():
+            synonyms.append(l.name())
+    #print(list(set(synonyms)))
 
-    for word in wordList:
-        biggerList.append(word)
-        synonyms = []
-        for syn in wordnet.synsets(word):
-            for l in syn.lemmas():
-                synonyms.append(l.name())
-        print(set(synonyms))
+    # if len(synonyms) == 0:
+    #     print("found no synonyms")
 
+    #print(word + " - " + " ".join(list(set(synonyms))))
+
+    return list(set(synonyms))
 
 
 def get_continuous_chunks(text):
