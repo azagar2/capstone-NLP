@@ -7,10 +7,13 @@ import json
 import itertools
 import re
 from nltk.corpus import wordnet
+from nltk.stem import WordNetLemmatizer
+from functools import lru_cache
 
 
 # STOP WORDS
 stop_words = set(stopwords.words('english'))
+wnl = WordNetLemmatizer()
 
 
 def main():
@@ -29,6 +32,7 @@ def main():
         category = event['category_key']
         print(category)
         example_sentence = event['description'].lower()
+        #example_sentence = re.sub(' [a-zA-Z]{2} '," ")
         example_sentence = re.sub('[^a-zA-Z ]', " ", example_sentence)
 
         # Use Punkt Tokenizer - TITLE
@@ -113,7 +117,7 @@ def process_content(tokenized):
             #filtered_sentence = [w for w in words if not w in stop_words]
             filtered_sentence = []
             for w in words:
-                if w not in stop_words:
+                if (w not in stop_words) and (len(w) > 2):
                     filtered_sentence.append(w)
             tagged = nltk.pos_tag(filtered_sentence) #words
             chunkParser = nltk.RegexpParser(r"""Chunk: {<J.+>+<N.+>?}""")
@@ -157,25 +161,36 @@ def parseSubtree(subtrees):
     masterList = list(set(masterList))
     print("**** MASTERLIST *****")
     print(masterList)
-
+    kingList = []
     for m in masterList:
-        masterList += addSynonyms(m)
+        kingList += addSynonyms(m)
 
     # print(masterList)
-    return(masterList)
+    return(list(set(kingList)))
 
 def addSynonyms(word):
 
     synonyms = []
-    for syn in wordnet.synsets(word):
-        for l in syn.lemmas():
-            synonyms.append(l.name())
+    #word += ".n.01"
+
+    for syn in (wordnet.synsets(str(word)))[:3]:
+        # lemmatize = lru_cache(50000)(wnl.lemmatize)
+        # synonyms.append(lemmatize(word))
+        #if syn != word:
+            # for l in syn.lemmas():
+            #     synonyms.append(l.name())
+            synonyms.append(syn.name().split(".")[0])
+            for h in syn.hypernyms():
+                synonyms.append(h.name().split(".")[0])
+
+
+
     #print(list(set(synonyms)))
 
     # if len(synonyms) == 0:
     #     print("found no synonyms")
 
-    #print(word + " - " + " ".join(list(set(synonyms))))
+    print(word + " - " + " ".join(list(set(synonyms))))
 
     return list(set(synonyms))
 
