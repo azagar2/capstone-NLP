@@ -41,9 +41,11 @@ def main():
         allSets.append(process_content(tokenized))
 
 
+    print("**** ALL SETS *****")
     for s in allSets:
         print(s)
 
+    print("**** ALL COMBOS *****")
     for x in itertools.combinations(allSets, 2):
         print(x[0] & x[1])
 
@@ -153,6 +155,9 @@ def parseSubtree(subtrees):
 
 
     masterList = list(set(masterList))
+    print("**** MASTERLIST *****")
+    print(masterList)
+
     for m in masterList:
         masterList += addSynonyms(m)
 
