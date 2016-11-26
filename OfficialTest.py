@@ -150,6 +150,19 @@ def parseSubtree(subtrees):
             masterList.append(" ".join(phrase))
     return(masterList)
 
+def addSynonyms(wordList):
+
+    biggerList = []
+
+    for word in wordList:
+        biggerList.append(word)
+        synonyms = []
+        for syn in wordnet.synsets(word):
+            for l in syn.lemmas():
+                synonyms.append(l.name())
+        print(set(synonyms))
+
+
 
 def get_continuous_chunks(text):
     chunked = nltk.ne_chunk(nltk.pos_tag(word_tokenize(text)))
