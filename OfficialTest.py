@@ -26,7 +26,7 @@ def main():
     allSets = []
 
     # Go through all data (titles for now)
-    for event in data[7:10]:
+    for event in data[:21]:
         print(event['title'])
         title = event['title']
         category = event['category_key']
@@ -36,7 +36,7 @@ def main():
         example_sentence = re.sub('[^a-zA-Z ]', " ", example_sentence)
 
         # Use Punkt Tokenizer - TITLE
-        #process_title(title)
+        process_title(title)
 
         # Use Punkt Tokenizer - CONTENT
         custom_sent_tokenizer = PunktSentenceTokenizer(example_sentence)
@@ -50,8 +50,10 @@ def main():
         print(s)
 
     print("**** ALL COMBOS *****")
-    for x in itertools.combinations(allSets, 2):
-        print(x[0] & x[1])
+    for x in itertools.combinations(allSets, 3):
+        if( not x[0] ):
+            continue
+        print(x[0] & x[1] & x[2])
 
     #print([x for x in itertools.combinations(allSets, 2)])
 
@@ -111,7 +113,6 @@ def process_title(title):
 
 
 def process_content(tokenized):
-    try:
         for i in tokenized[:]: #tokenized[:3]
             words = nltk.word_tokenize(i)
             #filtered_sentence = [w for w in words if not w in stop_words]
@@ -136,10 +137,6 @@ def process_content(tokenized):
             return uniqueTags
 
 
-    except Exception as e:
-        print(str(e))
-
-
 def parseSubtree(subtrees):
 
     masterList = []
@@ -148,20 +145,25 @@ def parseSubtree(subtrees):
         #print(treeList)
         phrase = []
         if len(treeList) == 1:
-            masterList.append(treeList[0][0])
+                masterList.append(treeList[0])
+                #print(treeList[0])
+            #masterList.append(treeList[0][0])
             #masterList += addSynonyms(treeList[0][0])
         else:
             for t in treeList:
+                #print(t)
                 phrase.append(t[0])
-                masterList.append(t[0])
+                masterList.append(t)
                 #masterList += addSynonyms(t[0])
-            masterList.append("_".join(phrase))
+            lastone = treeList[len(treeList)-1][1]
+            masterList.append(tuple(["_".join(phrase),lastone]))
 
 
     masterList = list(set(masterList))
-    print("**** MASTERLIST *****")
-    print(masterList)
+    #print("**** MASTERLIST *****")
+    #print(masterList)
     kingList = []
+
     for m in masterList:
         kingList += addSynonyms(m)
 
@@ -170,18 +172,31 @@ def parseSubtree(subtrees):
 
 def addSynonyms(word):
 
-    synonyms = []
-    #word += ".n.01"
-
-    for syn in (wordnet.synsets(str(word)))[:3]:
-        # lemmatize = lru_cache(50000)(wnl.lemmatize)
-        # synonyms.append(lemmatize(word))
-        #if syn != word:
-            # for l in syn.lemmas():
-            #     synonyms.append(l.name())
+    originalWord = word[0]
+    synonyms = [originalWord]
+    if word[1][0] == 'N':
+        originalWord += ".n.01"
+    elif word[1][0] == 'J':
+        originalWord += ".a.01"
+    else: print("error")
+    #word +=
+    allSets = wordnet.synsets(word[0])
+    if(len(allSets) == 0):
+        return synonyms
+    for syns in allSets:
+        for syn in syns.hypernyms():
             synonyms.append(syn.name().split(".")[0])
-            for h in syn.hypernyms():
-                synonyms.append(h.name().split(".")[0])
+        for syn in syns.lemmas():
+            synonyms.append(syn.name())
+        #print(syn)
+
+        # for l in syn.lemmas():
+        #     synonyms.append(l.name())
+        #
+        #     synonyms.append(syn.name().split(".")[0])
+        #     for h in syn.hypernyms():
+
+
 
 
 
@@ -190,7 +205,7 @@ def addSynonyms(word):
     # if len(synonyms) == 0:
     #     print("found no synonyms")
 
-    print(word + " - " + " ".join(list(set(synonyms))))
+    #print(word + " - " + " ".join(list(set(synonyms))))
 
     return list(set(synonyms))
 
