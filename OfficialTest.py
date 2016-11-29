@@ -69,24 +69,41 @@ def main():
         lord_set.append(combo)
         mega_corpus += combo
 
+    mega_corpus = set(mega_corpus);
+    #print(mega_corpus)
 
-    # print("**** EVENTS *****")
-    # for i in range(0,len(event_titles)):
-    #     print(event_titles[i])
-    #     print(event_categories[i])
-    #     print(lord_set[i])
-    #     print("")
+    with open('../scraper/new-events.json') as json_data:
+        data = json.load(json_data)
 
+    eventList = [];
+    for event in data[:]:
+        # Title
+        title = event['title']
+        event_titles.append(title)
+        title = re.sub('[^a-zA-Z0-9 ]', " ", title)
 
-    print(set(mega_corpus))
+        # Description
+        example_sentence = event['description'].lower()
+        example_sentence = re.sub('[^a-zA-Z ]', " ", example_sentence);
 
-    # print("**** ALL COMBOS *****")
-    # for x in itertools.combinations(lord_set, 3):
-    #     if( not x[0] ):
-    #         continue
-    #     print(x[0] & x[1] & x[2])
+        # Process title
+        title_tags = list(set(title_chunking(title) + title_chunking(title.lower())))
+        event_title_tags.append(title_tags)
 
-    #print([x for x in itertools.combinations(allSets, 2)])
+        custom_sent_tokenizer = PunktSentenceTokenizer() #example_sentence
+        tokenized = custom_sent_tokenizer.tokenize(example_sentence)
+        description_tags = process_content(tokenized)
+        combo = list(set(title_tags + description_tags))
+        intersection = list(mega_corpus.intersection(combo));
+        ratio = len(intersection)/len(combo);
+        data = {}
+        data['title'] = event['title']
+        data['ratio'] = ratio
+        data['matching'] = intersection
+        eventList.append(data);
+    print(json.dumps(list(sorted(eventList, key=sortFn))));
+def sortFn(s):
+    return s['ratio'];
 
 #################################
 
