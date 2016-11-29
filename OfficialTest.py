@@ -15,45 +15,76 @@ from functools import lru_cache
 stop_words = set(stopwords.words('english'))
 wnl = WordNetLemmatizer()
 
+# Big arrays
+event_titles = []
+event_title_tags = []
+event_categories = []
+lord_set = []
+event_description_tags = []
+
+
+bad_words = ['ticket', 'tickets', 'event', 'events', 'time', 'door', 'entrance']
+
 
 def main():
 
+    mega_corpus = []
+
     # IMPORT DATA FROM JSON FILE
-    with open('music.json') as json_data:
+    with open('coolUser.json') as json_data:
         data = json.load(json_data)
 
     # Master arrays
     allSets = []
 
     # Go through all data (titles for now)
-    for event in data[:21]:
-        print(event['title'])
+    for event in data[:]:
+
+        # Title
         title = event['title']
+        event_titles.append(title)
+        title = re.sub('[^a-zA-Z0-9 ]', " ", title)
+
+        # Category
         category = event['category_key']
-        print(category)
+        event_categories.append(category)
+
+        # Description
         example_sentence = event['description'].lower()
-        #example_sentence = re.sub(' [a-zA-Z]{2} '," ")
         example_sentence = re.sub('[^a-zA-Z ]', " ", example_sentence)
 
-        # Use Punkt Tokenizer - TITLE
-        process_title(title)
+        ################################################################
+
+        # Process title
+        title_tags = list(set(title_chunking(title) + title_chunking(title.lower())))
+        event_title_tags.append(title_tags)
+        #print("TITLE TAGS:   " + str(title_tags))
 
         # Use Punkt Tokenizer - CONTENT
-        custom_sent_tokenizer = PunktSentenceTokenizer(example_sentence)
+        custom_sent_tokenizer = PunktSentenceTokenizer() #example_sentence
         tokenized = custom_sent_tokenizer.tokenize(example_sentence)
+        description_tags = process_content(tokenized)
+        allSets.append(description_tags)
+        combo = list(set(title_tags + description_tags))
+        lord_set.append(combo)
+        mega_corpus += combo
 
-        allSets.append(process_content(tokenized))
+
+    # print("**** EVENTS *****")
+    # for i in range(0,len(event_titles)):
+    #     print(event_titles[i])
+    #     print(event_categories[i])
+    #     print(lord_set[i])
+    #     print("")
 
 
-    print("**** ALL SETS *****")
-    for s in allSets:
-        print(s)
+    print(set(mega_corpus))
 
-    print("**** ALL COMBOS *****")
-    for x in itertools.combinations(allSets, 3):
-        if( not x[0] ):
-            continue
-        print(x[0] & x[1] & x[2])
+    # print("**** ALL COMBOS *****")
+    # for x in itertools.combinations(lord_set, 3):
+    #     if( not x[0] ):
+    #         continue
+    #     print(x[0] & x[1] & x[2])
 
     #print([x for x in itertools.combinations(allSets, 2)])
 
@@ -62,13 +93,18 @@ def main():
 def process_title(title):
     words = nltk.word_tokenize(title)
     filtered_sentence = []
+    nonfiltered_sentence = []
     for w in words:
+        nonfiltered_sentence.append(w)
         if w not in stop_words:
             filtered_sentence.append(w)
     tagged = nltk.pos_tag(filtered_sentence)
+    tagged2 = nltk.pos_tag(filtered_sentence)
+    print(tagged)
+    print(tagged2)
     namedEntTrue = nltk.ne_chunk(tagged, binary=True)
     namedEntFalse = nltk.ne_chunk(tagged, binary=False)
-    #namedEntFalse.draw()
+    #namedEntTrue.draw()
     named_entities = []
     named_entities_false = []
     master_titles = []
@@ -99,6 +135,7 @@ def process_title(title):
                 temp.append(g[0])
                 if g in named_entities:
                     named_entities.remove(g)
+            #print("*************** " + " ".join(temp))
             master_titles.append(" ".join(temp))
 
     if len(named_entities) > 0:
@@ -109,7 +146,33 @@ def process_title(title):
     # print(named_entities)
 
     if len(master_titles) > 0:
-        print(set(master_titles))
+        return(master_titles)
+
+
+def title_chunking(title):
+
+        words = nltk.word_tokenize(title)
+        filtered_sentence = []
+        for w in words:
+            #if (w not in stop_words) and (len(w) > 2):
+            if (len(w) > 2):
+                filtered_sentence.append(w)
+        tagged = nltk.pos_tag(filtered_sentence) #words
+        chunkParser = nltk.RegexpParser(r"""Chunk: {<J.+>+<N.+>?}""")
+        chunkParser2 = nltk.RegexpParser(r"""Chunk: {<JJ>*<NN>}""")
+        chunkParser3 = nltk.RegexpParser(r"""Chunk: {<NN.*>+}""")
+        chunked = chunkParser.parse(tagged)
+        chunked2 = chunkParser2.parse(tagged)
+        chunked3 = chunkParser3.parse(tagged)
+
+        # Parse subtrees
+        chunkedList = parseSubtree(chunked.subtrees(filter=lambda t: t.label() == 'Chunk'), False)
+        chunked2List = parseSubtree(chunked2.subtrees(filter=lambda t: t.label() == 'Chunk'), False)
+        chunked3List = parseSubtree(chunked3.subtrees(filter=lambda t: t.label() == 'Chunk'), False)
+
+        # Generate set of tags from all lists
+        uniqueTags = list(set(chunkedList + chunked2List + chunked3List))
+        return uniqueTags
 
 
 def process_content(tokenized):
@@ -118,8 +181,10 @@ def process_content(tokenized):
             #filtered_sentence = [w for w in words if not w in stop_words]
             filtered_sentence = []
             for w in words:
-                if (w not in stop_words) and (len(w) > 2):
+                #if (w not in stop_words) and (len(w) > 2):
+                if (len(w) > 2):
                     filtered_sentence.append(w)
+
             tagged = nltk.pos_tag(filtered_sentence) #words
             chunkParser = nltk.RegexpParser(r"""Chunk: {<J.+>+<N.+>?}""")
             chunkParser2 = nltk.RegexpParser(r"""Chunk: {<JJ>*<NN>}""")
@@ -128,16 +193,15 @@ def process_content(tokenized):
             chunked2 = chunkParser2.parse(tagged)
             chunked3 = chunkParser3.parse(tagged)
 
+            chunkedList = parseSubtree(chunked.subtrees(filter=lambda t: t.label() == 'Chunk'),True)
+            chunked2List = parseSubtree(chunked2.subtrees(filter=lambda t: t.label() == 'Chunk'), True)
+            chunked3List = parseSubtree(chunked3.subtrees(filter=lambda t: t.label() == 'Chunk'), True)
 
-            chunkedList = parseSubtree(chunked.subtrees(filter=lambda t: t.label() == 'Chunk'))
-            chunked2List = parseSubtree(chunked2.subtrees(filter=lambda t: t.label() == 'Chunk'))
-            chunked3List = parseSubtree(chunked3.subtrees(filter=lambda t: t.label() == 'Chunk'))
-
-            uniqueTags = set(chunkedList + chunked2List + chunked3List)
+            uniqueTags = list(set(chunkedList + chunked2List + chunked3List))
             return uniqueTags
 
 
-def parseSubtree(subtrees):
+def parseSubtree(subtrees, useSyns):
 
     masterList = []
     for subtree in subtrees:
@@ -155,6 +219,7 @@ def parseSubtree(subtrees):
                 phrase.append(t[0])
                 masterList.append(t)
                 #masterList += addSynonyms(t[0])
+            #print("PHRASE: " + str(phrase))
             lastone = treeList[len(treeList)-1][1]
             masterList.append(tuple(["_".join(phrase),lastone]))
 
@@ -165,7 +230,11 @@ def parseSubtree(subtrees):
     kingList = []
 
     for m in masterList:
-        kingList += addSynonyms(m)
+        if m not in bad_words:
+            if useSyns:
+                kingList += addSynonyms(m)
+            else:
+                kingList.append(m[0])
 
     # print(masterList)
     return(list(set(kingList)))
@@ -179,55 +248,24 @@ def addSynonyms(word):
     elif word[1][0] == 'J':
         originalWord += ".a.01"
     else: print("error")
-    #word +=
+
     allSets = wordnet.synsets(word[0])
     if(len(allSets) == 0):
         return synonyms
     for syns in allSets:
         for syn in syns.hypernyms():
-            synonyms.append(syn.name().split(".")[0])
+            name = syn.name().split(".")[0]
+            if name not in bad_words and len(name) > 2:
+                synonyms.append(name)
         for syn in syns.lemmas():
-            synonyms.append(syn.name())
-        #print(syn)
-
-        # for l in syn.lemmas():
-        #     synonyms.append(l.name())
-        #
-        #     synonyms.append(syn.name().split(".")[0])
-        #     for h in syn.hypernyms():
-
-
-
-
-
-    #print(list(set(synonyms)))
+            name = syn.name()
+            if name not in bad_words and len(name) > 2:
+                synonyms.append(name)
 
     # if len(synonyms) == 0:
     #     print("found no synonyms")
 
-    #print(word + " - " + " ".join(list(set(synonyms))))
-
     return list(set(synonyms))
-
-
-def get_continuous_chunks(text):
-    chunked = nltk.ne_chunk(nltk.pos_tag(word_tokenize(text)))
-    #chunked = ne_chunk(text, binary=True)
-
-    prev = None
-    continuous_chunk = []
-    current_chunk = []
-    for i in chunked:
-            if type(i) == Tree:
-                    current_chunk.append(" ".join([token for token, pos in i.leaves()]))
-            elif current_chunk:
-                    named_entity = " ".join(current_chunk)
-                    if named_entity not in continuous_chunk:
-                            continuous_chunk.append(named_entity)
-                            current_chunk = []
-            else:
-                    continue
-    return continuous_chunk
 
 
 
