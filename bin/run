@@ -1,0 +1,28 @@
+#!/bin/bash
+cd "$(dirname "$0")";
+
+clean_up=false;
+
+# Options: whether or not to clean before/after building
+if ! [ -z "$1" ]; then
+	if [ $1 == "clean" ]; then
+		./clean;
+		clean_up=true;
+	else 
+		echo "unknown option";
+		exit 2;
+	fi
+fi
+
+# Display the logo
+./logo;
+cd ../;
+
+# This will run the project
+python3 Blueshift;
+
+# clean up after?
+if [ "$clean_up" = true  ]; then
+	echo "cleaning up"
+	./bin/clean;
+fi
