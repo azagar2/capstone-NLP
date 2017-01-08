@@ -1,0 +1,3 @@
+# clean files, removing the compiled python code segments
+find . -name '*.pyc' -delete;
+find . -name '__pycache__' -delete;
