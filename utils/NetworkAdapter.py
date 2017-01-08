@@ -53,10 +53,12 @@ class NetworkAdapter:
 					conn.send('{"error":"no id parameter"}'.encode("utf-8"));
 					pass;
 				elif 'command' not in commandData:
-					conn.send('{"error":"no command parameter"}'.encode("utf-8"));
+					error = {"error":"no command parameter","id":commandData.get("id")}
+					conn.send(json.dumps(error).encode("utf-8"));
 					pass;
 				elif commandData.get('command') not in self.callbacks:
-					conn.send('{"error":"unknown command"}'.encode("utf-8"));
+					error = {"error":"unknown command","id":commandData.get("id")}
+					conn.send(json.dumps(error).encode("utf-8"));
 					pass;
 				else:
 					callback = self.callbacks[commandData.get('command')];
