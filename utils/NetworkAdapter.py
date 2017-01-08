@@ -1,7 +1,9 @@
 import socket,os,_thread,time,json
 
 class NetworkAdapter:
+	# this is where the unix file-socket lives
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
+	# enables / disables debug logging.
 	DEBUG = True;
 	'''
 	Creates a linux file socket connection 
@@ -23,6 +25,8 @@ class NetworkAdapter:
 	
 	'''
 	Add a command
+	@param {String} command
+	@param {Function} callback for the command
 	'''
 	def addCommand(self,command,commandCallback):
 		self.callbacks[command] = commandCallback;

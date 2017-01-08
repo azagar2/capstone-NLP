@@ -2,7 +2,7 @@ import socket,json,sys
 
 
 class NetworkTester:
-
+	# this is where the unix file-socket lives
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
 
 	'''
@@ -16,20 +16,24 @@ class NetworkTester:
 
 	'''
 	Send raw input to the socket.
-	Checks the "ENTIRE result"
+	Checks the *ENTIRE* result, so make sure you format your json properly
 	'''
 	def send(self,message,expectedResponse,testName):
 		self.socket.send(message.encode("utf-8"));
 		data = self.socket.recv(1024);
 		self.printResult(data.decode("utf-8"),expectedResponse,testName);
 
+	'''
+	Send a command (as a valid json) and receive a valid response
+	checks only the response portion.
+	'''
 	def sendCommand(self,command,expectedResponse,testName):
 		self.counter += 1;
 		command = {"id":self.counter,"command":command}
 		self.socket.send(json.dumps(command).encode("utf-8"));
 		data = self.socket.recv(1024);
 		data = json.loads(data.decode("utf-8"));
-		self.printResult(data.get("response"),expectedResponse,testName);
+		self.printResult(data.get("response","ERROR:"+data.get("error","unknown")),expectedResponse,testName);
 
 	def printResult(self,input,expected,type):
 		if input == expected:
@@ -38,9 +42,9 @@ class NetworkTester:
 		else:
 			sys.stdout.write(u'\u2717');
 			sys.stdout.write("Did not " + type);
-			sys.stdout.write("\n")
+			sys.stdout.write("\n Received:   ")
 			sys.stdout.write(input);
-			sys.stdout.write("\n")
+			sys.stdout.write("\n Expected:   ")
 			sys.stdout.write(expected);
 		sys.stdout.write("\n")
 		sys.stdout.flush();
