@@ -9,7 +9,7 @@ import re
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 from functools import lru_cache
-
+from pprint import pprint
 
 # STOP WORDS
 stop_words = set(stopwords.words('english'))
@@ -22,16 +22,14 @@ event_categories = []
 lord_set = []
 event_description_tags = []
 
-
 bad_words = ['ticket', 'tickets', 'event', 'events', 'time', 'door', 'entrance']
-
 
 def main():
 
     mega_corpus = []
 
     # IMPORT DATA FROM JSON FILE
-    with open('coolUser.json') as json_data:
+    with open('../scraper/user.json') as json_data:
         data = json.load(json_data)
 
     # Master arrays
@@ -99,9 +97,9 @@ def main():
         data = {}
         data['title'] = event['title']
         data['ratio'] = ratio
-        data['matching'] = intersection
+        data['category'] = event['category'];
         eventList.append(data);
-    print(json.dumps(list(sorted(eventList, key=sortFn))));
+    pprint(list(sorted(eventList, key=sortFn)));
 def sortFn(s):
     return s['ratio'];
 
