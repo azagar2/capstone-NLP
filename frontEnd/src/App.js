@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Bs, { Col } from 'react-bootstrap';
 import './styles/App.css';
 
 import UserCard from './components/UserCard'
