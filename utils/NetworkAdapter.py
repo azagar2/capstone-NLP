@@ -4,7 +4,7 @@ class NetworkAdapter:
 	# this is where the unix file-socket lives
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
 	# enables / disables debug logging.
-	DEBUG = True;
+	DEBUG = False;
 
 	# Creates a linux file socket connection
 	def __init__(self):
@@ -17,7 +17,7 @@ class NetworkAdapter:
 
 	# Sends a debug message
 	# @param {String} message
- 	def debug(self, message):
+	def debug(self, message):
 		if self.DEBUG:
 			print("DEBUG::NetworkAdapter: "+message);
 
@@ -62,5 +62,5 @@ class NetworkAdapter:
 					callback = self.callbacks[commandData.get('command')];
 					params = commandData.get("params",[]);
 					_thread.start_new_thread(callback,(params,respond,));
-			self.debug("server went away");
+			self.debug("client went away");
 			conn.close();
