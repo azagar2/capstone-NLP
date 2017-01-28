@@ -1,0 +1,74 @@
+/* For classes common to all pages*/
+@font-face {
+    font-family: "FaktSoftPro";
+    src: url("../fonts/FaktSoftPro-Normal.woff") format('woff');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "FaktSoftPro";
+    src: url("../fonts/FaktSoftPro-Blond.woff") format('woff');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "FaktSoftPro";
+    src: url("../fonts/FaktSoftPro-Medium.woff") format('woff');
+    font-weight: 500;
+}
+
+.fakt {
+  font-family: FaktSoftPro;
+}
+
+.horizontal-line {
+  color: #d3d3d3;
+}
+
+.card{
+  text-align: center;
+  background: #f7f7f7;
+  box-shadow: 2px 2px 2px #888888;
+  border-radius: 5px;
+  margin: 5px;
+  display: inline-block;
+}
+
+.circle-image {
+  margin-top: 25px;
+  border-radius: 50%;
+  height: 150px;
+  width: auto;
+}
+
+.page-title {
+  padding-top: 50px;
+  text-align: center;
+  font-family: FaktSoftPro;
+}
+
+.button-pink,
+.button-pink:focus {
+  padding: 5px 5px 5px 5px;
+  margin-left: 375px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12pt;
+  width: 120px;
+  height: 35px;
+  background: #FF5984;
+  color: white;
+  border-radius: 7px;
+  font-family: FaktSoftPro;
+  box-shadow: none; /* Not working grrr */
+}
+
+.button-pink:hover {
+  background: #ff376b;
+  cursor: pointer;
+}
+
+.white {
+  color: white;
+}

@@ -1,0 +1,13 @@
+.create-user-container {
+  margin-left: 200px;
+  width: 80%;
+  height: 100%;
+}
+
+.create-user-background {
+  /*TODO - margins messed up*/
+  margin-top: -20px;
+  height: 700px;
+  width: auto;
+  background: grey;
+}
