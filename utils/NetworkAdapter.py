@@ -17,7 +17,7 @@ class NetworkAdapter:
 
 	# Sends a debug message
 	# @param {String} message
- 	def debug(self, message):
+	def debug(self, message):
 		if self.DEBUG:
 			print("DEBUG::NetworkAdapter: "+message);
 
