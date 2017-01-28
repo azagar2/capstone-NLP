@@ -1,5 +1,7 @@
 import socket,json,sys
 
+FIYAAAAAAAH='🔥 ';
+BOOOM='💣 ';
 
 class NetworkTester:
 	# this is where the unix file-socket lives
@@ -31,10 +33,10 @@ class NetworkTester:
 
 	def printResult(self,input,expected,type):
 		if input == expected:
-			sys.stdout.write(u'\u2713');
+			sys.stdout.write(FIYAAAAAAAH);
 			sys.stdout.write(type);
 		else:
-			sys.stdout.write(u'\u2717');
+			sys.stdout.write(BOOOM);
 			sys.stdout.write("Did not " + type);
 			sys.stdout.write("\n Received:   ")
 			sys.stdout.write(input);
