@@ -1,0 +1,16 @@
+{
+  "name": "Project-BlueShift",
+  "contributors": [{"name":"Vanessa Deng"},{"name":"Hannes Filler"},{"name":"Ryan Holmes"},{"name":"Ian Wood"},{"name":"Andrea Zagar"}],
+  "version": "0.1.0",
+  "private": false,
+  "scripts": {
+    "start": "node server/app.js",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "auto-install": "^1.5.0"
+  }
+}
