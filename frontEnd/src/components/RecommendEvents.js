@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Bs, { Col } from 'react-bootstrap';
-
 import '../styles/RecommendEvents.css';
 import UserCard from './UserCard';
 

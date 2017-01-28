@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Bs, { Col } from 'react-bootstrap';
 var Scroll  = require('react-scroll');
 
 import '../styles/CreateUser.css';
@@ -9,7 +8,7 @@ class CreateUser extends Component {
 
   scrollWin(){
     var scroll = Scroll.animateScroll;
-    scroll.scrollTo(1400);
+    scroll.scrollTo(window.innerHeight * 2);
   }
 
   render() {
@@ -17,7 +16,7 @@ class CreateUser extends Component {
       <div className="create-user-background">
         <h1 className='page-title'> Create Users </h1>
         <div className="create-user-container">
-          <UserCard img="../images/ryan.jpg" name="User 1"></UserCard>
+          <UserCard img="../images/ryan.jpg" name="User 1"/>
           <br/>
           <div onClick={this.scrollWin.bind(this)} className="button-pink">Continue</div>
         </div>
