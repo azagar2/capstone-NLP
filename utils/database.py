@@ -4,7 +4,7 @@ class DB:
 	class __DB:
 		DEBUG = True;
 
-		# Singleton used to acces the database
+		# Singleton used to access the database
 		# @param {String} connection configuration text
 		def __init__(self, connectionConfig):
 			self.connected = False;
@@ -20,6 +20,8 @@ class DB:
 		# Error
 		# prints error message in red.
 		def error(self,message):
+			# the weird characters add red colour to error messages.
+			# because everyone likes logs that are colourful.
 			print("\033[0;31mERROR::DB:",message,'\033[0m');
 
 		# @private
