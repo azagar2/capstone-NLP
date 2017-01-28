@@ -2,7 +2,7 @@ import psycopg2;
 
 class DB:
 	class __DB:
-		DEBUG = True;
+		DEBUG = False;
 
 		# Singleton used to access the database
 		# @param {String} connection configuration text
@@ -44,11 +44,11 @@ class DB:
 		# Run
 		# runs a command and commits it.
 		# @param {String} SQL command
-		def run(self,command):
+		def run(self,command,params):
 			try:
 				cursor = self.__getCursor();
 				self.debug("running command:"+command);
-				cursor.execute(command);
+				cursor.execute(command,params);
 				self.conn.commit();
 			except Exception as e:
 				self.connected = False;

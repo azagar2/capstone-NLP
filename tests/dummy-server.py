@@ -23,7 +23,7 @@ class NetworkTester:
 	# checks only the response portion.
 	def sendCommand(self,command,expectedResponse,testName):
 		self.counter += 1;
-		command = {"id":self.counter,"command":command}
+		command = {"id":self.counter,"command":command, "params":[4]}
 		self.socket.send(json.dumps(command).encode("utf-8"));
 		data = self.socket.recv(1024);
 		data = json.loads(data.decode("utf-8"));
@@ -51,4 +51,4 @@ tester.send('{"id":2,"command":"test"}','{"id": 2, "error": "unknown command"}',
 
 tester.sendCommand("clickImpression","click impression registered","register click impressions");
 tester.sendCommand("excludeImpression","exclude impression registered","register exclude impressions");
-tester.sendCommand("purchaseImpression","purchase impression registered","register purchase impressions");
+tester.sendCommand("buyImpression","buy impression registered","register buy impressions");
