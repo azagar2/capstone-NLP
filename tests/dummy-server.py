@@ -5,28 +5,22 @@ class NetworkTester:
 	# this is where the unix file-socket lives
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
 
-	'''
-	This is simply a sample for the node server to replace
-	This is useful for testing your commands and making sure everything works.
-	'''
+	# This is simply a sample for the node server to replace
+	# This is useful for testing your commands and making sure everything works.
 	def __init__(self):
 		self.counter = 0;
 		self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 		self.socket.connect(self.SOCKET_LOCATION)
 
-	'''
-	Send raw input to the socket.
-	Checks the *ENTIRE* result, so make sure you format your json properly
-	'''
+	# Send raw input to the socket.
+	# Checks the *ENTIRE* result, so make sure you format your json properly
 	def send(self,message,expectedResponse,testName):
 		self.socket.send(message.encode("utf-8"));
 		data = self.socket.recv(1024);
 		self.printResult(data.decode("utf-8"),expectedResponse,testName);
 
-	'''
-	Send a command (as a valid json) and receive a valid response
-	checks only the response portion.
-	'''
+	# Send a command (as a valid json) and receive a valid response
+	# checks only the response portion.
 	def sendCommand(self,command,expectedResponse,testName):
 		self.counter += 1;
 		command = {"id":self.counter,"command":command}

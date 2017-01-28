@@ -5,9 +5,8 @@ class NetworkAdapter:
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
 	# enables / disables debug logging.
 	DEBUG = True;
-	'''
-	Creates a linux file socket connection 
-	'''
+
+	# Creates a linux file socket connection
 	def __init__(self):
 		self.callbacks = {};
 		self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -15,26 +14,21 @@ class NetworkAdapter:
 			os.remove(self.SOCKET_LOCATION)
 		except OSError:
 			pass;
-	'''
-	Sends a debug message
-	@param {String} message
-	'''
-	def debug(self, message):
+
+	# Sends a debug message
+	# @param {String} message
+ 	def debug(self, message):
 		if self.DEBUG:
 			print("DEBUG::NetworkAdapter: "+message);
-	
-	'''
-	Add a command
-	@param {String} command
-	@param {Function} callback for the command
-	'''
+
+	# Add a command
+	# @param {String} command
+	# @param {Function} callback for the command
 	def addCommand(self,command,commandCallback):
 		self.callbacks[command] = commandCallback;
-	
-	'''
-	actually runs the adapter
-	WARNING: BLOCKING CALL
-	'''
+
+	# actually runs the adapter
+	# WARNING: BLOCKING CALL
 	def run(self):
 		self.socket.bind(self.SOCKET_LOCATION)
 		self.socket.listen(1)
@@ -47,12 +41,12 @@ class NetworkAdapter:
 				if not data: break;
 				commandData = json.loads(data.decode("utf-8"));
 				self.debug("got message:"+data.decode("utf-8"));
-				
+
 				def respond(response):
 					response = {'id':commandData.get('id'),'response':response};
 					self.debug("sending response:"+json.dumps(response));
 					conn.send(json.dumps(response).encode("utf-8"));
-				
+
 				if 'id' not in commandData:
 					conn.send('{"error":"no id parameter"}'.encode("utf-8"));
 					pass;
