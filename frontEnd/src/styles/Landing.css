@@ -1,0 +1,20 @@
+.landing-container {
+  margin-left: 180px;
+  width: 80%;
+  height: 100%;
+}
+
+.landing-background {
+  /*TODO - margins messed up*/
+  margin-top: -20px;
+  height: 700px;
+  width: auto;
+  background: #3CC6F2;
+}
+
+.landing-description {
+  width: 80%;
+  font-family: FaktSoftPro;
+  margin-bottom: 25px;
+  text-align: center;
+}
