@@ -20,8 +20,6 @@ server.listen(9000,'localhost');
 server.on('error', console.log);
 server.on('listening', console.log);
 
-BLUE_SHIFT_ADAPTER = '/tmp/blue-shift-adapter';
-
 PythonAdapter = require("./pythonAdapter.js")
 var adapter = new PythonAdapter();
 

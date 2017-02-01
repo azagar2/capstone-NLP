@@ -1,5 +1,7 @@
 var net = require("net");
 
+const BLUE_SHIFT_ADAPTER = '/tmp/blue-shift-adapter';
+
 function PythonAdapter(){
 	this.commandId = 1;
 	this.callbacks ={};
