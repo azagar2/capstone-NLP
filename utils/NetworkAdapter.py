@@ -1,4 +1,5 @@
 import socket,os,_thread,time,json,datetime
+from functools import partial
 
 class NetworkAdapter:
 	# this is where the unix file-socket lives
@@ -67,8 +68,8 @@ class NetworkAdapter:
 				commandData = json.loads(data.decode("utf-8"));
 				self.debug("got message:"+data.decode("utf-8"));
 
-				def respond(response):
-					response = {'id':commandData.get('id'),'response':response};
+				def respond(commandId,response):
+					response = {'id':commandId,'response':response};
 					self.debug("sending response:"+json.dumps(response,default=self.date_handler));
 					conn.send(json.dumps(response,default=self.date_handler).encode("utf-8"));
 
@@ -87,7 +88,7 @@ class NetworkAdapter:
 					callback = self.callbacks[commandData.get('command')];
 					params = commandData.get("params",[]);
 					if self.validate(params,self.commandParameters[commandData.get('command')]):
-						_thread.start_new_thread(callback,(params,respond,));
+						_thread.start_new_thread(callback,(params,partial(respond,commandData.get("id")),));
 					else:
 						error = {"error":"invalid parameters","id":commandData.get("id")}
 						conn.send(json.dumps(error).encode("utf-8"));
