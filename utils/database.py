@@ -48,7 +48,7 @@ class DB:
 			try:
 				cursor = self.__getCursor();
 				self.debug("running command:"+command);
-				cursor.execute(command,params);
+				cursor.execute(self.__validate(command),params);
 				self.conn.commit();
 			except Exception as e:
 				self.connected = False;
@@ -59,11 +59,11 @@ class DB:
 		# fetches the result of an executed command.
 		# @param {String} SQL command
 		# @param {Array} set of row objects
-		def get(self,command):
+		def get(self,command,params):
 			result = "ERROR: can't connect";
 			try:
 				cursor = self.__getCursor();
-				cursor.execute(command);
+				cursor.execute(self.__validate(command),params);
 				result = cursor.fetchall();
 				self.debug(result);
 				self.conn.commit();
@@ -72,6 +72,11 @@ class DB:
 				print("Uh oh, can't connect. Invalid dbname, user or password?")
 				print(e);
 			return result;
+
+		def __validate(self,command):
+			if command.endswith(";"):
+				return command;
+			return command + ";";
 
 	# instance of singleton
 	instance = None

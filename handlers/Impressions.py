@@ -1,6 +1,7 @@
 from utils import database;
+from handlers import AbstractHandler
 
-class ImpressionsHandler:
+class ImpressionsHandler(AbstractHandler.Handler):
 	# enables / disables debug logging.
 	DEBUG = True;
 
@@ -11,12 +12,7 @@ class ImpressionsHandler:
 	# used to update the user models.
 	def __init__(self):
 		self.db = database.DB();
-		self.commands = ['clickImpression','buyImpression','excludeImpression'];
-
-	# For debug messages from this class
-	def debug(self,message):
-		if(self.DEBUG):
-			print("DEBUG::ImpressionsHandler:",message);
+		self.commands = [['clickImpression',[int]],['buyImpression',[int]],['excludeImpression',[int]]];
 
 	# register an impression to the database.
 	# @param {int} userId
@@ -26,12 +22,6 @@ class ImpressionsHandler:
 		self.debug("got "+impressionType+" impression");
 		self.db.run("INSERT INTO Impressions VALUES (DEFAULT,%s,%s);",(userId,impressionType));
 		respond(impressionType+" impression registered");
-
-	# registers the handler with the main class.
-	# @param {NetworkAdapter}
-	def register(self, networkAdapter):
-		for command in self.commands:
-			networkAdapter.addCommand(command,getattr(self,command));
 
 	# called when a click impression is recorded.
 	# @param {Array} parameters from call (empty in this case)
