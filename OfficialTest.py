@@ -93,77 +93,21 @@ def main():
         custom_sent_tokenizer = PunktSentenceTokenizer() #example_sentence
         tokenized = custom_sent_tokenizer.tokenize(example_sentence)
         description_tags = process_content(tokenized)
+
+
         combo = list(set(title_tags + description_tags))
-        intersection = list(mega_corpus.intersection(combo));
-        ratio = len(intersection)/len(combo);
+        intersection = list(mega_corpus.intersection(combo))
+        ratio = len(intersection)/len(combo)
         data = {}
         data['title'] = event['title']
         data['ratio'] = ratio
         data['matching'] = intersection
-        eventList.append(data);
-    print(json.dumps(list(sorted(eventList, key=sortFn))));
+        eventList.append(data)
+    print(json.dumps(list(sorted(eventList, key=sortFn))))
 def sortFn(s):
-    return s['ratio'];
+    return s['ratio']
 
 #################################
-
-def process_title(title):
-    words = nltk.word_tokenize(title)
-    filtered_sentence = []
-    nonfiltered_sentence = []
-    for w in words:
-        nonfiltered_sentence.append(w)
-        if w not in stop_words:
-            filtered_sentence.append(w)
-    tagged = nltk.pos_tag(filtered_sentence)
-    tagged2 = nltk.pos_tag(filtered_sentence)
-    print(tagged)
-    print(tagged2)
-    namedEntTrue = nltk.ne_chunk(tagged, binary=True)
-    namedEntFalse = nltk.ne_chunk(tagged, binary=False)
-    #namedEntTrue.draw()
-    named_entities = []
-    named_entities_false = []
-    master_titles = []
-
-
-    #for subtree in namedEntTrue.subtrees(filter=lambda t: (t.label() == 'NE')):
-    for subtree in namedEntTrue.subtrees():
-        if subtree.label() == 'NE':
-            for s in list(subtree):
-                named_entities.append(s)
-
-    for subtree in namedEntFalse.subtrees():
-        if subtree.label() != 'S':
-            named_entities_false.append(list(subtree))
-
-    # Matching from both lists
-    for group in named_entities_false:
-        if len(group) == 0:
-            continue
-        elif len(group) == 1:
-            g = group[0]
-            if g in named_entities:
-                named_entities.remove(g)
-            master_titles.append(g[0])
-        else:
-            temp = []
-            for g in group:
-                temp.append(g[0])
-                if g in named_entities:
-                    named_entities.remove(g)
-            #print("*************** " + " ".join(temp))
-            master_titles.append(" ".join(temp))
-
-    if len(named_entities) > 0:
-        for item in named_entities:
-            master_titles.append(item[0])
-
-
-    # print(named_entities)
-
-    if len(master_titles) > 0:
-        return(master_titles)
 
 
 def title_chunking(title):
@@ -255,6 +199,7 @@ def parseSubtree(subtrees, useSyns):
 
     # print(masterList)
     return(list(set(kingList)))
+
 
 def addSynonyms(word):
 
