@@ -1,0 +1,4 @@
+#!/bin/bash
+# clean files, removing the compiled python code segments
+find . -name '*.pyc' ! -path "./frontEnd/*" ! -path "./\.git/*" -exec rm {} \;;
+find . -name '__pycache__' ! -path "./frontEnd/*" ! -path "./\.git/*" -exec rm -r {} \; 2>/dev/null;
