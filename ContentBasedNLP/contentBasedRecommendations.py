@@ -1,7 +1,3 @@
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import PunktSentenceTokenizer
-import json
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -9,21 +5,12 @@ import numpy as np
 
 
 """ STOP-WORDS """
-stop_words = set(stopwords.words('english'))
 #bad_words = set(['ticket', 'tickets', 'event', 'events', 'time', 'door', 'entrance'])
-stop_words.add('ticket')
-stop_words.add('tickets')
-stop_words.add('event')
-stop_words.add('events')
-stop_words.add('time')
-stop_words.add('door')
-stop_words.add('entrance')
 
 
 """ DATA SOURCE """
 ds = pd.read_json("coolUser.json")
-#print(ds)
-# eventually add  new column to dataframe with recommendations for each event , for now use dictionary
+# eventually add new column to dataframe with recommendations for each event , for now use dictionary
 
 """ DICTIONARIES """
 di = dict()
@@ -34,19 +21,6 @@ tf = TfidfVectorizer(analyzer='word', ngram_range=(1, 3), min_df=0, stop_words='
 tfidf_matrix = tf.fit_transform(ds['title']+ " " + ds['description'])
 cosine_similarities = cosine_similarity(tfidf_matrix, tfidf_matrix)
 #print(cosine_similarities_T)
-
-""" TF-IDF for TITLES """
-tf_T = TfidfVectorizer(analyzer='word', ngram_range=(1, 3), min_df=0, stop_words='english')
-tfidf_matrix_T = tf_T.fit_transform(ds['title'])
-cosine_similarities_T = cosine_similarity(tfidf_matrix_T, tfidf_matrix_T)
-#print(cosine_similarities_T)
-
-""" TF-IDF for DESCRIPTIONS """
-tf_D = TfidfVectorizer(analyzer='word', ngram_range=(1, 3), min_df=0, stop_words='english')
-tfidf_matrix_D = tf_D.fit_transform(ds['description'])
-cosine_similarities_D = cosine_similarity(tfidf_matrix_D, tfidf_matrix_D)
-#print(cosine_similarities_D)
-
 
 
 """ ITERATE THOUGH PANDAS DATAFRAME """
