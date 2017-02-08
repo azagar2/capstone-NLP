@@ -8,7 +8,6 @@ function PythonAdapter(){
 	this.error = console.log.bind(this,"PYTHON::ERROR::");
 	this.client = net.connect({path: BLUE_SHIFT_ADAPTER},()=>{
 		console.log('connected to server!');
-		//client.write(JSON.stringify({command:"test"}));
 	});
 	this.client.on('data', (data) => {
 		data = JSON.parse(data);
