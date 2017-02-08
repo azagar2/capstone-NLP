@@ -6,8 +6,16 @@ function PythonAdapter(){
 	this.commandId = 1;
 	this.callbacks ={};
 	this.error = console.log.bind(this,"PYTHON::ERROR::");
+	this.debug = console.log.bind(this,"PYTHON::DEBUG::");
 	this.client = net.connect({path: BLUE_SHIFT_ADAPTER},()=>{
-		console.log('connected to server!');
+		this.debug('connected to server!');
+	});
+	this.client.on('error',(error)=>{
+		if (error.syscall !== 'connect' && error.code !== 'ECONNREFUSED') {
+			throw error;
+		}
+		this.error("no server running on "+BLUE_SHIFT_ADAPTER);
+		process.exit(1);
 	});
 	this.client.on('data', (data) => {
 		data = JSON.parse(data);
@@ -21,6 +29,8 @@ function PythonAdapter(){
 	});
 	this.client.on('end', () => {
 		this.error('disconnected from server');
+		this.close();
+		process.exit(1);
 	});
 }
 
@@ -44,19 +54,45 @@ PythonAdapter.prototype = {
 		var id = this.commandId++;
 		this.callbacks[id] = callback;
 		this.client.write(JSON.stringify({command,params,id}));
+	},
+
+	close: function(){
+		this.error("shutting down");
+		this.client.destroy();
 	}
 }
 
-PythonAdapter.Impressions = {
+PythonAdapter.prototype.Impressions = {
 	CLICK : "clickImpression",
 	EXCLUDE: "excludeImpression",
 	BUY : "buyImpression"
 }
 
-PythonAdapter.Biases = {
+PythonAdapter.prototype.Biases = {
 	ADD:'addBias',
 	DELETE:'deleteBias',
 	LIST:'listBiases',
 }
 
-module.exports = PythonAdapter;
+module.exports = (function() {  
+	// Singleton instance goes into this variable
+	var instance;
+
+	// Singleton factory method
+	function factory() {
+		return Math.random();
+	}
+
+	// Singleton instance getter
+	function getInstance() {
+		// If the instance does not exists, creates it
+		if (instance === undefined) {
+			instance = new PythonAdapter();
+		}
+
+		return instance;
+	}
+
+	// Public API definition
+	return getInstance();
+})();

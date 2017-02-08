@@ -1,26 +1,56 @@
-var http = require("http");
+/**
+ * required modules
+ */
 var express = require("express");
 var path = require("path");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 
-var app = express();
-app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use("/",express.static(path.join(__dirname, "public")));
-
-app.set('port', 9000);
-var server = http.createServer(app);
+var config = require("./config");
+/**
+ * Config Variables
+ */
+var CURRENT_VERSION = config.version || 1;
 
 /**
- * Listen on provided port, on all network interfaces.
+ * express instance
  */
+var app = express();
+if(config.isDev){
+	app.use(logger("dev"));	
+}
+app.use(bodyParser.json())
 
-server.listen(9000,'localhost');
-server.on('error', console.log);
-server.on('listening', console.log);
+// load or run all active versions
+var versions = [CURRENT_VERSION];
+if(config.legacy){
+	versions.concat(config.legacy.versions);
+}
 
-PythonAdapter = require("./pythonAdapter.js")
-var adapter = new PythonAdapter();
+// run all active versions.
+for(var versionId in versions){
+	var VERSION = versions[versionId];
+	try{
+		var router = require("./api/v"+VERSION+"/");
+		app.use("/api/v"+VERSION,router);
+		if(VERSION == CURRENT_VERSION){
+			app.use("/api/",router);
+		}
+	}catch(error){
+		console.log("ERROR: could not run api version "+VERSION);
+		// ignore only if it's live.
+		if(config.isDev) throw error;
+	}
+}
 
+// load static folders, dev version uses the react webpack server.
+if(config.isLive){
+	app.use("/static",express.static(path.join(__dirname, "public")));
+}
 
+// fallback is a basic version endpoint
+app.use("/", function(req, res){
+	res.json({name: config.name, version: CURRENT_VERSION+"-"+config.environment});
+});
+
+module.exports =  app;
