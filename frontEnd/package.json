@@ -24,6 +24,7 @@
     "type": "git",
     "url": "https://github.com/azagar2/capstone-NLP"
   },
+  "proxy":"http://localhost:3001/",
   "devDependencies": {
     "react-scripts": "0.8.4"
   },
