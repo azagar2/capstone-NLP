@@ -26,8 +26,6 @@ cosine_similarities = cosine_similarity(tfidf_matrix, tfidf_matrix)
 """ ITERATE THOUGH PANDAS DATAFRAME """
 
 for idx, row in ds.iterrows():
-    #similar_indices_T = cosine_similarities_T[idx].argsort()[:-100:-1]
-    #similar_indices_D = cosine_similarities_D[idx].argsort()[:-100:-1]
     similar_indices = cosine_similarities[idx].argsort()[:-100:-1]
 
     similar_items = [(cosine_similarities[idx][i], ds['title'][i]) for i in similar_indices]
