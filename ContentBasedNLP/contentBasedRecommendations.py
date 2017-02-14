@@ -8,9 +8,37 @@ import numpy as np
 #bad_words = set(['ticket', 'tickets', 'event', 'events', 'time', 'door', 'entrance'])
 
 
+"""
+Need to do:
+First, make sure that only future events are loaded
+filter/sort based on....
+    latitude and longitude
+    event category
+    start date (the sooner the better)
+
+do we recommend events based on proximity or weigh category more heavily?
+
+find way to weigh attributes ....
+look at events the user has gone to in the past
+the more recent events have more weight
+go through the most recent 5 or 10 (cap yes or no?)
+check to see if user has marked an event as "gift" - if so, do not include in recommendations
+
+
+
+OVERALL DATA FILTERING
+any events that are "closed", do not recommend
+
+
+
+
+"""
+
+
 """ DATA SOURCE """
-ds = pd.read_json("coolUser.json")
+ds = pd.read_json("new-events.json")
 # eventually add new column to dataframe with recommendations for each event , for now use dictionary
+
 
 """ DICTIONARIES """
 di = dict()
@@ -20,19 +48,16 @@ di = dict()
 tf = TfidfVectorizer(analyzer='word', ngram_range=(1, 3), min_df=0, stop_words='english')
 tfidf_matrix = tf.fit_transform(ds['title']+ " " + ds['description'])
 cosine_similarities = cosine_similarity(tfidf_matrix, tfidf_matrix)
-#print(cosine_similarities_T)
 
 
 """ ITERATE THOUGH PANDAS DATAFRAME """
 
 for idx, row in ds.iterrows():
     similar_indices = cosine_similarities[idx].argsort()[:-100:-1]
-
     similar_items = [(cosine_similarities[idx][i], ds['title'][i]) for i in similar_indices]
-    #print(similar_indices)
-    #print(similar_items)
     title = similar_items[0][1]
     di[title] = similar_items[1:]
+    break
 
 
 #print(diTitles['Techweek | Chicago 2015'])
@@ -41,10 +66,6 @@ for key, value in di.items():
     print(key, value)
 
 print("--------------")
-
-
-
-
 
 
 
