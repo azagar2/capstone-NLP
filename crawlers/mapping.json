@@ -1,0 +1,13 @@
+{
+	"id": "",
+	"city": "",
+	"country": "",
+	"status": "",
+	"start_time": "dates/start/localDate",
+	"event_end_time": "",
+	"title": "name",
+	"description": "info",
+	"category": "",
+	"latitude": "_embedded/venues/location/latitude",
+	"longitude": "_embedded/venues/location/longitude"
+}
