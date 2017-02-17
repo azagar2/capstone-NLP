@@ -2,6 +2,8 @@ import urllib.request
 import urllib.error
 import json
 import sys
+import getopt
+import argparse
 
 class TicketMasterCrawler:
 
@@ -14,6 +16,10 @@ class TicketMasterCrawler:
     EMBEDDED = '_embedded'
     EVENTS = 'events'
     SLASH = '/'
+
+    request_params_file = 'requestParams.json'
+    mapping_file = 'mapping.json'
+    output_file = 'output.json'
 
     def __init__(self):
         pass
@@ -77,7 +83,7 @@ class TicketMasterCrawler:
         return output
 
     # reads the file that indicates the mapping for how information is parsed from the response
-    def loadMapping(self, fileName = 'mapping.json'):
+    def loadMapping(self, fileName):
         try:
             with open(fileName, 'r') as file:
                 content = self.jsonToPy(file.read())
@@ -93,7 +99,7 @@ class TicketMasterCrawler:
         return mapping
 
     # write the parsed events to the output file
-    def outputEvents(self, output, fileName = 'output.json'):
+    def outputEvents(self, fileName, output):
         try:
             with open(fileName, 'w') as file:
                 for event in output:
@@ -131,7 +137,7 @@ class TicketMasterCrawler:
         return strOptions
 
     # Opens the file with the JSON that specifics the parameters of the request
-    def readRequestFile(self, fileName = 'requestParams.json'):
+    def readRequestFile(self, fileName):
         try:
             with open(fileName, 'r') as file:
                 content = file.read()
@@ -141,16 +147,32 @@ class TicketMasterCrawler:
 
         return content
 
+    def run(self):
+        jsonOptions = self.readRequestFile(crawler.request_params_file)
+        strOptions = self.buildOptions(jsonOptions)
+        response = self.request(strOptions)
 
-# run
-crawler = TicketMasterCrawler()
+        # response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
 
-jsonOptions = crawler.readRequestFile()
-strOptions = crawler.buildOptions(jsonOptions)
-response = crawler.request(strOptions)
+        mapping = self.loadMapping(crawler.mapping_file)
+        output = self.parseEvents(response, mapping)
+        self.outputEvents(crawler.output_file, output)
 
-# response = crawler.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--request')
+    parser.add_argument('-m', '--mapping')
+    parser.add_argument('-o', '--output')
+    args = parser.parse_args()
 
-mapping = crawler.loadMapping()
-output = crawler.parseEvents(response, mapping)
-crawler.outputEvents(output)
+    if args.request is not None:
+        TicketMasterCrawler.request_params_file = args.request
+
+    if args.mapping is not None:
+        TicketMasterCrawler.mapping_file = args.mapping
+
+    if args.output is not None:
+        TicketMasterCrawler.output_file = args.output
+
+    crawler = TicketMasterCrawler()
+    crawler.run()
