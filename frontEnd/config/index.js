@@ -28,11 +28,11 @@ function checkConfig(env){
 	var path = getEnvironmentPath(env);
 	try {
 		return fs.existsSync(path) && !fs.accessSync(path, fs.F_OK);
-		// Do something
 	} catch (e) {
 		// It isn't accessible
 		console.log("access error while accessing config files");
 		console.log(e);
+		process.exit(1);
 		return false;
 	}
 }

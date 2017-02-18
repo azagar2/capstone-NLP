@@ -53,7 +53,7 @@ router.post("/click",function(req, res) {
 
 /**
  * get Parameter Error
- * parameter Error is in the format
+ * parameter Error is in the format. We don't check types, service does that.
  * { "({String} parameter name)":({Class} required)}
  * @param {Object} params
  * @param {Object} configParams
