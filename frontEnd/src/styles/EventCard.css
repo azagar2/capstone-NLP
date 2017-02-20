@@ -1,5 +1,24 @@
-/*TODO*/
 .event-card {
   height: 255px;
   width: 255px;
+}
+
+.event-title {
+  margin-top: 20px;
+  font-weight: 500;
+  font-size: 18pt;
+}
+
+.event-description {
+  word-wrap: break-word;
+  margin: 5px;
+  width: 245px;
+  height: 100px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button-group {
+  margin: 10px;
 }

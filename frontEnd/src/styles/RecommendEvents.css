@@ -20,7 +20,7 @@
   display: inline;
   margin-right: 200px;
   width: auto;
-  height: auto;
-  overflow: scroll;
+  height: 275px;
+  overflow-x: scroll;
   white-space: nowrap;
 }

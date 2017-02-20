@@ -5,9 +5,10 @@ class EventCard extends Component {
   render() {
     return (
       <div className="card event-card">
-        <div> {this.props.eventTitle} </div>
-        <div> {this.props.eventDescription} </div>
-        <div> {this.props.eventTags} </div>
+        <div className="event-title"> {this.props.eventTitle} </div>
+        <div className="event-description"> {this.props.eventDescription} </div>
+        <div> {this.props.eventCategory} </div>
+        <div> {this.props.eventLocation} </div>
       </div>
     );
   }
