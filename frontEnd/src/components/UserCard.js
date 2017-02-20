@@ -10,6 +10,7 @@ class UserCard extends Component {
         <img src={ require('../images/ryan.jpg') } role="presentation" alt={this.props.name} className="circle-image"/>
         <hr className="horizontal-line"/>
         <div> {this.props.name} </div>
+        <div> {this.props.location} </div>
       </div>
     );
   }

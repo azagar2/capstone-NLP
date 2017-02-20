@@ -5,7 +5,9 @@ class EventCard extends Component {
   render() {
     return (
       <div className="card event-card">
-        poop
+        <div> {this.props.eventTitle} </div>
+        <div> {this.props.eventDescription} </div>
+        <div> {this.props.eventTags} </div>
       </div>
     );
   }

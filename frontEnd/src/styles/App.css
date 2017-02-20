@@ -46,13 +46,13 @@
 .button-pink,
 .button-pink:focus {
   padding: 5px 5px 5px 5px;
-  margin-left: 375px;
+  margin-left: 400px;
   margin-top: 20px;
   text-align: center;
   font-weight: 500;
   font-size: 12pt;
   width: 120px;
-  height: 35px;
+  height: 25px;
   background: #FF5984;
   color: white;
   border-radius: 7px;

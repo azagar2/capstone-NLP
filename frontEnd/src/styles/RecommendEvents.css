@@ -2,6 +2,10 @@
   margin-left: 200px;
   width: 80%;
   height: 100%;
+  display: inline-flex;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
 }
 
 .recommend-events-background {
@@ -10,4 +14,13 @@
   height: 700px;
   width: auto;
   background: white;
+}
+
+.events-container {
+  display: inline;
+  margin-right: 200px;
+  width: auto;
+  height: auto;
+  overflow: scroll;
+  white-space: nowrap;
 }
