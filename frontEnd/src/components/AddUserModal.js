@@ -13,7 +13,7 @@ class AddUserModal extends Component {
   render() {
     return(
       <div>
-        <Modal isOpen={false} onRequestClose={"closeUserModal"} closeTimeoutMS={1000}>
+        <Modal isOpen={this.props.isOpen} onRequestClose={"closeUserModal"} closeTimeoutMS={1000}>
           <h1>Modal Content</h1>
           <p>Etc.</p>
         </Modal>
