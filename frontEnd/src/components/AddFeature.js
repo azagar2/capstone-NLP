@@ -9,7 +9,7 @@ class AddFeature extends Component {
 
   constructor(){
     super();
-    this.state = {isOpen: false};
+    this.state = {userOpen: false, eventUser: false};
   }
 
   scrollWin(){
@@ -18,24 +18,27 @@ class AddFeature extends Component {
   }
 
   closeUserModal(){
-    this.setState({isOpen: false});
+    this.setState({userOpen: false});
   }
 
   addUser(){
     //TODO: open a modal to set location of user
-    this.setState({isOpen: true});
+    this.setState({userOpen: true});
+  }
+
+  closeEventModal(){
+    this.setState({eventOpen: false});
   }
 
   addEvent(){
     //TODO: open a modal to search db for events
-    alert("event");
+    this.setState({eventOpen: true});
   }
 
   render() {
     if(this.props.type === "user"){
       return (
         <div>
-          {/* <AddUserModal isOpen={this.props.isOpen}></AddUserModal> */}
 
           <div className="card add-user-card" onClick={this.addUser.bind(this)}>
             <div className="add-text">
@@ -44,8 +47,8 @@ class AddFeature extends Component {
           </div>
 
           <div>
-            <Modal isOpen={this.state.isOpen} onRequestClose={this.closeUserModal.bind(this)} closeTimeoutMS={0} contentLabel="Modal">
-              <h1>Modal Content</h1>
+            <Modal isOpen={this.state.userOpen} onRequestClose={this.closeUserModal.bind(this)} closeTimeoutMS={0} contentLabel="Modal">
+              <h1>User Modal Content</h1>
               <p>Etc.</p>
             </Modal>
           </div>
@@ -54,10 +57,20 @@ class AddFeature extends Component {
       );
     } else {
       return (
-        <div className="card add-event-card" onClick={this.addEvent.bind(this)}>
-          <div className="add-text">
-            <span className="plus"> + </span> Add Event
+        <div>
+          <div className="card add-event-card" onClick={this.addEvent.bind(this)}>
+            <div className="add-text">
+              <span className="plus"> + </span> Add Event
+            </div>
           </div>
+
+          <div>
+            <Modal isOpen={this.state.eventOpen} onRequestClose={this.closeEventModal.bind(this)} closeTimeoutMS={0} contentLabel="Modal">
+              <h1>Event Modal Content</h1>
+              <p>Etc.</p>
+            </Modal>
+          </div>
+
         </div>
       );
     }

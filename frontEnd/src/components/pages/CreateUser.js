@@ -28,7 +28,7 @@ class CreateUser extends Component {
         <div className="create-user-container">
           <h1 className='page-title'> Create Users </h1>
 
-          <AddFeature type="user" isOpen={false}></AddFeature>
+          <AddFeature type="user"></AddFeature>
 
           <div onClick={this.scrollWin.bind(this)} className="button-pink">
             Continue
