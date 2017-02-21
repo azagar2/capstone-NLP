@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import Modal from 'react-modal';
 var Scroll  = require('react-scroll');
 
 import '../styles/AddFeature.css';
+import AddUserModal from './AddUserModal';
 
 class AddFeature extends Component {
 
@@ -12,6 +14,7 @@ class AddFeature extends Component {
 
   addUser(){
     //TODO: open a modal to set location of user
+    // this.props
     alert("user");
   }
 
@@ -23,9 +26,13 @@ class AddFeature extends Component {
   render() {
     if(this.props.type === "user"){
       return (
-        <div className="card add-user-card" onClick={this.addUser.bind(this)}>
-          <div className="add-text">
-            <span className="plus"> + </span> Add User
+        <div>
+          <AddUserModal></AddUserModal>
+
+          <div className="card add-user-card" onClick={this.addUser.bind(this)}>
+            <div className="add-text">
+              <span className="plus"> + </span> Add User
+            </div>
           </div>
         </div>
       );

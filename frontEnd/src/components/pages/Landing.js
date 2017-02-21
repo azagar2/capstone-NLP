@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 var Scroll  = require('react-scroll');
 
-import '../styles/Landing.css';
-import UserCard from './UserCard';
+import '../../styles/Landing.css';
+import UserCard from '../UserCard';
 
 class Landing extends Component {
 

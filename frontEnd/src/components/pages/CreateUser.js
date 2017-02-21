@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 var Scroll  = require('react-scroll');
 
-import '../styles/CreateUser.css';
-import UserCard from './UserCard';
-import AddFeature from './AddFeature';
+import '../../styles/CreateUser.css';
+import UserCard from '../UserCard';
+import AddFeature from '../AddFeature';
 
 class CreateUser extends Component {
 

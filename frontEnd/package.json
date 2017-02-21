@@ -1,6 +1,22 @@
 {
   "name": "Project-BlueShift",
-  "contributors": [{"name":"Vanessa Deng"},{"name":"Hannes Filler"},{"name":"Ryan Holmes"},{"name":"Ian Wood"},{"name":"Andrea Zagar"}],
+  "contributors": [
+    {
+      "name": "Vanessa Deng"
+    },
+    {
+      "name": "Hannes Filler"
+    },
+    {
+      "name": "Ryan Holmes"
+    },
+    {
+      "name": "Ian Wood"
+    },
+    {
+      "name": "Andrea Zagar"
+    }
+  ],
   "version": "0.1.0",
   "private": false,
   "devDependencies": {
@@ -10,6 +26,7 @@
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
+    "react-modal": "^1.6.5",
     "react-scroll": "^1.4.5"
   },
   "scripts": {

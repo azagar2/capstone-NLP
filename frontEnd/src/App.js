@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './styles/App.css';
 
-import UserCard from './components/UserCard'
-import Landing from './components/Landing'
-import CreateUser from './components/CreateUser'
-import RecommendEvents from './components/RecommendEvents'
+import Landing from './components/pages/Landing'
+import CreateUser from './components/pages/CreateUser'
+import RecommendEvents from './components/pages/RecommendEvents'
 
 class App extends Component {
   constructor(props){

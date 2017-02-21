@@ -7,8 +7,8 @@ class EventCard extends Component {
       <div className="card event-card">
         <div className="event-title"> {this.props.eventTitle} </div>
         <div className="event-description"> {this.props.eventDescription} </div>
-        <div> {this.props.eventCategory} </div>
-        <div> {this.props.eventLocation} </div>
+        <div className="event-category"> {this.props.eventCategory} </div>
+        <div className="event-location"> {this.props.eventLocation} </div>
       </div>
     );
   }
