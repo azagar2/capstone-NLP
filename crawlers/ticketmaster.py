@@ -2,8 +2,8 @@ import urllib.request
 import urllib.error
 import json
 import sys
-import getopt
 import argparse
+
 
 class TicketMasterCrawler:
 
@@ -16,6 +16,7 @@ class TicketMasterCrawler:
     EMBEDDED = '_embedded'
     EVENTS = 'events'
     SLASH = '/'
+    ROOT = 'root'
 
     request_params_file = 'requestParams.json'
     mapping_file = 'mapping.json'
@@ -56,7 +57,12 @@ class TicketMasterCrawler:
         output = list()
 
         try:
-            for event in response[self.EMBEDDED][self.EVENTS]:
+            if self.ROOT in mapping.keys():
+                for split in mapping[self.ROOT].split(self.SLASH):
+                    response = response[split]
+                mapping.pop(self.ROOT)
+
+            for event in response:
                 newEvent = dict(mapping)
 
                 for key, value in newEvent.items():
@@ -104,6 +110,8 @@ class TicketMasterCrawler:
             with open(fileName, 'w') as file:
                 for event in output:
                     file.write(self.pyToJson(output, True))
+
+                print('Outputting events')
         except IOError:
             print('Could open or write to output file')
             sys.exit()
@@ -150,13 +158,15 @@ class TicketMasterCrawler:
     def run(self):
         jsonOptions = self.readRequestFile(crawler.request_params_file)
         strOptions = self.buildOptions(jsonOptions)
-        response = self.request(strOptions)
+        # response = self.request(strOptions)
 
-        # response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
+        response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
 
         mapping = self.loadMapping(crawler.mapping_file)
         output = self.parseEvents(response, mapping)
         self.outputEvents(crawler.output_file, output)
+
+        print('done')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
