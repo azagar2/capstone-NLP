@@ -1,0 +1,41 @@
+[
+  {
+        "id": "5691349130a91e504c00325e",
+        "city": "Toronto",
+        "country": "CA",
+        "latitude": 43.653226,
+        "longitude": -79.383184,
+        "status": "closed",
+        "start_time": "16-02-20 21:00",
+        "event_end_time (YYYY-MM-DD)": "16-02-20",
+        "title": "February Success Training Seminar",
+        "description": "Join in an incredible training event with indepth information on Products and Marketing Plan9am - Supervisor Worksop10am - Herbalife Opportunity Meeting - open to everyone  and guests can stay free ALL day.            Advanced Product Training 12pm - Lunch with delicious Shakes 1pm - 3pm - Business Training, Marketing Plan and Recognition",
+        "category": "business"
+    },
+  {
+        "id": "55e8984ba14bfe9b4b001761",
+        "city": "Victoria",
+        "country": "CA",
+        "latitude": 48.428421,
+        "longitude": -123.365644,
+        "status": "closed",
+        "start_time": "15-11-15 6:00",
+        "event_end_time (YYYY-MM-DD)": "15-11-15",
+        "title": "Harvest Dinner at the Atrium",
+        "description": "The Health Wellness and Sustainability Festival is fortunate to be partnering with Camosun College and the Island Chef Collaborative to create our second evening and dinner you will remember with fond memories.  This is a five course gluten-free dinner, created by some of the top chefs and bakers in Victoria, and top chefs and bakers of the future.  Proceeds  are going to the Growing Chefs Program, a non-profit society, to educate children, families and community members about healthy eating and healthy food systems.  This is a wonderful opportunity to celebrate our island's talent, both established and the future, enjoy a phenomenal meal, and support a wonderful charity. ",
+        "category": "food-drink"
+    },
+  {
+        "id": "5445e8a8e9919516a5000236",
+        "city": "Ottawa",
+        "country": "CA",
+        "latitude": 45.421530,
+        "longitude": -75.697193,
+        "status": "closed",
+        "start_time": "14-11-15 20:30",
+        "event_end_time (YYYY-MM-DD)": "14-11-15",
+        "title": "6th SMASH Volleyball Tournament - SOLD OUT",
+        "description": "uOttawa Team Diabetes presents its 6th Bi-Annual SMASH Volleyball Tournament to be held on NOVEMBER 15 at the University of Ottawa. Help block glucose spikes and kill diabetes! All proceeds go to supporting runners participating in the Tamarack Ottawa Race Weekend Marathon and are donated to the Canadian Diabetes Association to help in the fight against Diabetes.Update on November 5 2014: All tickets sold! Thanks for all your wonderful support!",
+        "category": "sports"
+    }
+]
