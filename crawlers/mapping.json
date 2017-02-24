@@ -1,4 +1,5 @@
 {
+	"root": "_embedded/events",
 	"id": "",
 	"city": "",
 	"country": "",
@@ -6,8 +7,20 @@
 	"start_time": "dates/start/localDate",
 	"event_end_time": "",
 	"title": "name",
-	"description": "info",
+	"description": {
+		"path": "info",
+		"required": false,
+		"type": "string"
+    },
 	"category": "",
-	"latitude": "_embedded/venues/location/latitude",
-	"longitude": "_embedded/venues/location/longitude"
+	"latitude": {
+		"path": "_embedded/venues/location/latitude",
+		"required": false,
+		"type": "float"
+    },
+	"longitude": {
+		"path": "_embedded/venues/location/longitude",
+		"required": false,
+		"type": "float"
+    }
 }

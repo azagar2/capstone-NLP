@@ -17,6 +17,13 @@ class TicketMasterCrawler:
     EVENTS = 'events'
     SLASH = '/'
     ROOT = 'root'
+    PATH = 'path'
+    REQUIRED = 'required'
+    TYPE = 'type'
+
+    STRING = 'string'
+    FLOAT = 'float'
+    INT = 'int'
 
     request_params_file = 'requestParams.json'
     mapping_file = 'mapping.json'
@@ -66,16 +73,23 @@ class TicketMasterCrawler:
                 newEvent = dict(mapping)
 
                 for key, value in newEvent.items():
-                        if self.SLASH not in value:
-                            newEvent[key] = event[value]
-                        else:
-                            feature = event
-                            for split in value.split(self.SLASH):
-                                if (isinstance(feature, list)):
-                                    feature = feature[0][split]
-                                else:
-                                    feature = feature[split]
-                            newEvent[key] = feature
+                    if isinstance(value, dict):
+                        path = value[self.PATH]
+                        required = value[self.REQUIRED]
+                        outputType = value[self.TYPE]
+                    else:
+                        path = value
+                        required = False
+                        outputType = self.STRING
+
+                    feature = self.traverseDict(event, path)
+
+                    if outputType == self.FLOAT:
+                        feature = float(feature)
+                    elif outputType == self.INT:
+                        feature = int(float(feature))
+
+                    newEvent[key] = feature
 
                 output.append(newEvent)
 
@@ -87,6 +101,22 @@ class TicketMasterCrawler:
             sys.exit()
 
         return output
+
+    def traverseDict(self, dictionary, path):
+        splits = path.split(self.SLASH)
+
+        feature = dictionary
+        for split in path.split(self.SLASH):
+            if isinstance(feature, list):
+                feature = feature[0]  # todo: better array handling
+
+            if split in feature.keys():
+                feature = feature[split]
+            else:
+                feature = ''
+                break
+
+        return feature
 
     # reads the file that indicates the mapping for how information is parsed from the response
     def loadMapping(self, fileName):
@@ -158,9 +188,9 @@ class TicketMasterCrawler:
     def run(self):
         jsonOptions = self.readRequestFile(crawler.request_params_file)
         strOptions = self.buildOptions(jsonOptions)
-        # response = self.request(strOptions)
+        response = self.request(strOptions)
 
-        response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
+        # response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
 
         mapping = self.loadMapping(crawler.mapping_file)
         output = self.parseEvents(response, mapping)
