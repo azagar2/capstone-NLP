@@ -159,6 +159,29 @@ class TicketMasterCrawler:
             print('Invalid output content')
             sys.exit()
 
+    # same as outputEvents except adds the output events onto the ones existing in the file
+    def appendEvents(self, fileName, output):
+        try:
+            with open(fileName, 'r+') as file:
+                contents = file.read()
+
+                if contents is not '':
+                    contents = self.jsonToPy(contents)
+                    sum = contents + output
+                    file.seek(0)
+                    file.truncate()
+                    file.write(self.pyToJson(sum, True))
+                else:
+                    file.write(self.pyToJson(output, True))
+
+                print('Appending events')
+        except IOError:
+            print('Could open or write to output file')
+            sys.exit()
+        except json.JSONDecodeError:
+            print('Invalid output content')
+            sys.exit()
+
     # determine how update to date our db is (simple get value check)
     def dbLastUpdated(self):
         pass
