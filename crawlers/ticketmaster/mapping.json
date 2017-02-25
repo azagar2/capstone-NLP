@@ -1,0 +1,25 @@
+{
+	"root": "_embedded/events",
+	"id": "id",
+	"city": "_embedded/venues/city/name",
+	"country": "_embedded/venues/country/countryCode",
+	"status": "",
+	"start_time": "dates/start/dateTime",
+	"event_end_time": "",
+	"title": "name",
+	"score": "",
+	"description": "info",
+	"category": "classifications/segment/name",
+	"genre": "classifications/genre/name",
+	"subGenre": "classifications/subGenre/name",
+	"latitude": {
+		"path": "_embedded/venues/location/latitude",
+		"required": false,
+		"type": "float"
+    },
+	"longitude": {
+		"path": "_embedded/venues/location/longitude",
+		"required": false,
+		"type": "float"
+    }
+}

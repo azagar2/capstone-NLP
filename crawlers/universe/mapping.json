@@ -1,0 +1,23 @@
+{
+	"root": "discover_events",
+	"id": "id",
+	"city": "city",
+	"country": "country",
+	"status": "status",
+	"start_time": "start_time",
+	"event_end_time": "end_time",
+	"title": "title",
+	"score": "",
+	"description": "description",
+	"category": "category",
+	"latitude": {
+		"path": "latitude",
+		"required": false,
+		"type": "float"
+    },
+	"longitude": {
+		"path": "longitude",
+		"required": false,
+		"type": "float"
+    }
+}
