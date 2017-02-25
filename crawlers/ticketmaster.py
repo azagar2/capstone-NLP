@@ -7,14 +7,17 @@ import argparse
 
 class TicketMasterCrawler:
 
+    # Ticketmaster
     baseUrl = 'https://app.ticketmaster.com/discovery/v2/events.json?'
     apiKey = 'Ry4V2S9yfBqhz1MFpeRJnEbAxcp0nSGQ'
+
+    # Universe
+    # baseUrl = 'https://discover.universe.com/api/v2/discover_events?'
+    # apiKey = ''
 
     EQUALS = '='
     AMPERSAND = '&'
     APIKEY = 'apikey'
-    EMBEDDED = '_embedded'
-    EVENTS = 'events'
     SLASH = '/'
     ROOT = 'root'
     PATH = 'path'
@@ -138,8 +141,7 @@ class TicketMasterCrawler:
     def outputEvents(self, fileName, output):
         try:
             with open(fileName, 'w') as file:
-                for event in output:
-                    file.write(self.pyToJson(output, True))
+                file.write(self.pyToJson(output, True))
 
                 print('Outputting events')
         except IOError:
