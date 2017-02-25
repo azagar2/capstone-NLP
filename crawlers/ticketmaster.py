@@ -28,6 +28,9 @@ class TicketMasterCrawler:
     FLOAT = 'float'
     INT = 'int'
 
+    API = 'api'
+    APIS = ['universe', 'ticketmaster']
+
     request_params_file = 'requestParams.json'
     mapping_file = 'mapping.json'
     output_file = 'output.json'
@@ -94,7 +97,12 @@ class TicketMasterCrawler:
 
                     newEvent[key] = feature
 
+                for api in self.APIS:
+                    if api in self.baseUrl:
+                        newEvent[self.API] = api
+
                 output.append(newEvent)
+
 
         except KeyError as error:
             print('Error parsing the key: ' + str(error))
