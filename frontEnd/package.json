@@ -31,16 +31,9 @@
   "dependencies": {
     "body-parser": "^1.16.0",
     "express": "^4.14.1",
-    "morgan": "^1.7.0",
-    "react": "^15.4.2",
-    "react-bootstrap": "^0.30.7",
-    "react-dom": "^15.4.2",
-    "react-scroll": "^1.4.5"
+    "morgan": "^1.7.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "node bin/www"
   }
 }

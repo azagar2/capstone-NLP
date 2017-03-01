@@ -15,7 +15,7 @@ function PythonAdapter(){
 			throw error;
 		}
 		this.error("no server running on "+BLUE_SHIFT_ADAPTER);
-		process.exit(1);
+		//process.exit(1);
 	});
 	this.client.on('data', (data) => {
 		data = JSON.parse(data);
@@ -30,7 +30,7 @@ function PythonAdapter(){
 	this.client.on('end', () => {
 		this.error('disconnected from server');
 		this.close();
-		process.exit(1);
+		//process.exit(1);
 	});
 }
 

@@ -43,10 +43,8 @@ for(var versionId in versions){
 	}
 }
 
-// load static folders, dev version uses the react webpack server.
-if(config.isLive){
-	app.use("/static",express.static(path.join(__dirname, "public")));
-}
+
+app.use("/",express.static(path.join(__dirname, "public")));
 
 // fallback is a basic version endpoint
 app.use("/", function(req, res){
