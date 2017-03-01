@@ -3,7 +3,7 @@ import urllib.error
 import json
 import sys
 import argparse
-
+import iso8601
 
 class Crawler:
 
@@ -15,6 +15,7 @@ class Crawler:
     # baseUrl = 'https://discover.universe.com/api/v2/discover_events?'
     # apiKey = ''
 
+    # General constants
     EQUALS = '='
     AMPERSAND = '&'
     APIKEY = 'apikey'
@@ -23,13 +24,14 @@ class Crawler:
     PATH = 'path'
     REQUIRED = 'required'
     TYPE = 'type'
+    API = 'api'
+    APIS = ['universe', 'ticketmaster']
 
+    # Type constants
     STRING = 'string'
     FLOAT = 'float'
     INT = 'int'
-
-    API = 'api'
-    APIS = ['universe', 'ticketmaster']
+    UNIXTIME = 'unixtime'
 
     request_params_file = 'requestParams.json'
     mapping_file = 'mapping.json'
@@ -77,6 +79,7 @@ class Crawler:
 
             for event in response:
                 newEvent = dict(mapping)
+                skip = False
 
                 for key, value in newEvent.items():
                     if isinstance(value, dict):
@@ -90,12 +93,18 @@ class Crawler:
 
                     feature = self.traverseDict(event, path)
 
-                    if outputType == self.FLOAT:
-                        feature = float(feature)
-                    elif outputType == self.INT:
-                        feature = int(float(feature))
+                    if outputType != self.STRING:
+                        feature = self.convertType(feature, outputType)
+
+                    if feature is '' and required:
+                        print('Skipping')
+                        skip = True
+                        break
 
                     newEvent[key] = feature
+
+                if skip:
+                    continue
 
                 for api in self.APIS:
                     if api in self.baseUrl:
@@ -113,6 +122,7 @@ class Crawler:
 
         return output
 
+    # iteratively traversely over through a dictionary to get a specified value
     def traverseDict(self, dictionary, path):
         splits = path.split(self.SLASH)
 
@@ -128,6 +138,22 @@ class Crawler:
                 break
 
         return feature
+
+    # handles all conversion of strings to the specified output type
+    def convertType(self, feature, outputType):
+        try:
+            if outputType == self.FLOAT:
+                return float(feature)
+            elif outputType == self.INT:
+                return int(float(feature))
+            elif outputType == self.UNIXTIME:
+                return iso8601.parse_date(feature).timestamp()
+        except ValueError as error:
+            print(error)
+        except iso8601.iso8601.ParseError as error:
+            print(error)
+
+        return ''
 
     # reads the file that indicates the mapping for how information is parsed from the response
     def loadMapping(self, fileName):
