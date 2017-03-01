@@ -5,7 +5,7 @@ import sys
 import argparse
 
 
-class TicketMasterCrawler:
+class Crawler:
 
     # Ticketmaster
     baseUrl = 'https://app.ticketmaster.com/discovery/v2/events.json?'
@@ -219,15 +219,15 @@ class TicketMasterCrawler:
         return content
 
     def run(self):
-        jsonOptions = self.readRequestFile(crawler.request_params_file)
+        jsonOptions = self.readRequestFile(Crawler.request_params_file)
         strOptions = self.buildOptions(jsonOptions)
         response = self.request(strOptions)
 
         # response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
 
-        mapping = self.loadMapping(crawler.mapping_file)
+        mapping = self.loadMapping(Crawler.mapping_file)
         output = self.parseEvents(response, mapping)
-        self.outputEvents(crawler.output_file, output)
+        self.outputEvents(Crawler.output_file, output)
 
         print('done')
 
@@ -239,13 +239,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.request is not None:
-        TicketMasterCrawler.request_params_file = args.request
+        Crawler.request_params_file = args.request
 
     if args.mapping is not None:
-        TicketMasterCrawler.mapping_file = args.mapping
+        Crawler.mapping_file = args.mapping
 
     if args.output is not None:
-        TicketMasterCrawler.output_file = args.output
+        Crawler.output_file = args.output
 
-    crawler = TicketMasterCrawler()
+    crawler = Crawler()
     crawler.run()
