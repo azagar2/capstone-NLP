@@ -3,19 +3,104 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <!--
-      Notice the use of %PUBLIC_URL% in the tag above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <link rel="stylesheet" href="../css/lib/animate.css">
+    <link rel="stylesheet" href="../css/lib/bootstrap.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/landing.css">
+    <link rel="stylesheet" href="../css/create-user.css">
+    <link rel="stylesheet" href="../css/recommend-events.css">
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/bootstrap.js"></script>
+
     <title> BlueShift Demo </title>
   </head>
+
+
   <body>
-    <div id="root"></div>
+
+    <!-- Landing Page -->
+      <div class="landing-background">
+        <h1 class="page-title white"> BlueShift </h1>
+        <!-- Team pictures -->
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <h3 class="landing-description white">This site is a demo to showcase the recommendation engine we have created for Universe.com. It uses natural language processing to classify events and machine learning to do hybrid filtering. </h3>
+            </div>
+          </div>
+          <div class="row">
+            <!-- RYAN  TODO: offsets?-->
+            <div class="card user-card col-md-2 col-md-offset-2">
+              <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
+              <hr class="horizontal-line"/>
+              <div> Ryan Holmes</div>
+            </div>
+
+            <!-- RYAN -->
+            <div class="card user-card col-md-2">
+              <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
+              <hr class="horizontal-line"/>
+              <div> Ryan Holmes</div>
+            </div>
+
+            <!-- RYAN -->
+            <div class="card user-card col-md-2">
+              <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
+              <hr class="horizontal-line"/>
+              <div> Ryan Holmes</div>
+            </div>
+
+            <!-- RYAN -->
+            <div class="card user-card col-md-2">
+              <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
+              <hr class="horizontal-line"/>
+              <div> Ryan Holmes</div>
+            </div>
+
+            <!-- RYAN -->
+            <div class="card user-card col-md-2">
+              <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
+              <hr class="horizontal-line"/>
+              <div> Ryan Holmes</div>
+            </div>
+          </div>
+        </div>
+
+        <br/>
+        <div id="startDemoBtn" class="button-pink">Begin Demo</div>
+
+      </div> <!-- Landing Page -->
+
+<!-- ============================================ -->
+
+    <!-- Create Users Page -->
+      <div class="create-user-background" >
+        <h1 class='page-title'> Create Users </h1>
+
+        <div class="create-user-card-holder container">
+          <div class="row" id="userRow0">
+            <!-- Add User -->
+            <div class="card add-user-card col-md-2 col-md-offset-2" id="userButtonCard">
+              <div class="add-text">
+                <span class="plus"> + </span> Add User
+              </div>
+            </div>
+
+            <div class="col-md-6 events-container" id="eventContainer0">
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="button-pink" id="createUserContinueBtn"> Continue </div>
+      </div> <!-- Create Users Page -->
+
+<!-- ============================================ -->
+
+
   </body>
+
 </html>

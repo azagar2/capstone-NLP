@@ -1,0 +1,14 @@
+.landing-background {
+  /*TODO*/
+  margin-top: -20px;
+  min-height: 705px;
+  /*width: auto;*/
+  background: #3CC6F2;
+}
+
+.landing-description {
+  /*width: 80%;*/
+  font-family: FaktSoftPro;
+  margin-bottom: 25px;
+  text-align: center;
+}

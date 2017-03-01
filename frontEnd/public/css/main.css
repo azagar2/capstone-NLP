@@ -1,0 +1,90 @@
+/* For classes common to all pages*/
+/*================= FONTS ===================*/
+@font-face {
+    font-family: "FaktSoftPro";
+    src: url("fonts/FaktSoftPro-Normal.woff") format('woff');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "FaktSoftPro";
+    src: url("fonts/FaktSoftPro-Blond.woff") format('woff');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "FaktSoftPro";
+    src: url("fonts/FaktSoftPro-Medium.woff") format('woff');
+    font-weight: 500;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-family: FaktSoftPro;
+}
+
+.horizontal-line {
+  color: #d3d3d3;
+}
+
+.card{
+  text-align: center;
+  background: #f7f7f7;
+  box-shadow: 2px 2px 2px #888888;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.circle-image {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  height: 120px;
+  width: auto;
+}
+
+.page-title {
+  padding-top: 50px;
+  text-align: center;
+  font-family: FaktSoftPro;
+}
+
+.button-pink,
+.button-pink:focus {
+  margin: 0 auto;
+  margin-top: 8px;
+  display: block;
+  padding: 5px 5px 5px 5px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12pt;
+  width: 120px;
+  height: 30px;
+  background: #FF5984;
+  color: white;
+  border-radius: 7px;
+  font-family: FaktSoftPro;
+}
+
+.button-pink:hover {
+  background: #ff376b;
+  cursor: pointer;
+}
+
+.white {
+  color: white;
+}
+
+.input-field {
+  border-radius: 3px;
+  margin: 2px;
+  border: 1px solid #ccc;
+  padding: 5px 8px;
+}
+
+.input-field:focus, .input-field:active{
+  border: 1px solid #3CC6F2;
+}

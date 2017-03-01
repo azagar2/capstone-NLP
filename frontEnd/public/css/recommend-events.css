@@ -1,0 +1,21 @@
+.recommend-events-container {
+  display: inline-flex;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+}
+
+.recommend-events-background {
+  min-height: 705px;
+  background: white;
+}
+
+.events-container {
+  /*TODO scrolling*/
+  display: inline-flex;
+  height: 275px;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+/*TODO remove col-md-6 on events, min-width of 255px*/
