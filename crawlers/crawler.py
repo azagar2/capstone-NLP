@@ -36,7 +36,7 @@ class Crawler:
     output_file = 'output.json'
 
 
-    def __init__(self, api='ticketmaster'):
+    def __init__(self, api='universe'):
         self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
@@ -270,6 +270,8 @@ class Crawler:
             mapping = self.loadMapping(Crawler.mapping_file)
             output = self.parseEvents(response, mapping)
             self.appendEvents(Crawler.output_file, output)
+
+            print('done')
 
 
 if __name__ == "__main__":
