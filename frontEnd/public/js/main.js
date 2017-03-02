@@ -25,22 +25,28 @@ function userButtonCardFn(){
 
   $('#userButtonCard').remove();
   var userForm = `
-  <div class="hidden card add-user-card col-md-2 col-md-offset-2" id="userFormCard">
-    <img src="../images/user_icon_${users.length + 1}.png" alt="User 1" class="circle-image">
-    <form action="">
-      <input class="input-field" type="text" placeholder="User ${users.length + 1}" id="userNameField">
+  <div class="hidden col-2 offset-2" id="userFormCard">
+    <div class="card add-user-card">
+      <img src="../images/user_icon_${users.length + 1}.png" alt="User 1" class="circle-image">
 
-      <div class="select-style">
-        <select id="userLocationField">
-          <option value="Location 1">Location 1</option>
-          <option value="Location 2">Location 2</option>
-          <option value="Location 3">Location 3</option>
-          <option value="Location 4">Location 4</option>
-        </select>
+      <div class="col-10 offset-1">
+        <form action="">
+          <input class="input-field" type="text" placeholder="User ${users.length + 1}" id="userNameField">
+
+          <div class="select-style">
+            <select id="userLocationField">
+              <option value="Location 1">Location 1</option>
+              <option value="Location 2">Location 2</option>
+              <option value="Location 3">Location 3</option>
+              <option value="Location 4">Location 4</option>
+            </select>
+          </div>
+
+          <div class="button-pink" id="createUserBtn">Create</div>
+        </form>
       </div>
 
-      <div class="button-pink" id="createUserBtn">Create</div>
-    </form>
+    </div>
   </div>
   `
   $(`#userRow${users.length}`).prepend(userForm);
@@ -56,11 +62,13 @@ function createUserButton(){
   var userName = $('#userNameField').val();
   var userLocation = $('#userLocationField').val();
   var newUser = `
-  <div class="hidden card user-card col-md-2 col-md-offset-2" id="newUser${users.length}">
-    <img src="../images/user_icon_${users.length + 1}.png" alt="${userName}" class="circle-image"/>
-    <hr class="horizontal-line"/>
-    <div> ${userName} </div>
-    <div> ${userLocation} </div>
+  <div class="hidden col-2 offset-2" id="newUser${users.length}">
+    <div class="card user-card">
+      <img src="../images/user_icon_${users.length + 1}.png" alt="${userName}" class="circle-image"/>
+      <hr class="horizontal-line"/>
+      <div> ${userName} </div>
+      <div> ${userLocation} </div>
+    </div>
   </div>
   `;
 
@@ -82,17 +90,19 @@ function createUserButton(){
 
   //create row for new user
   var newUserRow = `
-      <div class = "row" id="userRow${users.length}">
-        <div class="col-md-6 events-container" id="eventContainer${users.length}">
+      <div class="ryan-row" id="userRow${users.length}">
+        <div class="col-6 events-container" id="eventContainer${users.length}">
         </div>
       </div>
   `;
   $('.create-user-card-holder').append(newUserRow);
 
   var userButtonCard = `
-  <div class="hidden card add-user-card col-md-2 col-md-offset-2" id="userButtonCard">
-    <div class="add-text">
-      <span class="plus"> + </span> Add User
+  <div class="hidden col-2 offset-2" id="userButtonCard">
+    <div class="card add-user-card">
+      <div class="add-text">
+        <span class="plus"> + </span> Add User
+      </div>
     </div>
   </div>
   `
@@ -110,18 +120,24 @@ function eventButtonCardFn(){
   var row = eventId.split('').pop();
 
   var eventCardForm = `
-  <div class="hidden card add-event-card col-md-6" id="eventFormCard${row}">
+  <div class="hidden col-6 remove-padding" id="eventFormCard${row}">
+    <div class="card add-event-card">
 
-    <div class="input-group" style="margin: 10px;">
-      <input type="text" class="form-control input-lg" placeholder="Buscar" />
-      <span class="input-group-btn">
-        <button class="btn btn-info btn-lg" type="button">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
-      </span>
+      <div class="input-group event-search">
+        <input type="text" class="form-control input" placeholder="Search Events" />
+        <span class="input-group-btn">
+          <button class="btn btn-info btn" type="button" id="eventSearchBtn${row}">
+            <i class="glyphicon glyphicon-search"></i>
+          </button>
+        </span>
+      </div>
+
+      <div class="event-search-container" id="eventSearchContainer${row}">
+        <!-- TODO: fill with events from db -->
+      </div>
+
+      <div class="button-pink" id="createEventBtn${row}">Create</div>
     </div>
-
-    <div class="button-pink" id="createEventBtn${row}">Create</div>
   </div>
   `
 
@@ -138,17 +154,17 @@ function eventButtonCardFn(){
 function createUserContinueBtn(){
   //inject recommendation page
   var recPage = `
-  <div class="recommend-events-background container">
+  <div class="recommend-events-background">
     <h1 class='page-title'> Recommend Events </h1>
 
-    <div class="row">
+    <div class="ryan-row">
       <div class="button-group">
         <div class="button-pink"> Recommend </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1">
+    <div class="ryan-row">
+      <div class="col-10 offset-1">
         <ul class="nav nav-tabs nav-justified">
           <li class="active"><a href="#u1" data-toggle="tab">User 1</a></li>
           <li><a href="#u2" data-toggle="tab">User 2</a></li>
@@ -181,8 +197,10 @@ function createEventButton(){
   var buttonId = `#${this.id}`;
   var row = buttonId.split('').pop();
   var eventCard = `
-  <div class="hidden card add-event-card" id="eventCard${numEvents}${row}">
-    Some new Event
+  <div class="hidden col-6 remove-padding" id="eventCard${numEvents}${row}">
+    <div class="card add-event-card">
+      Some new Event
+    </div>
   </div>
   `
 
@@ -204,11 +222,13 @@ function createEventButton(){
 
 function getEventButtonCard(row){
   var addEventCard = `
-  <div class="hidden card add-event-card" id="eventButtonCard${row}">
-    <div class="add-text">
-      <span class="plus"> + </span> Add Event
+  <div class="hidden col-6 remove-padding"  id="eventButtonCard${row}">
+    <div class="card add-event-card">
+      <div class="add-text">
+        <span class="plus"> + </span> Add Event
+      </div>
     </div>
-  </div>
+  <div>
   `
   return addEventCard;
 };

@@ -1,12 +1,8 @@
 /*============ GENERAL CREAT USER STUFF  ==============*/
-.create-user-card-holder {
-  margin-left: 16.67%;
-}
 
 .create-user-background {
   margin-top: -20px;
   min-height: 705px;
-  /*width: auto;*/
   background: #d9d9d9;
 }
 
@@ -33,7 +29,6 @@
   color: #b9b9b9;
   text-align: center;
   font-size: 16pt;
-  margin-top: 100px;
 }
 
 .plus {
@@ -80,10 +75,9 @@
 }
 
 .select-style {
+    width: 100%;
     margin: 2px;
-    margin-left: 9px;
     border: 1px solid #ccc;
-    width: 147px;
     border-radius: 3px;
     overflow: hidden;
     background-color: #fff;
@@ -103,4 +97,12 @@
 
 .select-style select:focus {
     outline: none;
+}
+
+.event-search {
+  padding: 10px;
+}
+
+.event-search-container {
+  height: 120px;
 }
