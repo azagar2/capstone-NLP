@@ -4,7 +4,11 @@
 	"city": "_embedded/venues/city/name",
 	"country": "_embedded/venues/country/countryCode",
 	"status": "",
-	"start_time": "dates/start/dateTime",
+	"start_time": {
+		"path": "dates/start/dateTime",
+		"required": true,
+		"type": "unixtime"
+    },
 	"event_end_time": "",
 	"title": "name",
 	"score": "",
@@ -14,12 +18,18 @@
 	"subGenre": "classifications/subGenre/name",
 	"latitude": {
 		"path": "_embedded/venues/location/latitude",
-		"required": false,
+		"required": true,
 		"type": "float"
     },
 	"longitude": {
 		"path": "_embedded/venues/location/longitude",
+		"required": true,
+		"type": "float"
+    },
+	"price": {
+		"path": "priceRanges/min",
 		"required": false,
 		"type": "float"
-    }
+    },
+	"currency": "priceRanges/currency"
 }
