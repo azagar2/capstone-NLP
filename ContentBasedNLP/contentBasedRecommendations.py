@@ -31,13 +31,20 @@ def main():
     ds = pd.read_json("new-events.json")
     newEvents = ds.copy()
 
+    """ MAKE CATEGORIES NUMERICAL """
+    ds['category'] = ds['category'].replace(['music'], '1')
+    print(ds)
+
+
     """ GET ALL PRE-PROCESSED EVENTS FROM SINGLE USER'S PAST PURCHASES """
     pieces = {}
     for idx, event in userEvents.iterrows():
         filt = preProcessEvents(newEvents, event.latitude, event.longitude, idx+1)
         pieces[idx+1] = filt
     result = pd.concat(pieces)
-    print(result)
+    #print(result)
+
+    #nlp(ds)
 
     """ ADD  """
 
@@ -76,11 +83,11 @@ def nlp(ds):
     """ ITERATE THOUGH PANDAS DATAFRAME """
 
     for idx, row in ds.iterrows():
-        similar_indices = cosine_similarities[idx].argsort()[:-15:-1]
+        similar_indices = cosine_similarities[idx].argsort()[:-50:-1]
         similar_items = [(cosine_similarities[idx][i], ds['id'][i]) for i in similar_indices]
         title = similar_items[0][1]
         di[title] = similar_items[1:]
-        break
+        #break
 
 
     #print(diTitles['Techweek | Chicago 2015'])
