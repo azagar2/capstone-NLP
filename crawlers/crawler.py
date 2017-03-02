@@ -29,11 +29,13 @@ class Crawler:
     INT = 'int'
     UNIXTIME = 'unixtime'
 
+    # Config constants
     request_params_file = 'requestParams.json'
     mapping_file = 'mapping.json'
     output_file = 'output.json'
 
-    def __init__(self, api = 'universe'):
+
+    def __init__(self, api='universe'):
         self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
@@ -56,7 +58,7 @@ class Crawler:
         return json.loads(text)
 
     # convert python dict or list into a json string
-    def pyToJson(self, text, pretty = False):
+    def pyToJson(self, text, pretty=False):
         if pretty:
             return json.dumps(text, indent = 4, separators = (',', ': '))
         else:
@@ -215,13 +217,7 @@ class Crawler:
         pass
 
     # converts the request parameters from json to a string
-    def buildOptions(self, jsonOptions):
-        try:
-            options = self.jsonToPy(jsonOptions)
-        except json.JSONDecodeError:
-            print('Invalid input options')
-            sys.exit()
-
+    def buildOptions(self, options):
         strOptions = ""
 
         for index, key in enumerate(options):
@@ -235,13 +231,17 @@ class Crawler:
     def readRequestFile(self, fileName):
         try:
             with open(fileName, 'r') as file:
-                content = file.read()
+                content = self.jsonToPy(file.read())
         except IOError:
             print('Could not read request parameters file')
+            sys.exit()
+        except json.JSONDecodeError:
+            print('Invalid input options')
             sys.exit()
 
         return content
 
+    # basic execution of the script
     def run(self):
         jsonOptions = self.readRequestFile(Crawler.request_params_file)
         strOptions = self.buildOptions(jsonOptions)
@@ -255,11 +255,25 @@ class Crawler:
 
         print('done')
 
+    # make multiple requests in one command (call if request params is a list)
+    def superRequest(self):
+        optionsList = self.readRequestFile(Crawler.request_params_file)
+
+        for options in optionsList:
+            strOptions = self.buildOptions(options)
+            response = self.request(strOptions)
+            mapping = self.loadMapping(Crawler.mapping_file)
+            output = self.parseEvents(response, mapping)
+            self.appendEvents(Crawler.output_file, output)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--request')
     parser.add_argument('-m', '--mapping')
     parser.add_argument('-o', '--output')
+    parser.add_argument('-a', '--api')
+    parser.add_argument('-s', '--super', action='store_true')
     args = parser.parse_args()
 
     if args.request is not None:
@@ -271,5 +285,12 @@ if __name__ == "__main__":
     if args.output is not None:
         Crawler.output_file = args.output
 
-    crawler = Crawler()
-    crawler.run()
+    if args.api is not None:
+        crawler = Crawler(args.api)
+    else:
+        crawler = Crawler()
+
+    if args.super:
+        crawler.superRequest()
+    else:
+        crawler.run()
