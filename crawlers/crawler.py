@@ -5,15 +5,13 @@ import sys
 import argparse
 import iso8601
 
+# Ticketmaster: Ry4V2S9yfBqhz1MFpeRJnEbAxcp0nSGQ
+
 class Crawler:
-
-    # Ticketmaster
-    baseUrl = 'https://app.ticketmaster.com/discovery/v2/events.json?'
-    apiKey = 'Ry4V2S9yfBqhz1MFpeRJnEbAxcp0nSGQ'
-
-    # Universe
-    # baseUrl = 'https://discover.universe.com/api/v2/discover_events?'
-    # apiKey = ''
+    APIS = {
+        'universe': 'https://discover.universe.com/api/v2/discover_events?',
+        'ticketmaster': 'https://app.ticketmaster.com/discovery/v2/events.json?'
+    }
 
     # General constants
     EQUALS = '='
@@ -25,7 +23,6 @@ class Crawler:
     REQUIRED = 'required'
     TYPE = 'type'
     API = 'api'
-    APIS = ['universe', 'ticketmaster']
 
     # Type constants
     STRING = 'string'
@@ -37,9 +34,8 @@ class Crawler:
     mapping_file = 'mapping.json'
     output_file = 'output.json'
 
-    def __init__(self):
-        pass
-        # load baseUrl and apiKey from db
+    def __init__(self, api = 'ticketmaster'):
+        self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
     def request(self, options, decoding = 'utf-8'):
@@ -106,7 +102,7 @@ class Crawler:
                 if skip:
                     continue
 
-                for api in self.APIS:
+                for api in self.APIS.keys():
                     if api in self.baseUrl:
                         newEvent[self.API] = api
 
@@ -124,8 +120,6 @@ class Crawler:
 
     # iteratively traversely over through a dictionary to get a specified value
     def traverseDict(self, dictionary, path):
-        splits = path.split(self.SLASH)
-
         feature = dictionary
         for split in path.split(self.SLASH):
             if isinstance(feature, list):
@@ -226,10 +220,10 @@ class Crawler:
 
         strOptions = ""
 
-        for key, item in options.items():
-            strOptions += str(key) + self.EQUALS + str(item) + self.AMPERSAND
-
-        strOptions += self.APIKEY + self.EQUALS + self.apiKey
+        for index, key in enumerate(options):
+            strOptions += str(key) + self.EQUALS + str(options[key])
+            if index is not len(options) - 1:
+                strOptions += self.AMPERSAND
 
         return strOptions
 
