@@ -254,8 +254,6 @@ class Crawler:
         strOptions = self.buildOptions(jsonOptions)
         response = self.request(strOptions)
 
-        # response = self.jsonToPy(open('temp.txt', 'r').read())  # this is for testing
-
         mapping = self.loadMapping(Crawler.mapping_file)
         output = self.parseEvents(response, mapping)
         self.outputEvents(Crawler.output_file, output)
