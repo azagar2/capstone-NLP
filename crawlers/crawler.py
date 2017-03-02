@@ -16,7 +16,6 @@ class Crawler:
     # General constants
     EQUALS = '='
     AMPERSAND = '&'
-    APIKEY = 'apikey'
     SLASH = '/'
     ROOT = 'root'
     PATH = 'path'
@@ -34,7 +33,7 @@ class Crawler:
     mapping_file = 'mapping.json'
     output_file = 'output.json'
 
-    def __init__(self, api = 'ticketmaster'):
+    def __init__(self, api = 'universe'):
         self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
@@ -131,6 +130,9 @@ class Crawler:
                 feature = ''
                 break
 
+        if feature is None:
+            return ''
+
         return feature
 
     # handles all conversion of strings to the specified output type
@@ -143,9 +145,11 @@ class Crawler:
             elif outputType == self.UNIXTIME:
                 return iso8601.parse_date(feature).timestamp()
         except ValueError as error:
-            print(error)
+            print("Value Error: " + str(error))
         except iso8601.iso8601.ParseError as error:
-            print(error)
+            print("ISO8601 Parse Error: " + str(error))
+        except TypeError as error:
+            print("Type Error: " + str(error))
 
         return ''
 
