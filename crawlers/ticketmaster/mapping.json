@@ -13,9 +13,18 @@
 	"title": "name",
 	"score": "",
 	"description": "info",
-	"category": "classifications/segment/name",
-	"genre": "classifications/genre/name",
-	"subGenre": "classifications/subGenre/name",
+	"category":  {
+		"path": "classifications/segment/name",
+		"default": "other"
+    },
+	"genre":  {
+		"path": "classifications/genre/name",
+		"default": "other"
+    },
+	"subGenre":  {
+		"path": "classifications/subGenre/name",
+		"default": "other"
+    },
 	"latitude": {
 		"path": "_embedded/venues/location/latitude",
 		"required": true,
@@ -28,7 +37,6 @@
     },
 	"price": {
 		"path": "priceRanges/min",
-		"required": false,
 		"type": "float"
     },
 	"currency": "priceRanges/currency"

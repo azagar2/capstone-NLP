@@ -22,6 +22,7 @@ class Crawler:
     REQUIRED = 'required'
     TYPE = 'type'
     API = 'api'
+    DEFAULT = 'default'
 
     # Type constants
     STRING = 'string'
@@ -35,7 +36,7 @@ class Crawler:
     output_file = 'output.json'
 
 
-    def __init__(self, api='universe'):
+    def __init__(self, api='ticketmaster'):
         self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
@@ -79,19 +80,23 @@ class Crawler:
                 skip = False
 
                 for key, value in newEvent.items():
+                    path = value
+                    required = False
+                    outputType = self.STRING
+                    default = ''
+
                     if isinstance(value, dict):
                         path = value[self.PATH]
-                        required = value[self.REQUIRED]
-                        outputType = value[self.TYPE]
-                    else:
-                        path = value
-                        required = False
-                        outputType = self.STRING
+                        required = value[self.REQUIRED] if self.REQUIRED in value.keys() else False
+                        outputType = value[self.TYPE] if self.TYPE in value.keys() else self.STRING
+                        default = value[self.DEFAULT] if self.DEFAULT in value.keys() else ''
 
                     feature = self.traverseDict(event, path)
 
-                    if outputType != self.STRING:
-                        feature = self.convertType(feature, outputType)
+                    feature = self.convertType(feature, outputType)
+
+                    if feature is '':
+                        feature = default
 
                     if feature is '' and required:
                         print('Skipping')
@@ -146,6 +151,8 @@ class Crawler:
                 return int(float(feature))
             elif outputType == self.UNIXTIME:
                 return iso8601.parse_date(feature).timestamp()
+            elif outputType == self.STRING:
+                return str(feature)
         except ValueError as error:
             print("Value Error: " + str(error))
         except iso8601.iso8601.ParseError as error:
