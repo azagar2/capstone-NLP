@@ -1,21 +1,39 @@
 {
   "name": "Project-BlueShift",
-  "contributors": [{"name":"Vanessa Deng"},{"name":"Hannes Filler"},{"name":"Ryan Holmes"},{"name":"Ian Wood"},{"name":"Andrea Zagar"}],
+  "contributors": [
+    {
+      "name": "Vanessa Deng"
+    },
+    {
+      "name": "Hannes Filler"
+    },
+    {
+      "name": "Ryan Holmes"
+    },
+    {
+      "name": "Ian Wood"
+    },
+    {
+      "name": "Andrea Zagar"
+    }
+  ],
   "version": "0.1.0",
   "private": false,
+  "description": "recommendation engine built for [the] Universe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azagar2/capstone-NLP"
+  },
+  "proxy":"http://localhost:3001/",
   "devDependencies": {
     "react-scripts": "0.8.4"
   },
   "dependencies": {
-    "react": "^15.4.2",
-    "react-bootstrap": "^0.30.7",
-    "react-dom": "^15.4.2",
-    "react-scroll": "^1.4.5"
+    "body-parser": "^1.16.0",
+    "express": "^4.14.1",
+    "morgan": "^1.7.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "node bin/www"
   }
 }

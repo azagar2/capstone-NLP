@@ -1,0 +1,88 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+var http = require('http');
+
+// defaults.
+var PORT = "NONE SPECIFIED";
+var ADDRESS = "0.0.0.0";
+
+var config = require("../config");
+/**
+ * Get port from environment and store in Express.
+ */
+PORT = config.port || PORT;
+ADDRESS = config.address || ADDRESS;
+
+// Connect to recommendation service
+var adapter = require("../pythonAdapter.js");
+
+// start the actual app.
+var app = require('../server.js');
+
+/**
+ * Create HTTP server.
+ */
+app.set('port', PORT);
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(PORT,ADDRESS);
+server.on('error', onError);
+server.on('listening', onListening);
+server.on('close',onClose);
+
+function onExit(){
+	adapter.close();
+	server.close(onClose);
+	process.exit(0);
+}
+process.on('exit', onClose);
+process.on('SIGINT',onExit);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+function onError(error) {
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
+
+	// error accessing port / unix filesocket.
+	var bind = typeof PORT === 'string'
+		? 'Pipe ' + PORT
+		: 'Port ' + PORT;
+
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
+}
+
+
+/**
+ * Event listener for HTTP server "close" event.
+ */
+function onClose(){
+	console.log("Server is shutting down");
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+function onListening() {
+	console.log("Server started on: " + ADDRESS + ":" + PORT);
+}
