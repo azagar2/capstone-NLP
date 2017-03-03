@@ -1,0 +1,39 @@
+{
+	"root": "discover_events",
+	"id": "id",
+	"city": "city",
+	"country": "country",
+	"status": "status",
+	"start_time": {
+		"path": "start_time",
+		"required": true,
+		"type": "unixtime"
+    },
+	"event_end_time": {
+		"path": "end_time",
+		"type": "unixtime"
+    },
+	"title": "title",
+	"score": "",
+	"description": "description",
+	"category": {
+		"path": "category",
+		"default": "other"
+    },
+	"latitude": {
+		"path": "latitude",
+		"required": true,
+		"type": "float"
+    },
+	"longitude": {
+		"path": "longitude",
+		"required": true,
+		"type": "float"
+    },
+	"source_type": "source_type",
+	"price": {
+		"path": "price",
+		"type": "float"
+    },
+	"currency": "currency"
+}
