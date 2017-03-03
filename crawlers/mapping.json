@@ -1,26 +1,39 @@
 {
-	"root": "_embedded/events",
-	"id": "",
-	"city": "",
-	"country": "",
-	"status": "",
-	"start_time": "dates/start/localDate",
-	"event_end_time": "",
-	"title": "name",
-	"description": {
-		"path": "info",
-		"required": false,
-		"type": "string"
+	"root": "discover_events",
+	"id": "id",
+	"city": "city",
+	"country": "country",
+	"status": "status",
+	"start_time": {
+		"path": "start_time",
+		"required": true,
+		"type": "unixtime"
     },
-	"category": "",
+	"event_end_time": {
+		"path": "end_time",
+		"type": "unixtime"
+    },
+	"title": "title",
+	"score": "",
+	"description": "description",
+	"category": {
+		"path": "category",
+		"default": "other"
+    },
 	"latitude": {
-		"path": "_embedded/venues/location/latitude",
-		"required": false,
+		"path": "latitude",
+		"required": true,
 		"type": "float"
     },
 	"longitude": {
-		"path": "_embedded/venues/location/longitude",
-		"required": false,
+		"path": "longitude",
+		"required": true,
 		"type": "float"
-    }
+    },
+	"source_type": "source_type",
+	"price": {
+		"path": "price",
+		"type": "float"
+    },
+	"currency": "currency"
 }
