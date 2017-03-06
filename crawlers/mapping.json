@@ -33,7 +33,8 @@
 	"source_type": "source_type",
 	"price": {
 		"path": "price",
-		"type": "float"
+		"type": "float",
+		"default": 0
     },
 	"currency": "currency"
 }

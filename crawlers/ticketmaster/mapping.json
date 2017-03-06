@@ -37,7 +37,8 @@
     },
 	"price": {
 		"path": "priceRanges/min",
-		"type": "float"
+		"type": "float",
+		"default": 0
     },
 	"currency": "priceRanges/currency"
 }
