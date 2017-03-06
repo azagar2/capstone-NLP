@@ -169,7 +169,9 @@ class Crawler:
     # reads the file that indicates the mapping for how information is parsed from the response
     def loadMapping(self, fileName):
         try:
-            with open('crawlers/'+fileName, 'r') as file:
+            fileDir = os.path.dirname(os.path.realpath('__file__'));
+            fileName = os.path.join(fileDir,"crawlers",fileName)
+            with open(fileName, 'r') as file:
                 content = self.jsonToPy(file.read())
         except IOError:
             print('Could not read mapping file')
