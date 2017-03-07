@@ -16,7 +16,10 @@ router.post("/buy",function(req, res) {
 	if(error){
 		return res.json(error);
 	}
-	adapter.send(adapter.Impressions.BUY, req.body.userId, (response)=>{
+	adapter.send(adapter.Impressions.BUY, req.body.userId, (error,response)=>{
+		if(error){
+			return res.json({error});
+		}
 		res.json(response);
 	});
 });
@@ -31,7 +34,10 @@ router.post("/exclude",function(req, res) {
 	if(error){
 		return res.json(error);
 	}
-	adapter.send(adapter.Impressions.EXCLUDE, req.body.userId, (response)=>{
+	adapter.send(adapter.Impressions.EXCLUDE, req.body.userId, (error,response)=>{
+		if(error){
+			return res.json({error});
+		}
 		res.json(response);
 	});
 });
@@ -46,7 +52,10 @@ router.post("/click",function(req, res) {
 	if(error){
 		return res.json(error);
 	}
-	adapter.send(adapter.Impressions.CLICK, req.body.userId, (response)=>{
+	adapter.send(adapter.Impressions.CLICK, req.body.userId, (error,response)=>{
+		if(error){
+			return res.json({error});
+		}
 		res.json(response);
 	});
 });
