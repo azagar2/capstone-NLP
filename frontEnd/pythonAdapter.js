@@ -20,17 +20,24 @@ function PythonAdapter(){
 	});
 	this.client.on('data', (data) => {
 		data = data.toString();
-		control = data.substr(0,data.indexOf("|")).split(":");
+		control = data.substr(0,data.indexOf("|"));
 		data = data.substr(data.indexOf("|")+1);
+		if(control == "e"){
+			// error message
+			control = "1:1:1";
+		}
+		console.log(control);
+		control = control.split(":");
 		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
 		// message complete
-		if(control[2] == 1){
+		if(control[2] == "1"){
 			data = JSON.parse(data);
 			if(data.error){
 				this.error(data.error);
+				this.callbacks[data.id](data.error)
 				if(data.id !== undefined) delete this.callbacks[data.id];
 			} else {
-				this.callbacks[data.id](data.response);
+				this.callbacks[data.id](null,data.response);
 			}
 			delete this.callbacks[data.id];
 			return;
@@ -54,7 +61,7 @@ function PythonAdapter(){
 			if(data.id !== undefined) delete this.callbacks[data.id];
 			return
 		}
-		this.callbacks[data.id](data.response);
+		this.callbacks[data.id](null,data.response);
 		delete this.callbacks[data.id];
 		delete this.buffer[control[0]];
 	});
