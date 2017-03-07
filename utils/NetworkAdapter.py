@@ -71,18 +71,23 @@ class NetworkAdapter:
 				def respond(commandId,response):
 					response = {'id':commandId,'response':response};
 					self.debug("sending response:"+json.dumps(response,default=self.date_handler));
-					conn.send(json.dumps(response,default=self.date_handler).encode("utf-8"));
+					response = json.dumps(response,default=self.date_handler);
+					chunksize = 8000;
+					chunks = [response[i:i+chunksize] for i in range(0, len(response), chunksize)];
+					for idx,chunk in enumerate(chunks):
+						identifier = str(commandId)+":"+str(idx)+":"+str(len(chunks)-1);
+						conn.send((identifier + "|" + chunk).encode("utf-8"));
 
 				if 'id' not in commandData:
-					conn.send('{"error":"no id parameter"}'.encode("utf-8"));
+					conn.send('e|{"error":"no id parameter"}'.encode("utf-8"));
 					pass;
 				elif 'command' not in commandData:
 					error = {"error":"no command parameter","id":commandData.get("id")}
-					conn.send(json.dumps(error).encode("utf-8"));
+					conn.send(("e|"+json.dumps(error)).encode("utf-8"));
 					pass;
 				elif commandData.get('command') not in self.callbacks:
 					error = {"error":"unknown command","id":commandData.get("id")}
-					conn.send(json.dumps(error).encode("utf-8"));
+					conn.send(("e|"+json.dumps(error)).encode("utf-8"));
 					pass;
 				else:
 					callback = self.callbacks[commandData.get('command')];
@@ -91,6 +96,6 @@ class NetworkAdapter:
 						_thread.start_new_thread(callback,(params,partial(respond,commandData.get("id")),));
 					else:
 						error = {"error":"invalid parameters","id":commandData.get("id")}
-						conn.send(json.dumps(error).encode("utf-8"));
+						conn.send(("e|"+json.dumps(error)).encode("utf-8"));
 			self.debug("client went away");
 			conn.close();
