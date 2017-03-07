@@ -4,6 +4,7 @@ const BLUE_SHIFT_ADAPTER = '/tmp/blue-shift-adapter';
 
 function PythonAdapter(){
 	this.commandId = 1;
+	this.buffer = {};
 	this.callbacks ={};
 	this.error = console.log.bind(this,"PYTHON::ERROR::");
 	this.debug = console.log.bind(this,"PYTHON::DEBUG::");
@@ -18,14 +19,44 @@ function PythonAdapter(){
 		//process.exit(1);
 	});
 	this.client.on('data', (data) => {
-		data = JSON.parse(data);
+		data = data.toString();
+		control = data.substr(0,data.indexOf("|")).split(":");
+		data = data.substr(data.indexOf("|")+1);
+		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
+		// message complete
+		if(control[2] == 1){
+			data = JSON.parse(data);
+			if(data.error){
+				this.error(data.error);
+				if(data.id !== undefined) delete this.callbacks[data.id];
+			} else {
+				this.callbacks[data.id](data.response);
+			}
+			delete this.callbacks[data.id];
+			return;
+		}
+		// message incomplete, wait for the rest
+		if(!this.buffer[control[0]]){
+			this.buffer[control[0]] = {remaining:control[2]};
+		}
+		this.buffer[control[0]][control[1]] = data;
+		if(this.buffer[control[0]].remaining-- !== 0){
+			return
+		}
+		var buffer = "";
+		for (var i = 0; i <= control[2]; i++) {
+			buffer+= this.buffer[control[0]][i];
+			delete this.buffer[control[0]][i];
+		}
+		data = JSON.parse(buffer);
 		if(data.error){
 			this.error(data.error);
 			if(data.id !== undefined) delete this.callbacks[data.id];
-		} else {
-			this.callbacks[data.id](data.response);
+			return
 		}
+		this.callbacks[data.id](data.response);
 		delete this.callbacks[data.id];
+		delete this.buffer[control[0]];
 	});
 	this.client.on('end', () => {
 		this.error('disconnected from server');
@@ -72,6 +103,10 @@ PythonAdapter.prototype.Biases = {
 	ADD:'addBias',
 	DELETE:'deleteBias',
 	LIST:'listBiases',
+}
+
+PythonAdapter.prototype.Recommender = {
+	ANONYMOUS:'getAnonymousRecommendations'
 }
 
 module.exports = (function() {  

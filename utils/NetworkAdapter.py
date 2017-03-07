@@ -71,7 +71,12 @@ class NetworkAdapter:
 				def respond(commandId,response):
 					response = {'id':commandId,'response':response};
 					self.debug("sending response:"+json.dumps(response,default=self.date_handler));
-					conn.send(json.dumps(response,default=self.date_handler).encode("utf-8"));
+					response = json.dumps(response,default=self.date_handler);
+					chunksize = 8000;
+					chunks = [response[i:i+chunksize] for i in range(0, len(response), chunksize)];
+					for idx,chunk in enumerate(chunks):
+						identifier = str(commandId)+":"+str(idx)+":"+str(len(chunks)-1);
+						conn.send((identifier + "|" + chunk).encode("utf-8"));
 
 				if 'id' not in commandData:
 					conn.send('{"error":"no id parameter"}'.encode("utf-8"));
