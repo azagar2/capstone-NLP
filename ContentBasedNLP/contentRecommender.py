@@ -1,14 +1,9 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn import preprocessing
-from sklearn.cluster import KMeans, MiniBatchKMeans
 from geopy.distance import vincenty
 import numpy as np
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
-from scipy.spatial.distance import cdist
-from sklearn.metrics.pairwise import pairwise_distances_argmin
+import timeit
 
 
 """ Denver: 39.739236, -104.990251 """
@@ -90,12 +85,17 @@ class Recommender:
             frames[a] = self.generateNLPRecommendations(newset, weight)
 
         # generate recommendations
-        result = pd.DataFrame(pd.concat(frames))
-        #result.groupby('id')['weight'].sum()
-        #result.groupby('weight').sum()
-        result = result['id'].groupby(result['weight']).sum()
-        print(result.tail(100))
-        return(result.tail(100))
+        result = pd.DataFrame(pd.concat(frames, ignore_index=True))
+        #print(result.loc[result['weight'] == 0.387071])
+        result.groupby(by=['id'], sort=False)['weight'].sum()
+        result.sort_values(by='weight', inplace=True, ascending=False)
+        del result['title']
+
+        # HANNES HI
+        print(result['id'].tolist())
+        print(result['weight'].tolist())
+        print(result.set_index('id').T.to_dict(orient='records'))
+        return(result.set_index('id').T.to_dict(orient='list'))
 
 
     def generateNLPRecommendations(self, ds, weight):
