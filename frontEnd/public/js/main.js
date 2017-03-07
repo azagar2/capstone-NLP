@@ -42,7 +42,7 @@ function userButtonCardFn(){
             </select>
           </div>
 
-          <div class="button-pink" id="createUserBtn">Create</div>
+          <div class="button-pink" id="createUserBtn" style="width: 100%; margin-left: 2px; margin-top: 4px;">Create</div>
         </form>
       </div>
 
@@ -59,8 +59,9 @@ function userButtonCardFn(){
 
 //called to create a user
 function createUserButton(){
-  var userName = $('#userNameField').val();
+  var userName = $('#userNameField').val() || `User ${users.length + 1}`;
   var userLocation = $('#userLocationField').val();
+
   var newUser = `
   <div class="hidden col-2 offset-2" id="newUser${users.length}">
     <div class="card user-card">
@@ -68,6 +69,7 @@ function createUserButton(){
       <hr class="horizontal-line"/>
       <div> ${userName} </div>
       <div> ${userLocation} </div>
+      <div><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></div>
     </div>
   </div>
   `;
@@ -87,6 +89,7 @@ function createUserButton(){
 
   // //store user that was created
   users.push({name: userName, location: userLocation});
+  users[users.length - 1]["events"] = [];
 
   //create row for new user
   var newUserRow = `
@@ -195,7 +198,10 @@ function createUserContinueBtn(){
     </div>
   </div>
   `
-  $('body').append(recPage);
+  if(!$(`.recommend-events-background`).length){
+    $('body').append(recPage);
+  }
+
   $('html, body').animate({
      scrollTop: $('.recommend-events-background').offset().top
    }, 1000);
@@ -204,12 +210,13 @@ function createUserContinueBtn(){
 // =======================================================================================================
 
 function createEventButton(){
-  var buttonId = `#${this.id}`;
-  var row = buttonId.split('').pop();
+  var jq = $(`#${this.id}`);
+  var row = jq.data("row");
+
   var eventCard = `
   <div class="hidden col-5 remove-padding" id="eventCard${numEvents}${row}">
     <div class="card event-card">
-      Some new Event
+      <div class="events-title"> ${jq.text()} </div>
     </div>
   </div>
   `
@@ -225,6 +232,9 @@ function createEventButton(){
   $(`#eventButtonCard${row}`).addClass('animated fadeInDown');
 
   $(`#eventButtonCard${row}`).on("click", eventButtonCardFn);
+  //TODO: push full event not just title
+  users[row]["events"].push(jq.text());
+  console.log(users);
   numEvents++;
 };
 
@@ -245,6 +255,20 @@ function getEventButtonCard(row){
 
 function searchEvents(){
   var row = this.id.split("").pop();
-  var searchVal = $(`#event-search${row}`).val();
-  alert(`You searched ${searchVal}`);
+  var searchVal = $(`#event-search${row}`).val().toUpperCase();
+  $(`#eventSearchContainer${row}`).empty();
+
+  $.getJSON( "../data/VanLaNY3000output.json", function( data ) {
+    var items = [];
+    $.each( data, function(k,v) {
+      if(v.title.toUpperCase().includes(searchVal) || v.description.toUpperCase().includes(searchVal) || v.category.toUpperCase().includes(searchVal)){
+        items.push( `<div data-row="${row}" class="event-listing" id="${v.id}"> ${v.title} </div>` );
+      }
+    });
+    $(`#eventSearchContainer${row}`).append(items.join(""));
+
+    $.each($(`.event-listing`), function(k, v){
+      $(`#${v.id}`).on("click", createEventButton);
+    });
+  });
 };

@@ -112,4 +112,43 @@
 
 .event-search-container {
   height: 120px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  white-space: nowrap;
+  margin: 10px;
+  text-align: left;
+}
+
+.events-title {
+  padding: 15px;
+  font-family: brandon-grotesque, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  overflow-x: hidden;
+  white-space: pre-wrap;      /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap;     /* Opera <7 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  word-wrap: break-word;      /* IE */
+}
+
+.event-listing {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #ccc;
+}
+
+.event-listing:hover {
+  background: #ddd;
+}
+
+.glyphicon-trash{
+  color: #ccc;
+  margin-top: 20px;
+  margin-left: -160px;
+}
+
+.glyphicon-trash:hover{
+  color: #aaa;
+  cursor: pointer;
 }
