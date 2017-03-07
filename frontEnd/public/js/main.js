@@ -50,8 +50,7 @@ function userButtonCardFn(){
   </div>
   `
   $(`#userRow${users.length}`).prepend(userForm);
-  $('#userFormCard').removeClass('hidden');
-  $('#userFormCard').addClass('animated fadeInDown');
+  fadeInAnimate('userFormCard')
   $('#createUserBtn').on("click", createUserButton);
 };
 
@@ -80,11 +79,9 @@ function createUserButton(){
   $(`#userRow${users.length}`).prepend(newUser);
   $(`#eventContainer${users.length}`).append(addEventCard);
 
-  $(`#newUser${users.length}`).removeClass('hidden');
-  $(`#newUser${users.length}`).addClass('animated fadeInDown');
+  fadeInAnimate(`newUser${users.length}`);
+  fadeInAnimate(`eventButtonCard${users.length}`);
 
-  $(`#eventButtonCard${users.length}`).addClass('animated fadeInDown');
-  $(`#eventButtonCard${users.length}`).removeClass('hidden');
   $(`#eventButtonCard${users.length}`).on("click", eventButtonCardFn);
 
   // //store user that was created
@@ -112,8 +109,7 @@ function createUserButton(){
   `
 
   $(`#userRow${users.length}`).prepend(userButtonCard);
-  $('#userButtonCard').removeClass('hidden');
-  $('#userButtonCard').addClass('animated fadeInDown');
+  fadeInAnimate("userButtonCard");
   $('#userButtonCard').on("click", userButtonCardFn);
 };
 
@@ -140,17 +136,13 @@ function eventButtonCardFn(){
         <!-- TODO: fill with events from db -->
       </div>
 
-      <div class="button-pink" id="createEventBtn${row}">Create</div>
     </div>
   </div>
   `
 
   $(eventId).remove();
   $(`#eventContainer${row}`).append(eventCardForm);
-  $(`#eventFormCard${row}`).removeClass('hidden');
-  $(`#eventFormCard${row}`).addClass('animated fadeInDown');
-
-  $(`#createEventBtn${row}`).on("click", createEventButton);
+  fadeInAnimate(`eventFormCard${row}`);
   $(`#eventSearchBtn${row}`).on("click", searchEvents);
 };
 
@@ -158,46 +150,41 @@ function eventButtonCardFn(){
 
 function createUserContinueBtn(){
   //inject recommendation page
-  // <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
   var recPage = `
   <div class="recommend-events-background">
     <h1 class='page-title'> Recommend Events </h1>
-
-
 
   <div class="ryan-row" style='margin-top: 50px;'>
       <div class="col-10 offset-1">
 
         <div class="col-2">
           <ul class="nav nav-tabs">
-            <li class="active tab-item"><a href="#u1" data-toggle="tab"> User 1 </a></li>
-            <li class="tab-item"><a href="#u2" data-toggle="tab">User 2</a></li>
-            <li class="tab-item"><a href="#u3" data-toggle="tab">User 3</a></li>
+            <li class="active tab-item"><a href="#u1" data-toggle="tab"> ${users[0].name} </a></li>`
+
+  for(var i = 1; i<=users.length-1; i++){
+    recPage = recPage.concat(`<li class="tab-item"><a href="#u${i+1}" data-toggle="tab"> ${users[i].name} </a></li>`);
+  }
+
+  recPage = recPage.concat(`
           </ul>
         </div>
-
         <div class="col-10">
           <div class="tab-content">
-
             <div class="tab-pane active fade in" id="u1">
-              User 1
-              <div class="button-pink pull-right"> Recommend </div>
-            </div>
+               poop1
+               <!-- <div class="button-pink pull-right"> Recommend </div> -->
+            </div>`);
 
-            <div class="tab-pane fade" id="u2">
-              user 2
-            </div>
+  for(var i = 1; i<=users.length-1; i++){
+    recPage = recPage.concat(`
+      <div class="tab-pane" id="u${i+1}">
+        <!-- Events go here -->
+        <div class="button-pink pull-right"> Recommend </div>
+      </div>`);
+  }
 
-            <div class="tab-pane fade" id=u3>
-              user 3
-            </div>
-          </div>
-        </div>
+  recPage = recPage.concat("</div></div></div></div></div>");
 
-      </div>
-    </div>
-  </div>
-  `
   if(!$(`.recommend-events-background`).length){
     $('body').append(recPage);
   }
@@ -223,18 +210,15 @@ function createEventButton(){
 
   $(`#eventFormCard${row}`).remove();
   $(`#eventContainer${row}`).append(eventCard);
-  $(`#eventCard${numEvents}${row}`).removeClass('hidden');
-  $(`#eventCard${numEvents}${row}`).addClass('animated fadeInDown');
+  fadeInAnimate(`eventCard${numEvents}${row}`);
 
   var addEventCard = getEventButtonCard(row);
   $(`#eventContainer${row}`).append(addEventCard);
-  $(`#eventButtonCard${row}`).removeClass('hidden');
-  $(`#eventButtonCard${row}`).addClass('animated fadeInDown');
+  fadeInAnimate(`eventButtonCard${row}`);
 
   $(`#eventButtonCard${row}`).on("click", eventButtonCardFn);
   //TODO: push full event not just title
   users[row]["events"].push(jq.text());
-  console.log(users);
   numEvents++;
 };
 
@@ -272,3 +256,8 @@ function searchEvents(){
     });
   });
 };
+
+function fadeInAnimate(id){
+  $(`#${id}`).removeClass('hidden');
+  $(`#${id}`).addClass('animated fadeInDown');
+}
