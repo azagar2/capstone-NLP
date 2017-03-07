@@ -7,7 +7,12 @@
 
 .recommend-events-background {
   min-height: 705px;
-  background: white;
+  margin-top: -20px;
+  background: #d9d9d9;
+  background: -webkit-linear-gradient(white, #d9d9d9);
+  background: -o-linear-gradient(white, #d9d9d9);
+  background: -moz-linear-gradient(white, #d9d9d9);
+  background: linear-gradient(white, #d9d9d9); 
 }
 
 .events-container {

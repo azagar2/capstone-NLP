@@ -160,13 +160,9 @@ function createUserContinueBtn(){
   <div class="recommend-events-background">
     <h1 class='page-title'> Recommend Events </h1>
 
-    <div class="ryan-row">
-      <div class="col-10 offset-1 jumbotron">
-        <div class="button-pink pull-right"> Recommend </div>
-      </div>
-    </div>
 
-    <div class="ryan-row">
+
+  <div class="ryan-row" style='margin-top: 50px;'>
       <div class="col-10 offset-1">
 
         <div class="col-2">
@@ -179,12 +175,16 @@ function createUserContinueBtn(){
 
         <div class="col-10">
           <div class="tab-content">
+
             <div class="tab-pane active fade in" id="u1">
               User 1
+              <div class="button-pink pull-right"> Recommend </div>
             </div>
+
             <div class="tab-pane fade" id="u2">
               user 2
             </div>
+
             <div class="tab-pane fade" id=u3>
               user 3
             </div>

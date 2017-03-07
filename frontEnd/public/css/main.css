@@ -22,8 +22,14 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
   font-family: FaktSoftPro;
+  /*font-family: brandon-grotesque, sans-serif;
+  font-style: normal;
+  font-weight: 700;*/
+}
+
+h1 {
+  font-size: 300%;
 }
 
 .horizontal-line {
@@ -51,7 +57,10 @@ body {
 .page-title {
   padding-top: 50px;
   text-align: center;
-  font-family: FaktSoftPro;
+  /*font-family: FaktSoftPro;*/
+  font-family: brandon-grotesque, sans-serif;
+  font-style: normal;
+  font-weight: 700;
 }
 
 .button-pink,
@@ -67,8 +76,11 @@ body {
   height: 30px;
   background: #FF5984;
   color: white;
-  border-radius: 7px;
-  font-family: FaktSoftPro;
+  border-radius: 4px;
+  /*font-family: FaktSoftPro;*/
+  font-family: brandon-grotesque, sans-serif;
+  font-style: normal;
+  font-weight: 700;
 }
 
 .button-pink:hover {
@@ -105,7 +117,7 @@ body {
 }*/
 .nav-tabs > li {
   width: 100%;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
   /*margin-top: 5px;*/
 }
 
@@ -113,9 +125,8 @@ body {
   color: #555;
   cursor: default;
   border: 0;
-  background: #eee;
-  /*background-color: #ddd;*/
-  border: 1px solid #ddd;
+  background: #ddd;
+  border: 1px solid #ccc;
   border-left: 3px solid #FF5984;
 }
 

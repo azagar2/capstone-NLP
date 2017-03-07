@@ -3,7 +3,17 @@
 .create-user-background {
   margin-top: -20px;
   min-height: 705px;
-  background: #d9d9d9;
+  /*background: #d9d9d9;
+  background: -webkit-linear-gradient(#d9d9d9, white);
+  background: -o-linear-gradient(#d9d9d9, white);
+  background: -moz-linear-gradient(#d9d9d9, white);
+  background: linear-gradient(#d9d9d9, white); */
+
+  background: #3CC6F2; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(#3CC6F2, #eee); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#3CC6F2, #eee); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#3CC6F2, #eee); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#3CC6F2, #eee); /* Standard syntax */
 }
 
 /* =========== ADDING FEATURE CARDS ============*/
