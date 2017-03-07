@@ -22,15 +22,10 @@ function PythonAdapter(){
 		data = data.toString();
 		control = data.substr(0,data.indexOf("|"));
 		data = data.substr(data.indexOf("|")+1);
-		if(control == "e"){
-			// error message
-			control = "1:1:1";
-		}
-		console.log(control);
 		control = control.split(":");
 		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
-		// message complete
-		if(control[2] == "1"){
+		// single frame message or error message
+		if(control[0] == "e" || control[2] == "1"){
 			data = JSON.parse(data);
 			if(data.error){
 				this.error(data.error);
@@ -50,6 +45,7 @@ function PythonAdapter(){
 		if(this.buffer[control[0]].remaining-- !== 0){
 			return
 		}
+		// message complete, assemble it.
 		var buffer = "";
 		for (var i = 0; i <= control[2]; i++) {
 			buffer+= this.buffer[control[0]][i];

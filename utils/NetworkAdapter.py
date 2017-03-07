@@ -5,7 +5,7 @@ class NetworkAdapter:
 	# this is where the unix file-socket lives
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
 	# enables / disables debug logging.
-	DEBUG = True;
+	DEBUG = False;
 
 	# Creates a linux file socket connection
 	def __init__(self):
