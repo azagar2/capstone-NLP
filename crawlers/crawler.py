@@ -222,10 +222,6 @@ class Crawler:
             print('Invalid output content')
             sys.exit()
 
-    # def nullify(self, output):
-    #     for event in output:
-    #         event = dict((k, v) for k, v in content.items() if v)
-
     # same as outputEvents except adds the output events onto the ones existing in the file
     def appendEvents(self, fileName, output):
         try:
