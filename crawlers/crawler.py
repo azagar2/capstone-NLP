@@ -6,7 +6,7 @@ import argparse
 import iso8601
 import os
 
-from utils import database;
+from utils import database
 
 # Ticketmaster: Ry4V2S9yfBqhz1MFpeRJnEbAxcp0nSGQ
 
@@ -26,6 +26,7 @@ class Crawler:
     TYPE = 'type'
     API = 'api'
     DEFAULT = 'default'
+    CRAWLERS = 'crawlers'
 
     # Type constants
     STRING = 'string'
@@ -169,8 +170,12 @@ class Crawler:
     # reads the file that indicates the mapping for how information is parsed from the response
     def loadMapping(self, fileName):
         try:
-            fileDir = os.path.dirname(os.path.realpath('__file__'));
-            fileName = os.path.join(fileDir,"crawlers",fileName)
+            fileDir = os.path.dirname(os.path.realpath('__file__'))
+            if self.CRAWLERS in fileDir:
+                fileName = os.path.join(fileDir, fileName)
+            else:
+                fileName = os.path.join(fileDir, self.CRAWLERS, fileName)
+
             with open(fileName, 'r') as file:
                 content = self.jsonToPy(file.read())
         except IOError:
@@ -274,9 +279,12 @@ class Crawler:
 
     # Opens the file with the JSON that specifics the parameters of the request
     def readRequestFile(self, fileName):
-        fileDir = os.path.dirname(os.path.realpath('__file__'));
-        fileName = os.path.join(fileDir,"crawlers",fileName)
-        print(fileName);
+        fileDir = os.path.dirname(os.path.realpath('__file__'))
+        if self.CRAWLERS in fileDir:
+            fileName = os.path.join(fileDir, fileName)
+        else:
+            fileName = os.path.join(fileDir, self.CRAWLERS, fileName)
+
         try:
             with open(fileName, 'r') as file:
                 content = self.jsonToPy(file.read())
