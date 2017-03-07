@@ -4,7 +4,7 @@ $(document).ready(function(){
   var numEvents;
   $('#startDemoBtn').click(function(){
     $('html, body').animate({
-       scrollTop: $('#userButtonCard').offset().top
+       scrollTop: $('#create-users-title').offset().top
      }, 1000);
   });
 
@@ -90,6 +90,7 @@ function createUserButton(){
 
   //create row for new user
   var newUserRow = `
+    <hr class="horizontal-line" style="width: 50%;"/>
       <div class="ryan-row" id="userRow${users.length}">
         <div class="col-6 events-container" id="eventContainer${users.length}">
         </div>
@@ -99,7 +100,7 @@ function createUserButton(){
 
   var userButtonCard = `
   <div class="hidden col-2 offset-2" id="userButtonCard">
-    <div class="card add-user-card">
+    <div class="card add-user-card card-hover">
       <div class="add-text">
         <span class="plus"> + </span> Add User
       </div>
@@ -120,11 +121,11 @@ function eventButtonCardFn(){
   var row = eventId.split('').pop();
 
   var eventCardForm = `
-  <div class="hidden col-6 remove-padding" id="eventFormCard${row}">
-    <div class="card add-event-card">
+  <div class="hidden col-5 remove-padding" id="eventFormCard${row}">
+    <div class="card event-card">
 
       <div class="input-group event-search">
-        <input type="text" class="form-control input" placeholder="Search Events" />
+        <input id="event-search${row}" type="text" class="form-control input" placeholder="Search Events" />
         <span class="input-group-btn">
           <button class="btn btn-info btn" type="button" id="eventSearchBtn${row}">
             <i class="glyphicon glyphicon-search"></i>
@@ -147,40 +148,49 @@ function eventButtonCardFn(){
   $(`#eventFormCard${row}`).addClass('animated fadeInDown');
 
   $(`#createEventBtn${row}`).on("click", createEventButton);
+  $(`#eventSearchBtn${row}`).on("click", searchEvents);
 };
 
 // =======================================================================================================
 
 function createUserContinueBtn(){
   //inject recommendation page
+  // <img src="../images/ryan.jpg" role="presentation" alt="Ryan Holmes" class="circle-image"/>
   var recPage = `
   <div class="recommend-events-background">
     <h1 class='page-title'> Recommend Events </h1>
 
     <div class="ryan-row">
-      <div class="button-group">
-        <div class="button-pink"> Recommend </div>
+      <div class="col-10 offset-1 jumbotron">
+        <div class="button-pink pull-right"> Recommend </div>
       </div>
     </div>
 
     <div class="ryan-row">
       <div class="col-10 offset-1">
-        <ul class="nav nav-tabs nav-justified">
-          <li class="active"><a href="#u1" data-toggle="tab">User 1</a></li>
-          <li><a href="#u2" data-toggle="tab">User 2</a></li>
-          <li><a href="#u3" data-toggle="tab">User 3</a></li>
-        </ul>
-        <div class="tab-content" style="margin: 10px;">
-          <div class="tab-pane active fade in" id="u1">
-            user 1
-          </div>
-          <div class="tab-pane fade" id="u2">
-            user 2
-          </div>
-          <div class="tab-pane fade" id=u3>
-            user 3
+
+        <div class="col-2">
+          <ul class="nav nav-tabs">
+            <li class="active tab-item"><a href="#u1" data-toggle="tab"> User 1 </a></li>
+            <li class="tab-item"><a href="#u2" data-toggle="tab">User 2</a></li>
+            <li class="tab-item"><a href="#u3" data-toggle="tab">User 3</a></li>
+          </ul>
+        </div>
+
+        <div class="col-10">
+          <div class="tab-content">
+            <div class="tab-pane active fade in" id="u1">
+              User 1
+            </div>
+            <div class="tab-pane fade" id="u2">
+              user 2
+            </div>
+            <div class="tab-pane fade" id=u3>
+              user 3
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -197,8 +207,8 @@ function createEventButton(){
   var buttonId = `#${this.id}`;
   var row = buttonId.split('').pop();
   var eventCard = `
-  <div class="hidden col-6 remove-padding" id="eventCard${numEvents}${row}">
-    <div class="card add-event-card">
+  <div class="hidden col-5 remove-padding" id="eventCard${numEvents}${row}">
+    <div class="card event-card">
       Some new Event
     </div>
   </div>
@@ -222,8 +232,8 @@ function createEventButton(){
 
 function getEventButtonCard(row){
   var addEventCard = `
-  <div class="hidden col-6 remove-padding"  id="eventButtonCard${row}">
-    <div class="card add-event-card">
+  <div class="hidden col-5 remove-padding"  id="eventButtonCard${row}">
+    <div class="card event-card card-hover">
       <div class="add-text">
         <span class="plus"> + </span> Add Event
       </div>
@@ -231,4 +241,10 @@ function getEventButtonCard(row){
   <div>
   `
   return addEventCard;
+};
+
+function searchEvents(){
+  var row = this.id.split("").pop();
+  var searchVal = $(`#event-search${row}`).val();
+  alert(`You searched ${searchVal}`);
 };

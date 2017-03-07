@@ -37,6 +37,10 @@ body {
   border-radius: 5px;
 }
 
+.card-hover:hover {
+  background: #eee;
+}
+
 .circle-image {
   margin-top: 10px;
   border-radius: 50%;
@@ -53,9 +57,9 @@ body {
 .button-pink,
 .button-pink:focus {
   margin: 0 auto;
-  margin-top: 8px;
+  margin-top: 10px;
   display: block;
-  padding: 5px 5px 5px 5px;
+  padding: 5px;
   text-align: center;
   font-weight: 500;
   font-size: 12pt;
@@ -87,3 +91,56 @@ body {
 .input-field:focus, .input-field:active{
   border: 1px solid #3CC6F2;
 }
+
+/* TAB PANELS */
+
+.nav-tabs {
+  float: left;
+  border-bottom: 0;
+}
+
+/*.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+  border:0;
+  border-radius: 0px;
+}*/
+.nav-tabs > li {
+  width: 100%;
+  border: 1px solid #eee;
+  /*margin-top: 5px;*/
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  color: #555;
+  cursor: default;
+  border: 0;
+  background: #eee;
+  /*background-color: #ddd;*/
+  border: 1px solid #ddd;
+  border-left: 3px solid #FF5984;
+}
+
+.nav-tabs > li > a {
+  margin: 0;
+  border: 0;
+  border-radius: 0px;
+}
+
+/*.tab-pane.active {
+  background: #eee;
+}*/
+
+/*.tab-item {
+  width: 100%;
+}*/
+
+/*.tab-item:hover {
+  background: grey;
+}
+
+.tab-item>a:hover {
+  background: grey;
+}*/
+/*
+.nav-tabs>li.active>a {
+  border: 1px;
+}*/
