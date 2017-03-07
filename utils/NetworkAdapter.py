@@ -5,7 +5,7 @@ class NetworkAdapter:
 	# this is where the unix file-socket lives
 	SOCKET_LOCATION = "/tmp/blue-shift-adapter";
 	# enables / disables debug logging.
-	DEBUG = False;
+	DEBUG = True;
 
 	# Creates a linux file socket connection
 	def __init__(self):
@@ -79,15 +79,15 @@ class NetworkAdapter:
 						conn.send((identifier + "|" + chunk).encode("utf-8"));
 
 				if 'id' not in commandData:
-					conn.send('{"error":"no id parameter"}'.encode("utf-8"));
+					conn.send('e|{"error":"no id parameter"}'.encode("utf-8"));
 					pass;
 				elif 'command' not in commandData:
 					error = {"error":"no command parameter","id":commandData.get("id")}
-					conn.send(json.dumps(error).encode("utf-8"));
+					conn.send(("e|"+json.dumps(error)).encode("utf-8"));
 					pass;
 				elif commandData.get('command') not in self.callbacks:
 					error = {"error":"unknown command","id":commandData.get("id")}
-					conn.send(json.dumps(error).encode("utf-8"));
+					conn.send(("e|"+json.dumps(error)).encode("utf-8"));
 					pass;
 				else:
 					callback = self.callbacks[commandData.get('command')];
@@ -96,6 +96,6 @@ class NetworkAdapter:
 						_thread.start_new_thread(callback,(params,partial(respond,commandData.get("id")),));
 					else:
 						error = {"error":"invalid parameters","id":commandData.get("id")}
-						conn.send(json.dumps(error).encode("utf-8"));
+						conn.send(("e|"+json.dumps(error)).encode("utf-8"));
 			self.debug("client went away");
 			conn.close();
