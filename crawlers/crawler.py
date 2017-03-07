@@ -88,7 +88,7 @@ class Crawler:
                     path = value
                     required = False
                     outputType = self.STRING
-                    default = ''
+                    default = None
 
                     if isinstance(value, dict):
                         path = value[self.PATH]
@@ -103,7 +103,7 @@ class Crawler:
                     if feature is '':
                         feature = default
 
-                    if feature is '' and required:
+                    if feature is None and required:
                         print('Skipping')
                         skip = True
                         break
@@ -165,7 +165,7 @@ class Crawler:
         except TypeError as error:
             print("Type Error: " + str(error))
 
-        return ''
+        return None
 
     # reads the file that indicates the mapping for how information is parsed from the response
     def loadMapping(self, fileName):
@@ -192,35 +192,24 @@ class Crawler:
     # write the parsed events to the output file
     def outputEvents(self, fileName, output):
         for event in output:
-            if(event.get("event_end_time") == ""):
-                self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),NULL,%s,%s,%s,%s,%s,%s,%s);",[
-                    event.get("source_type"),
-                    event.get("currency"),
-                    event.get("category"),
-                    event.get("start_time"),
-                    event.get("id"),
-                    event.get("price"),
-                    event.get("title"),
-                    event.get("description"),
-                    event.get("longitude"),
-                    event.get("latitude"),
-                    event.get("api")
-                ])
-            else:
-                self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s);",[
-                    event.get("source_type"),
-                    event.get("currency"),
-                    event.get("category"),
-                    event.get("start_time"),
-                    event.get("event_end_time"),
-                    event.get("id"),
-                    event.get("price"),
-                    event.get("title"),
-                    event.get("description"),
-                    event.get("longitude"),
-                    event.get("latitude"),
-                    event.get("api")
-                ])
+            self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",[
+                event.get("source_type"),
+                event.get("currency"),
+                event.get("category"),
+                event.get("start_time"),
+                event.get("event_end_time"),
+                event.get("id"),
+                event.get("price"),
+                event.get("title"),
+                event.get("description"),
+                event.get("longitude"),
+                event.get("latitude"),
+                event.get("api"),
+                event.get("genre"),
+                event.get("subGenre"),
+                event.get("city"),
+                event.get("country")
+            ])
         try:
             with open(fileName, 'w') as file:
                 file.write(self.pyToJson(output, True))
@@ -232,6 +221,10 @@ class Crawler:
         except json.JSONDecodeError:
             print('Invalid output content')
             sys.exit()
+
+    # def nullify(self, output):
+    #     for event in output:
+    #         event = dict((k, v) for k, v in content.items() if v)
 
     # same as outputEvents except adds the output events onto the ones existing in the file
     def appendEvents(self, fileName, output):

@@ -8,8 +8,12 @@ CREATE TABLE Events(
 	eventId integer,
 	price float,
 	title text,
-	description text,	
+	description text,
 	longitude Double Precision,
 	latitude Double Precision,
-	api varchar
+	api varchar,
+	genre varchar,
+	subGenre varchar,
+	city varchar,
+	country varchar
 );
