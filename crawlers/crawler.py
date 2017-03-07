@@ -41,7 +41,7 @@ class Crawler:
 
 
     def __init__(self, api='universe'):
-        self.DB = database.DB();
+        self.DB = database.DB()
         self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
@@ -192,8 +192,6 @@ class Crawler:
     # write the parsed events to the output file
     def outputEvents(self, fileName, output):
         for event in output:
-            if event.get("price") == "":
-                event["price"] = 0;
             if(event.get("event_end_time") == ""):
                 self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),NULL,%s,%s,%s,%s,%s,%s,%s);",[
                     event.get("source_type"),
@@ -207,7 +205,7 @@ class Crawler:
                     event.get("longitude"),
                     event.get("latitude"),
                     event.get("api")
-                ]);
+                ])
             else:
                 self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s);",[
                     event.get("source_type"),
@@ -222,7 +220,7 @@ class Crawler:
                     event.get("longitude"),
                     event.get("latitude"),
                     event.get("api")
-                ]);
+                ])
         try:
             with open(fileName, 'w') as file:
                 file.write(self.pyToJson(output, True))
