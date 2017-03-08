@@ -1,7 +1,7 @@
 from utils import database;
 from datetime import datetime;
 from handlers import AbstractHandler;
-from recommenders import GeneralRecommender;
+from recommenders import GeneralRecommender, ContentRecommender;
 
 class RecommendationHandler(AbstractHandler.Handler):
 	# enables / disables debug logging.
@@ -11,12 +11,15 @@ class RecommendationHandler(AbstractHandler.Handler):
 	# used to update the user models.
 	def __init__(self):
 		self.db = database.DB();
-		self.commands = [["getAnonymousRecommendations",[int]]];	
+		self.commands = [["getAnonymousRecommendations",[int]],["getContentRecommendations",[str]]];
 		self.__loadRecommenders();
 
 	def getAnonymousRecommendations(self,params,respond):
 		Y = self.recommenders[0].recommend(self.events);
 		respond([x for (y,x) in sorted(zip(Y,self.events))][:params[0]]);
+
+	def getRecommendations(self,params,respond):
+		pass
 
 	# load recommenders based on existing data.
 	def __loadRecommenders(self):
@@ -24,5 +27,5 @@ class RecommendationHandler(AbstractHandler.Handler):
 		DB = database.DB();
 		self.events = DB.get("SELECT * FROM Events;",[]);
 
-		self.recommenders = [GeneralRecommender.GeneralRecommender()];
+		self.recommenders = [GeneralRecommender.GeneralRecommender(), ContentRecommender.ContentRecommender()];
 		self.debug("Recommenders initialized");

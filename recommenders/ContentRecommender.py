@@ -9,7 +9,7 @@ from math import radians, cos, sin, asin, sqrt
 """ London: 42.984923, -81.245277 """
 
 
-class Recommender:
+class ContentRecommender:
 
     # Constants
     user_lat = 0
@@ -93,24 +93,9 @@ class Recommender:
 
 
     def recommend(self):
-        # add event to nlp_data
         frames = {}
         new_df = self.user_events.copy().filter(self.nlp_features, axis=1)
         new_df = new_df.append(self.nlp_data, ignore_index=True)
-
-        # for a in range(0, self.num_past_user_events):
-        #
-        #
-        #     newset = pd.DataFrame(np.array([[self.user_events.loc[a]['id'], self.user_events.loc[a]['title'],
-        #                                      self.user_events.loc[a]['description']]]), columns=self.nlp_features).\
-        #                                      append(self.nlp_data, ignore_index=True)
-        #     if (self.num_past_user_events > 1):
-        #         weight = (a/self.num_past_user_events)*0.5
-        #     else: weight = 0
-        #     frames[a] = self.generateNLPRecommendations(newset, weight)
-        #     print(time.clock() - t0, "seconds process time to loop")
-        #print(result.loc[result['weight'] == 0.387071])
-
         result = self.generateNLPRecommendations(new_df)
 
         # need to eliminate any instance of old events in recommendations
@@ -123,10 +108,8 @@ class Recommender:
         del result['title']
 
         # HANNES HI
-        print(result['id'].tolist())
-        print(result['weight'].tolist())
-        print(result.set_index('id').T.to_dict(orient='records'))
-        return(result.set_index('id').T.to_dict(orient='records'))
+        # print(result.set_index('id').T.to_dict(orient='records'))
+        return([result['id'].tolist(),result['weight'].tolist()])
 
 
     def generateNLPRecommendations(self, ds):
@@ -155,10 +138,8 @@ class Recommender:
                 return(ret_df)
 
 
-
 if __name__ == "__main__":
-
-    recommender = Recommender()
+    recommender = ContentRecommender()
     recommender.recommend()
 
 
