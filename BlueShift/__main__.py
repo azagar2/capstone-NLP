@@ -1,14 +1,16 @@
-from handlers import Impressions
-from handlers import Bias
-from utils import NetworkAdapter
+from handlers.Impressions import ImpressionsHandler;
+from handlers.Bias import BiasHandler;
+from handlers.Recommendations import RecommendationHandler;
+from utils.NetworkAdapter import NetworkAdapter;
 
 if __name__ == '__main__':
-	connector = NetworkAdapter.NetworkAdapter();
+	connector = NetworkAdapter();
 
-	# add handlers for adding impressions
+	#add handlers for adding impressions
 	handlers = [
-		Impressions.ImpressionsHandler(),
-		Bias.BiasHandler()
+		ImpressionsHandler(),
+		BiasHandler(),
+		RecommendationHandler()
 	];
 	for handler in handlers:
 		handler.register(connector);
