@@ -126,13 +126,7 @@ function createUserContinueBtn(){
       <div class="tab-content col-9 events-container">`);
 
   for(var i = 0; i<=users.length-1; i++){
-    recPage = recPage.concat(`<div class="tab-pane" id="u${i+1}">`);
-    for(var j=0; j<=users[i]["events"].length-1; j++){
-      var eCard = getEventCard(users[i]["events"][j]);
-      recPage = recPage.concat(eCard);
-      numEvents++;
-    }
-    recPage = recPage.concat(`</div>`);
+    recPage = recPage.concat(`<div class="tab-pane" id="u${i+1}"></div>`);
   }
 
   recPage = recPage.concat("</div></div></div></div></div>");
@@ -140,6 +134,12 @@ function createUserContinueBtn(){
   if(!$(`.recommend-events-background`).length){
     $('body').append(recPage);
     $('#u1').addClass("active fade in");
+    for(var i = 0; i<=users.length-1; i++){
+      for(var j=0; j<=users[i]["events"].length-1; j++){
+        getEventCard(users[i]["events"][j], `u${i+1}`);
+        numEvents++;
+      }
+    }
     // $('#test').on("click", testing);
   }
 
@@ -154,10 +154,10 @@ function createEventButton(){
   var jq = $(`#${this.id}`);
   var row = jq.data("row");
   var eventData = { title: jq.text(), id: this.id, description: jq.data("description"), category: jq.data("category"), price: jq.data("price") }
-  var eventCard = getEventCard(eventData);
+  getEventCard(eventData, `eventContainer${row}`);
 
   $(`#eventFormCard${row}`).remove();
-  $(`#eventContainer${row}`).append(eventCard);
+  // $(`#eventContainer${row}`).append(eventCard);
   $(`#eventCard${numEvents}`).addClass("hidden");
   fadeInAnimate(`eventCard${numEvents}`);
 
@@ -223,8 +223,8 @@ function getUniverseImage(eventID, callback) {
 };
 
 // ==============  GETTERS =======================
-function getEventCard(eventObject){
-  return (`
+function getEventCard(eventObject, id){
+  $(`#${id}`).append(`
   <div class="col-5 remove-padding" id="eventCard${numEvents}">
     <div class="card event-card">
       <div class="events-img"></div>
