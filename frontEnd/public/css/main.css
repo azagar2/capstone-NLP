@@ -109,6 +109,7 @@ h1 {
 .nav-tabs {
   float: left;
   border-bottom: 0;
+  width: 100%;
 }
 
 /*.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {

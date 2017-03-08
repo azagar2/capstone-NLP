@@ -28,6 +28,7 @@
 .event-card {
   height: 255px;
   width: 245px;
+  overflow-y: hidden;
 }
 
 .event-card :hover{
@@ -62,14 +63,6 @@
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.event-category {
-
-}
-
-.event-location {
-
 }
 
 .button-group {
@@ -119,12 +112,33 @@
   text-align: left;
 }
 
+.events-category{
+
+}
+
+.events-price {
+
+}
+
 .events-title {
   padding: 15px;
   font-family: brandon-grotesque, sans-serif;
   font-style: normal;
   font-weight: 700;
   overflow-x: hidden;
+  white-space: pre-wrap;      /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap;     /* Opera <7 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  word-wrap: break-word;      /* IE */
+}
+
+.events-description {
+  height: 140px;
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow-y: hidden;
+  /*text-overflow: ellipsis;*/
   white-space: pre-wrap;      /* CSS3 */
   white-space: -moz-pre-wrap; /* Firefox */
   white-space: -pre-wrap;     /* Opera <7 */

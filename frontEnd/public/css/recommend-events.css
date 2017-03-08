@@ -8,11 +8,11 @@
 .recommend-events-background {
   min-height: 705px;
   margin-top: -20px;
-  background: #d9d9d9;
-  background: -webkit-linear-gradient(white, #d9d9d9);
-  background: -o-linear-gradient(white, #d9d9d9);
-  background: -moz-linear-gradient(white, #d9d9d9);
-  background: linear-gradient(white, #d9d9d9); 
+  background: #3CC6F2; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(#3CC6F2, #eee); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#3CC6F2, #eee); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#3CC6F2, #eee); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#3CC6F2, #eee); /* Standard syntax */
 }
 
 .events-container {
