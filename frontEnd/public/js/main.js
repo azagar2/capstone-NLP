@@ -114,27 +114,29 @@ function createUserContinueBtn(){
       <div class="col-8 offset-2">
         <div class="col-3">
           <ul class="nav nav-tabs">
-            <li class="active tab-item"><a href="#u1" data-toggle="tab"> ${users[0].name}</a></li>`
+            <li class="active tab-item"><a href="#p1" data-toggle="tab"> ${users[0].name}</a></li>`
 
   for(var i = 1; i<=users.length-1; i++){
-    recPage = recPage.concat(`<li class="tab-item"><a href="#u${i+1}" data-toggle="tab"> ${users[i].name}</a></li>`);
+    recPage = recPage.concat(`<li class="tab-item"><a href="#p${i+1}" data-toggle="tab"> ${users[i].name}</a></li>`);
   }
 
   recPage = recPage.concat(`
         </ul>
       </div>
-      <div class="past-events"> Past Events <div>
-      <div class="tab-content col-9 events-container">`);
+      <div class="tab-content col-9">
+        <div class="past-events"> Past Events </div>
+          `);
 
   for(var i = 0; i<=users.length-1; i++){
-    recPage = recPage.concat(`<div class="tab-pane" id="u${i+1}"></div>`);
+    recPage = recPage.concat(`<div class="tab-pane" id="p${i+1}">
+    <div class="events-container" id="u${i+1}"></div></div>`);
   }
 
-  recPage = recPage.concat("</div></div></div></div></div>");
+  recPage = recPage.concat(`</div> </div> </div> </div> </div> </div>`);
 
   if(!$(`.recommend-events-background`).length){
     $('body').append(recPage);
-    $('#u1').addClass("active fade in");
+    $('#p1').addClass("active fade in");
     for(var i = 0; i<=users.length-1; i++){
       for(var j=0; j<=users[i]["events"].length-1; j++){
         getEventCard(users[i]["events"][j], `u${i+1}`);

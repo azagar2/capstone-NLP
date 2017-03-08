@@ -139,6 +139,7 @@ h1 {
 
 .tab-content > .active {
     display: inline-flex;
+    width: 100%;
 }
 
 /*.tab-pane.active {
