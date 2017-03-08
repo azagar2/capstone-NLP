@@ -142,8 +142,13 @@ function createUserContinueBtn(){
         getEventCard(users[i]["events"][j], `b${i+1}`);
         numEvents++;
       }
-      $(`#a${i+1}`).append(`<div class="rec-subheader"> Recomended Events </div>
-      <div class="events-container" id="c${i+1}"></div>`);
+      $(`#a${i+1}`).append(`
+        <div style="display: inline-flex;">
+          <div class="rec-subheader"> Recommended Events </div>
+          <div class="button-pink" style="margin-top: 0px;" id="recBtn${i}"> Recommend </div>
+        </div>
+        <div class="events-container" id="c${i+1}"></div>`);
+      $(`#recBtn${i}`).on("click", recommendEvents);
     }
     // $('#test').on("click", testing);
   }
@@ -158,7 +163,7 @@ function createUserContinueBtn(){
 function createEventButton(){
   var jq = $(`#${this.id}`);
   var row = jq.data("row");
-  var eventData = { title: jq.text(), id: this.id, description: jq.data("description"), category: jq.data("category"), price: jq.data("price") }
+  var eventData = { title: jq.text(), id: this.id, description: jq.data("description"), category: jq.data("category"), price: jq.data("price"), image: jq.data("image"), cover: jq.data("cover") }
   getEventCard(eventData, `eventContainer${row}`);
 
   $(`#eventFormCard${row}`).remove();
@@ -186,12 +191,12 @@ function searchEvents(){
   var searchVal = $(`#event-search${row}`).val().toUpperCase();
   $(`#eventSearchContainer${row}`).empty();
 
-  $.getJSON( "../data/VanLaNY3000output.json", function( data ) {
+  $.getJSON( "../data/pastEvents.json", function( data ) {
     var items = [];
     $.each( data, function(k,v) {
       if(v.title.toUpperCase().includes(searchVal) || v.description.toUpperCase().includes(searchVal) || v.category.toUpperCase().includes(searchVal)){
         items.push( `<div data-row="${row}" data-description="${v.description}" data-category="${v.category}"
-          data-price="${v.price}" class="event-listing" id="${v.id}"> ${v.title} </div>` );
+          data-price="${v.price}" data-image="${v.image}" data-cover="${v.cover_photo}" class="event-listing" id="${v.id}"> ${v.title} </div>` );
       }
     });
     $(`#eventSearchContainer${row}`).append(items.join(""));
@@ -212,39 +217,29 @@ function fadeInAnimate(id){
 }
 
 function testing(){
+  console.log("POOP");
   console.log(users);
 };
 
-function getUniverseImage(eventID, callback) {
-	var url = "https://discover.universe.com/api/v2/discover_events/" + eventID;
-
-	$.get(url, function(response) {
-		var thing = {
-			"small": response.discover_event.image_url,
-			"large": response.discover_event.cover_photo_url
-		};
-		callback(thing);
-	})
-	.fail(function() {
-		console.log("Error collecting image for id: " + eventID);
-		callback(null);
-	});
-};
+function recommendEvents(){
+  var w = this.id.split("").pop();
+  var ids = $.map(users[w]["events"], function(val) { return val.id; });
+  var url = `http://localhost:3001/api/v1/recommend/users?event1=${ids[0]}?event2=${ids[1]}?event3=${ids[2]}`;
+}
 
 // ==============  GETTERS =======================
 function getEventCard(eventObject, id){
-  // TODO: timing issue -> fixed by storing images
   $(`#${id}`).append(`
     <div class="ryan-row">
        <div class="col-5 remove-padding" id="eventCard${numEvents}">
          <div class="card event-card">
 
-           <div class="bg">
+           <div class="bg" style="background-image: url('${eventObject.cover}')">
              <div class="events-title"> ${eventObject.title} </div>
            </div>
 
            <div class="events-content">
-             <div><img class="events-img-small pull-left" src="https://images.universe.com/043ba63c-a1e8-4556-8b77-4106de33d8d1/-/format/jpeg/-/scale_crop/160x160/center/-/progressive/yes/-/inline/yes/"></div>
+             <div><img class="events-img-small pull-left" src="${eventObject.image}"></div>
              <div class="events-description"> ${eventObject.description} </div>
              <div style="display:inline-flex; margin-top: 10px;">
                <span class="glyphicon glyphicon-trash events-trash" aria-hidden="true"></span>
@@ -259,35 +254,6 @@ function getEventCard(eventObject, id){
        </div>
       </div>
   `);
-	// getUniverseImage(eventObject.id, function(images) {
-	// 	if (images) {
-  //     console.log(images.small);
-  //     console.log(images.large);
-  //     $(`#${id}`).append(`
-  //     <div class="col-5 remove-padding" id="eventCard${numEvents}">
-  //       <div class="card event-card">
-  //         <!-- <div><img class="events-img-small" src="${images.small}"></div> -->
-  //         <div class="events-title"> ${eventObject.title} </div>
-  //         <div class="events-description"> ${eventObject.description} </div>
-  //         <div class="events-category"> ${eventObject.category} </div>
-  //         <div class="events-price"> $${eventObject.price} </div>
-  //       </div>
-  //     </div>
-  //     `);
-	// 	} else {
-  //     $(`#${id}`).append(`
-  //     <div class="col-5 remove-padding" id="eventCard${numEvents}">
-  //       <div class="card event-card">
-  //         <div class="events-img"></div>
-  //         <div class="events-title"> ${eventObject.title} </div>
-  //         <div class="events-description"> ${eventObject.description} </div>
-  //         <div class="events-category"> ${eventObject.category} </div>
-  //         <div class="events-price"> $${eventObject.price} </div>
-  //       </div>
-  //     </div>
-  //     `);
-  //   }
-	// });
 };
 
 // =======================================================================================================
