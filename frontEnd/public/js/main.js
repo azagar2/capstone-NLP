@@ -108,40 +108,42 @@ function createUserContinueBtn(){
   //inject recommendation page
   var recPage = `
   <div class="recommend-events-background">
-    <h1 class='page-title'> Recommend Events </h1>
+    <h1 class='page-title white'> Recommend Events </h1>
 
     <div class="ryan-row" style='margin-top: 50px;'>
       <div class="col-8 offset-2">
         <div class="col-3">
           <ul class="nav nav-tabs">
-            <li class="active tab-item"><a href="#p1" data-toggle="tab"> ${users[0].name}</a></li>`
+            <li class="active tab-item"><a href="#a1" data-toggle="tab"> ${users[0].name}</a></li>`
 
   for(var i = 1; i<=users.length-1; i++){
-    recPage = recPage.concat(`<li class="tab-item"><a href="#p${i+1}" data-toggle="tab"> ${users[i].name}</a></li>`);
+    recPage = recPage.concat(`<li class="tab-item"><a href="#a${i+1}" data-toggle="tab"> ${users[i].name}</a></li>`);
   }
 
   recPage = recPage.concat(`
         </ul>
       </div>
       <div class="tab-content col-9">
-        <div class="past-events"> Past Events </div>
+        <div class="rec-subheader"> Past Events </div>
           `);
 
   for(var i = 0; i<=users.length-1; i++){
-    recPage = recPage.concat(`<div class="tab-pane" id="p${i+1}">
-    <div class="events-container" id="u${i+1}"></div></div>`);
+    recPage = recPage.concat(`<div class="tab-pane" id="a${i+1}">
+    <div class="events-container" id="b${i+1}"></div></div>`);
   }
 
   recPage = recPage.concat(`</div> </div> </div> </div> </div> </div>`);
 
   if(!$(`.recommend-events-background`).length){
     $('body').append(recPage);
-    $('#p1').addClass("active fade in");
+    $('#a1').addClass("active fade in");
     for(var i = 0; i<=users.length-1; i++){
       for(var j=0; j<=users[i]["events"].length-1; j++){
-        getEventCard(users[i]["events"][j], `u${i+1}`);
+        getEventCard(users[i]["events"][j], `b${i+1}`);
         numEvents++;
       }
+      $(`#a${i+1}`).append(`<div class="rec-subheader"> Recomended Events </div>
+      <div class="events-container" id="c${i+1}"></div>`);
     }
     // $('#test').on("click", testing);
   }
@@ -229,14 +231,29 @@ function getUniverseImage(eventID, callback) {
 function getEventCard(eventObject, id){
   // TODO: timing issue -> fixed by storing images
   $(`#${id}`).append(`
-  <div class="col-5 remove-padding" id="eventCard${numEvents}">
-    <div class="card event-card">
-      <div class="events-title"> ${eventObject.title} </div>
-      <div class="events-description"> ${eventObject.description} </div>
-      <div class="events-category"> ${eventObject.category} </div>
-      <div class="events-price"> $${eventObject.price} </div>
-    </div>
-  </div>
+    <div class="ryan-row">
+       <div class="col-5 remove-padding" id="eventCard${numEvents}">
+         <div class="card event-card">
+
+           <div class="bg">
+             <div class="events-title"> ${eventObject.title} </div>
+           </div>
+
+           <div class="events-content">
+             <div><img class="events-img-small pull-left" src="https://images.universe.com/043ba63c-a1e8-4556-8b77-4106de33d8d1/-/format/jpeg/-/scale_crop/160x160/center/-/progressive/yes/-/inline/yes/"></div>
+             <div class="events-description"> ${eventObject.description} </div>
+             <div style="display:inline-flex; margin-top: 10px;">
+               <span class="glyphicon glyphicon-trash events-trash" aria-hidden="true"></span>
+               <div>|</div>
+               <div class="events-category"> ${eventObject.category} </div>
+               <div>|</div>
+               <div class="events-price"> $${eventObject.price} </div>
+             </div>
+           </div>
+
+         </div>
+       </div>
+      </div>
   `);
 	// getUniverseImage(eventObject.id, function(images) {
 	// 	if (images) {

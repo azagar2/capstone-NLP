@@ -94,8 +94,129 @@
   padding: 10px;
 }
 
+.event-listing {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #ccc;
+}
 
-.events-category{}
+.event-listing:hover {
+  background: #ddd;
+}
+
+.glyphicon-trash{
+  color: #ccc;
+  margin-top: 20px;
+  margin-left: -160px;
+}
+
+.glyphicon-trash:hover{
+  color: #aaa;
+  cursor: pointer;
+}
+
+.rec-subheader{
+  color: white;
+  font-size: 110%;
+  font-weight: 500;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+
+/*===*/
+.events-category{
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.events-price {
+  margin-left: 15px;
+}
+
+.event-search-container {
+  height: 120px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  white-space: nowrap;
+  margin: 10px;
+  text-align: left;
+}
+
+.events-img-small {
+  max-width: 80px;
+  border-radius: 5px;
+  height: auto;
+  border: 3px solid white;
+  margin-top: -60px;
+  margin-left: 10px;
+  z-index: 100;
+}
+
+.bg {
+  background-image: url("https://images.universe.com/043ba63c-a1e8-4556-8b77-4106de33d8d1/-/inline/yes/");
+  width: 100%;
+  height: 120px;
+  margin-top: 100px;
+  background-size: cover;
+}
+
+.events-img-large {
+  width: 100%;
+  background-size: cover;
+  height: 130px;
+}
+
+.events-title {
+  overflow-y: hidden;
+  text-align: center;
+  height: 95px;
+  padding: 15px;
+  font-family: brandon-grotesque, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  margin-top: -100px;
+  margin-left: 80px;
+  color: white;
+}
+
+.events-description {
+  width: 100%;
+  margin-top: -60px;
+  height: 80px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #aaa;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.events-content{
+  height: 130px;
+}
+
+.events-trash {
+  margin-right: 15px;
+  margin-left: 0px;
+  margin-top: 3px;
+}
+
+
+
+
+/*old*/
+/*.events-category{}
 
 .events-price {}
 
@@ -134,121 +255,14 @@
 }
 
 .events-description {
-  height: 140px;
+  height: 100px;
   padding-left: 15px;
   padding-right: 15px;
   overflow-y: hidden;
+  overflow-x: hidden;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
-}
-
-.event-listing {
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border-bottom: 1px solid #ccc;
-}
-
-.event-listing:hover {
-  background: #ddd;
-}
-
-.glyphicon-trash{
-  color: #ccc;
-  margin-top: 20px;
-  margin-left: -160px;
-}
-
-.glyphicon-trash:hover{
-  color: #aaa;
-  cursor: pointer;
-}
-
-
-
-/*===*/
-/*.events-category{
-  margin-left: 15px;
-  margin-right: 15px;
-}
-
-.events-price {
-  margin-left: 15px;
-}
-
-.event-search-container {
-  height: 120px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  white-space: nowrap;
-  margin: 10px;
-  text-align: left;
-}
-
-.events-img-small {
-  max-width: 80px;
-  border-radius: 5px;
-  height: auto;
-  border: 3px solid white;
-  margin-top: -60px;
-  margin-left: 10px;
-  z-index: 100;
-}
-
-.bg {
-  background-image: url("https://images.universe.com/043ba63c-a1e8-4556-8b77-4106de33d8d1/-/inline/yes/");
-  width: 100%;
-  height: 120px;
-  margin-top: 100px;
-}
-
-.events-img-large {
-  width: 100%;
-  background-size: cover;
-  height: 130px;
-}
-
-.events-title {
-  text-align: center;
-  padding: 15px;
-  font-family: brandon-grotesque, sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  overflow-x: hidden;
-  white-space: pre-wrap;      /* CSS3 */
-  white-space: -moz-pre-wrap; /* Firefox */
-  white-space: -pre-wrap;     /* Opera <7 */
-  white-space: -o-pre-wrap;   /* Opera 7 */
-  word-wrap: break-word;      /* IE */
-  margin-top: -100px;
-  margin-left: 80px;
-  color: white;
-}
-
-.events-description {
-  width: 100%;
-  margin-top: -60px;
-  height: 80px;
-  padding-left: 15px;
-  padding-right: 15px;
-  color: #aaa;
-  overflow-y: hidden;
-  /*text-overflow: ellipsis;*/
-  white-space: pre-wrap;      /* CSS3 */
-  white-space: -moz-pre-wrap; /* Firefox */
-  white-space: -pre-wrap;     /* Opera <7 */
-  white-space: -o-pre-wrap;   /* Opera 7 */
-  word-wrap: break-word;      /* IE */
-}
-
-.events-content{
-  height: 130px;
-}
-
-.events-trash {
-  margin-right: 15px;
-  margin-left: 0px;
-  margin-top: 3px;
 }*/
