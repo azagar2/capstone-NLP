@@ -173,8 +173,10 @@ function createEventButton(){
   $(`#eventButtonCard${row}`).on("click", eventButtonCardFn);
 
   //TODO: push full event not just title
-  users[row]["events"].push(eventData);
-  numEvents++;
+  if(users[row]){
+    users[row]["events"].push(eventData);
+    numEvents++;
+  }
 };
 
 // =======================================================================================================
@@ -195,7 +197,9 @@ function searchEvents(){
     $(`#eventSearchContainer${row}`).append(items.join(""));
 
     $.each($(`.event-listing`), function(k, v){
-      $(`#${v.id}`).on("click", createEventButton);
+      if(`#${v.id}` !== "#"){
+        $(`#${v.id}`).on("click", createEventButton);
+      }
     });
   });
 };
