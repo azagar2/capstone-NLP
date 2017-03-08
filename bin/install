@@ -1,0 +1,7 @@
+export PYTHONPATH=$PYTHONPATH:$PWD;
+pip3 install pandas;
+pip3 install psycopg2;
+pip3 install tensorflow;
+pip3 install numpy;
+pip3 install scipy;
+pip3 install sklearn;
