@@ -11,7 +11,7 @@ class RecommendationHandler(AbstractHandler.Handler):
 	# used to update the user models.
 	def __init__(self):
 		self.db = database.DB();
-		self.commands = [["getAnonymousRecommendations",[int]],["getContentRecommendations",[str]]];
+		self.commands = [["getAnonymousRecommendations",[int]],["getRecommendations",[str]]];
 		self.__loadRecommenders();
 
 	def getAnonymousRecommendations(self,params,respond):
@@ -27,5 +27,5 @@ class RecommendationHandler(AbstractHandler.Handler):
 		DB = database.DB();
 		self.events = DB.get("SELECT * FROM Events;",[]);
 
-		self.recommenders = [GeneralRecommender.GeneralRecommender(), ContentRecommender.ContentRecommender()];
+		self.recommenders = [GeneralRecommender.GeneralRecommender()];
 		self.debug("Recommenders initialized");
