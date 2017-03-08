@@ -114,15 +114,16 @@ function createUserContinueBtn(){
       <div class="col-8 offset-2">
         <div class="col-3">
           <ul class="nav nav-tabs">
-            <li class="active tab-item"><a href="#u1" data-toggle="tab"> ${users[0].name} </a></li>`
+            <li class="active tab-item"><a href="#u1" data-toggle="tab"> ${users[0].name}</a></li>`
 
   for(var i = 1; i<=users.length-1; i++){
-    recPage = recPage.concat(`<li class="tab-item"><a href="#u${i+1}" data-toggle="tab"> ${users[i].name} </a></li>`);
+    recPage = recPage.concat(`<li class="tab-item"><a href="#u${i+1}" data-toggle="tab"> ${users[i].name}</a></li>`);
   }
 
   recPage = recPage.concat(`
         </ul>
       </div>
+      <div class="past-events"> Past Events <div>
       <div class="tab-content col-9 events-container">`);
 
   for(var i = 0; i<=users.length-1; i++){
@@ -224,10 +225,10 @@ function getUniverseImage(eventID, callback) {
 
 // ==============  GETTERS =======================
 function getEventCard(eventObject, id){
+  // TODO: timing issue -> fixed by storing images
   $(`#${id}`).append(`
   <div class="col-5 remove-padding" id="eventCard${numEvents}">
     <div class="card event-card">
-      <div class="events-img"></div>
       <div class="events-title"> ${eventObject.title} </div>
       <div class="events-description"> ${eventObject.description} </div>
       <div class="events-category"> ${eventObject.category} </div>
@@ -235,6 +236,35 @@ function getEventCard(eventObject, id){
     </div>
   </div>
   `);
+	// getUniverseImage(eventObject.id, function(images) {
+	// 	if (images) {
+  //     console.log(images.small);
+  //     console.log(images.large);
+  //     $(`#${id}`).append(`
+  //     <div class="col-5 remove-padding" id="eventCard${numEvents}">
+  //       <div class="card event-card">
+  //         <!-- <div><img class="events-img-small" src="${images.small}"></div> -->
+  //         <div class="events-title"> ${eventObject.title} </div>
+  //         <div class="events-description"> ${eventObject.description} </div>
+  //         <div class="events-category"> ${eventObject.category} </div>
+  //         <div class="events-price"> $${eventObject.price} </div>
+  //       </div>
+  //     </div>
+  //     `);
+	// 	} else {
+  //     $(`#${id}`).append(`
+  //     <div class="col-5 remove-padding" id="eventCard${numEvents}">
+  //       <div class="card event-card">
+  //         <div class="events-img"></div>
+  //         <div class="events-title"> ${eventObject.title} </div>
+  //         <div class="events-description"> ${eventObject.description} </div>
+  //         <div class="events-category"> ${eventObject.category} </div>
+  //         <div class="events-price"> $${eventObject.price} </div>
+  //       </div>
+  //     </div>
+  //     `);
+  //   }
+	// });
 };
 
 // =======================================================================================================
