@@ -1,4 +1,6 @@
 import psycopg2;
+import json;
+import os;
 
 class DB:
 	class __DB:
@@ -8,7 +10,12 @@ class DB:
 		# @param {String} connection configuration text
 		def __init__(self, connectionConfig):
 			self.connected = False;
-			self.__CONNECTION_STRING = connectionConfig
+			params = (connectionConfig["host"],
+				connectionConfig["database"],
+				connectionConfig["username"],
+				connectionConfig["password"],
+				connectionConfig["port"]);
+			self.__CONNECTION_STRING = "host='%s' dbname='%s' user='%s' password='%s' port='%s'" % params;
 
 		# Debug
 		# prints debug messages iff DEBUG is set to true
@@ -84,8 +91,23 @@ class DB:
 	# singleton constructor
 	def __init__(self):
 		if not DB.instance:
-			# TODO: load connection config in from a file here.
-			DB.instance = DB.__DB("dbname='testdb'");
+			fileDir = os.path.dirname(os.path.realpath('__file__'));
+			fileName = os.path.join(fileDir, 'frontEnd','config','config.live.json');
+			try:
+				with open(fileName) as data_file:
+					config_data = json.load(data_file);
+			except IOError:
+				fileName = os.path.join(fileDir, 'frontEnd','config','config.dev.json');
+				try:
+					with open(fileName) as data_file:
+						config_data = json.load(data_file);
+				except IOError:
+					print("no config file found");
+					sys.exit();
+			except json.JSONDecodeError:
+				print('Invalid output content')
+				sys.exit()
+			DB.instance = DB.__DB(config_data["pgsql"]);
 
 	# proxy function
 	def __getattr__(self, name):
