@@ -130,6 +130,7 @@ function createUserContinueBtn(){
     for(var j=0; j<=users[i]["events"].length-1; j++){
       var eCard = getEventCard(users[i]["events"][j]);
       recPage = recPage.concat(eCard);
+      numEvents++;
     }
     recPage = recPage.concat(`</div>`);
   }
@@ -205,11 +206,28 @@ function testing(){
   console.log(users);
 };
 
+function getUniverseImage(eventID, callback) {
+	var url = "https://discover.universe.com/api/v2/discover_events/" + eventID;
+
+	$.get(url, function(response) {
+		var thing = {
+			"small": response.discover_event.image_url,
+			"large": response.discover_event.cover_photo_url
+		};
+		callback(thing);
+	})
+	.fail(function() {
+		console.log("Error collecting image for id: " + eventID);
+		callback(null);
+	});
+};
+
 // ==============  GETTERS =======================
 function getEventCard(eventObject){
   return (`
   <div class="col-5 remove-padding" id="eventCard${numEvents}">
     <div class="card event-card">
+      <div class="events-img"></div>
       <div class="events-title"> ${eventObject.title} </div>
       <div class="events-description"> ${eventObject.description} </div>
       <div class="events-category"> ${eventObject.category} </div>
