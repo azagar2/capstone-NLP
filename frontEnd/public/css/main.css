@@ -28,6 +28,23 @@ body {
   font-weight: 700;*/
 }
 
+/*.rec-container {
+  display: inline-flex;
+  position: absolute;
+  top: 2510px;
+  left: 440px;
+}*/
+
+#theRecBtn{
+  color:white;
+  font-weight: 500;
+}
+
+#theRecBtn:hover{
+  color: #ccc;
+  cursor: pointer;
+}
+
 h1 {
   font-size: 300%;
 }
@@ -90,7 +107,7 @@ h1 {
     width: 100px;
     height: 20px;
     border-radius: 3px;
-    margin-left: 110px;
+    margin-left: 300px;
 }
 
 .button-pink:hover {

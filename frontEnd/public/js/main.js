@@ -111,8 +111,8 @@ function createUserContinueBtn(){
     <h1 class='page-title white'> Recommend Events </h1>
 
     <div class="ryan-row" style='margin-top: 50px;'>
-      <div class="col-8 offset-2">
-        <div class="col-3">
+      <div class="col-10 offset-1">
+        <div class="col-2">
           <ul class="nav nav-tabs">
             <li class="active tab-item"><a href="#a1" data-toggle="tab"> ${users[0].name}</a></li>`
 
@@ -123,9 +123,9 @@ function createUserContinueBtn(){
   recPage = recPage.concat(`
         </ul>
       </div>
-      <div class="tab-content col-9">
-        <div class="rec-subheader"> Past Events </div>
-          `);
+      <div class="tab-content col-10">
+        <div class="rec-subheader col-2"> Past Events</div>
+        <div class="col-2 offset-6" id="theRecBtn"> Recommend </div>`);
 
   for(var i = 0; i<=users.length-1; i++){
     recPage = recPage.concat(`<div class="tab-pane" id="a${i+1}">
@@ -136,6 +136,7 @@ function createUserContinueBtn(){
 
   if(!$(`.recommend-events-background`).length){
     $('body').append(recPage);
+    $('#theRecBtn').on("click", recommendEvents);
     $('#a1').addClass("active fade in");
     for(var i = 0; i<=users.length-1; i++){
       for(var j=0; j<=users[i]["events"].length-1; j++){
@@ -143,12 +144,12 @@ function createUserContinueBtn(){
         numEvents++;
       }
       $(`#a${i+1}`).append(`
-        <div style="display: inline-flex;">
+        <!--<div class="rec-container" style="display: inline-flex;">
           <div class="rec-subheader"> Recommended Events </div>
           <div class="button-pink pink-small" id="recBtn${i+1}"> Recommend </div>
-        </div>
-        <div class="events-container" id="c${i+1}"></div>`);
-      $(`#recBtn${i+1}`).on("click", recommendEvents);
+        </div>-->
+        <div class="events-container" style="margin-top:20px;" id="c${i+1}"></div>`);
+      // $(`#recBtn${i+1}`).on("click", recommendEvents);
     }
     // $('#test').on("click", testing);
   }
@@ -217,7 +218,8 @@ function fadeInAnimate(id){
 }
 
 function recommendEvents(){
-  var w = this.id.split("").pop();
+  var w = $(".tab-pane.active").attr("id").split("").pop();
+  // var w = this.id.split("").pop();
   var ids = $.map(users[w-1]["events"], function(val) { return val.id; });
   if(ids[0]) var e1 = `event1=${ids[0]}`;
   if(ids[1]) var e2 = `&event2=${ids[1]}`;
@@ -244,7 +246,6 @@ function recommendEvents(){
 // ==============  GETTERS =======================
 function getEventCard(eventObject, id){
   $(`#${id}`).append(`
-    <div class="ryan-row">
        <div class="col-5 remove-padding" id="eventCard${numEvents}">
          <div class="card event-card">
 
@@ -266,7 +267,6 @@ function getEventCard(eventObject, id){
 
          </div>
        </div>
-      </div>
   `);
 };
 
