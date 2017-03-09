@@ -23,7 +23,7 @@ router.get("/user",function(req, res) {
 	var event1 = req.query.event1 || "None";
 	var event2 = req.query.event2 || "None";
 	var event3 = req.query.event3 || "None";
-	adapter.send(adapter.Recommender.USER, event1,event2,event3 (error,response)=>{
+	adapter.send(adapter.Recommender.USER, event1,event2,event3, (error,response)=>{
 		if(error){
 			return res.json({error});
 		}
