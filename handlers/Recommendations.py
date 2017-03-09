@@ -11,7 +11,7 @@ class RecommendationHandler(AbstractHandler.Handler):
 	# used to update the user models.
 	def __init__(self):
 		self.db = database.DB();
-		self.commands = [["getAnonymousRecommendations",[int]],["getContentRecommendations",[str,str,str]]];
+		self.commands = [["getAnonymousRecommendations",[int]],["getRecommendations",[str,str,str]]];
 		self.__loadRecommenders();
 
 	def getAnonymousRecommendations(self,params,respond):
@@ -19,10 +19,10 @@ class RecommendationHandler(AbstractHandler.Handler):
 		respond([x for (y,x) in sorted(zip(Y,self.events))][:params[0]]);
 
 	def getRecommendations(self,params,respond):
-		print(params)
 		recom = ContentRecommender.ContentRecommender(params)
 		recs = recom.recommend()
 		print(recs)
+		respond(recs)
 
 
 	# load recommenders based on existing data.
