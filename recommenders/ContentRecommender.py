@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from math import radians, cos, sin, asin, sqrt
+#from utils import database
 
 """ Denver: 39.739236, -104.990251 """
 """ Toronto: 43.653226, -79.383184 """
@@ -19,21 +20,40 @@ class ContentRecommender:
     nlp_features = ['id', 'title', 'description']
 
     # User data and pre-processed data
+    all_user_events = ''
     user_events = ''
     nlp_data = ''
 
     # File paths for user and future data
-    user_data_file = "testData/userEventsTest.json"
-    future_event_data_file = "testData/VanLaNY3000output.json"
+    future_event_data_file = "testData/futureEvents.json"
+    user_data_file = "testData/pastEvents.json"
 
 
-    def __init__(self):
+
+    def __init__(self, userEvents):
+
+        #self.db = database.DB()
+
+        # first grab top 3 events from the user using userID
+        # now grab the future events
 
         # assume that index 1 indicates most recently purchased event, then increases with past purchases
-
-
         """ USER DATA SOURCE """
-        self.user_events = pd.read_json(self.user_data_file)
+        self.all_user_events = pd.read_json(self.user_data_file)
+        #self.all_user_events = pd.read_json("testData/userEventsTest.json")
+        self.user_events = pd.DataFrame
+
+        # print(self.all_user_events)
+        userEvents = list(map(int, userEvents))
+        for i in range(0,len(userEvents)):
+            if userEvents[i] != "None":
+                self.user_events = self.all_user_events[self.all_user_events['id'].isin(userEvents)]
+                #tmp_row = self.all_user_events.loc[self.all_user_events['id'] == userEvents[i]]
+                # if i == 0:
+                #     self.user_events = pd.DataFrame(tmp_row)
+                # else:
+                #     self.user_events = self.user_events.append(pd.DataFrame(tmp_row))
+
         self.num_past_user_events = len(self.user_events.index)
         if (self.num_past_user_events > 0):
             self.user_lat = self.user_events.loc[0].latitude
@@ -86,7 +106,9 @@ class ContentRecommender:
 
     def preProcessNLP(self, df):
         # if ticketmaster event, add genre and sub-genre to description then remove those columns from df
-        df.loc[df['api'] == "ticketmaster", 'description'] = df['description'].str.cat([df['genre'], df['subGenre']], sep=' ')
+
+        #df.loc[df['api'] == "ticketmaster", 'description'] = df['description'].str.cat([df['genre'], df['subGenre']], sep=' ')
+
         # only select specific columns from original dataframe
         ds = df.filter(self.nlp_features, axis=1)
         return ds
@@ -105,6 +127,9 @@ class ContentRecommender:
         # then group by id and add weights
         result.groupby(by=['id'], sort=False)['weight'].sum()
         result.sort_values(by='weight', inplace=True, ascending=False)
+
+        #print(result)
+
         del result['title']
 
         # HANNES HI
@@ -126,9 +151,9 @@ class ContentRecommender:
 
         """ ITERATE THROUGH PANDAS DATAFRAME """
         for idx, row in ds.iterrows():
-            if (self.num_past_user_events > 1):
-                weight = ((idx+1)/self.num_past_user_events)*0.5
-            similar_indices = cosine_similarities[idx].argsort()[:-50:-1]
+            #if (self.num_past_user_events > 1):
+                #weight = ((idx+1)/self.num_past_user_events)*0.5
+            similar_indices = cosine_similarities[idx].argsort()[:-20:-1]
             similar_items = [{'id': ds['id'][i],'title': ds['title'][i], 'weight': cosine_similarities[idx][i]+weight} for i in similar_indices]
             if (idx == 0):
                 ret_df = pd.DataFrame(similar_items[1:])
@@ -139,7 +164,7 @@ class ContentRecommender:
 
 
 if __name__ == "__main__":
-    recommender = ContentRecommender()
+    recommender = ContentRecommender(["329060","330743","321507"])
     recommender.recommend()
 
 
