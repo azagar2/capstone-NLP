@@ -216,15 +216,10 @@ function fadeInAnimate(id){
   $(`#${id}`).addClass('animated fadeInDown');
 }
 
-// function testing(){
-//   console.log("POOP");
-//   console.log(users);
-// };
-
 function recommendEvents(){
   var w = this.id.split("").pop();
   var ids = $.map(users[w]["events"], function(val) { return val.id; });
-  var url = `http://localhost:3001/api/v1/ContentRecommender/users?event1=${ids[0]}&event2=${ids[1]}&event3=${ids[2]}`;
+  var url = `http://localhost:3001/api/v1/ContentRecommender/users?event1=${ids[0] || ""}&event2=${ids[1] || ""}&event3=${ids[2] || ""}`;
   // $.get(url, function(data, status){
   //       alert("Data: " + data + "\nStatus: " + status);
   // });

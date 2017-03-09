@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 var adapter = require("../../pythonAdapter.js");
 
-const DEFAULT_NUMBER_OF_RECOMMENDARIONS = 100;
+const DEFAULT_NUMBER_OF_RECOMMENDARIONS = 20;
 
 /**
  * @post impressions/buy

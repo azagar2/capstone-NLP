@@ -25,8 +25,8 @@ class ContentRecommender:
     nlp_data = ''
 
     # File paths for user and future data
-    future_event_data_file = "testData/futureEvents.json"
-    user_data_file = "testData/pastEvents.json"
+    future_event_data_file = "ContentBasedNLP/testData/futureEvents.json"
+    user_data_file = "ContentBasedNLP/testData/pastEvents.json"
 
 
 
@@ -44,16 +44,18 @@ class ContentRecommender:
         self.user_events = pd.DataFrame
 
         # print(self.all_user_events)
-        userEvents = list(map(int, userEvents))
+        parsedUserEvents = [];
         for i in range(0,len(userEvents)):
             if userEvents[i] != "None":
-                self.user_events = self.all_user_events[self.all_user_events['id'].isin(userEvents)]
+                parsedUserEvents.append(int(userEvents[i]));
                 #tmp_row = self.all_user_events.loc[self.all_user_events['id'] == userEvents[i]]
                 # if i == 0:
                 #     self.user_events = pd.DataFrame(tmp_row)
                 # else:
                 #     self.user_events = self.user_events.append(pd.DataFrame(tmp_row))
-
+        self.user_events = list(map(int,parsedUserEvents));
+        print(self.user_events);
+        self.user_events = self.all_user_events[self.all_user_events['id'].isin(parsedUserEvents)]
         self.num_past_user_events = len(self.user_events.index)
         if (self.num_past_user_events > 0):
             self.user_lat = self.user_events.loc[0].latitude
