@@ -220,8 +220,8 @@ function recommendEvents(){
   var w = this.id.split("").pop();
   var ids = $.map(users[w-1]["events"], function(val) { return val.id; });
   if(ids[0]) var e1 = `event1=${ids[0]}`;
-  if(ids[1]) var e2 = `event1=${ids[1]}`;
-  if(ids[2]) var e3 = `event1=${ids[2]}`;
+  if(ids[1]) var e2 = `&event2=${ids[1]}`;
+  if(ids[2]) var e3 = `&event3=${ids[2]}`;
 
   var url = `http://localhost:3001/api/v1/recommendations/user?${e1 || ""}${e2 || ""}${e3 || ""}`;
   console.log(url);
