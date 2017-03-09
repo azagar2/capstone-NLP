@@ -32,5 +32,5 @@ class RecommendationHandler(AbstractHandler.Handler):
 		DB = database.DB();
 		self.events = DB.get("SELECT * FROM Events;",[]);
 
-		self.recommenders = [GeneralRecommender.GeneralRecommender()];
+		# self.recommenders = [GeneralRecommender.GeneralRecommender()];
 		self.debug("Recommenders initialized");

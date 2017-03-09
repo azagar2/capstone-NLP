@@ -109,7 +109,8 @@ PythonAdapter.prototype.Biases = {
 }
 
 PythonAdapter.prototype.Recommender = {
-	ANONYMOUS:'getAnonymousRecommendations'
+	ANONYMOUS:'getAnonymousRecommendations',
+	USER: 'getRecommendations'
 }
 
 module.exports = (function() {
