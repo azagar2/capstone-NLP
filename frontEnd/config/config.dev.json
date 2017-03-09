@@ -2,5 +2,12 @@
 	"name":"Project BlueShift",
 	"port":3001,
 	"address":"127.0.0.1",
-	"version":1
+	"version":1,
+	"pgsql":{
+		"port":5432,
+		"host":"localhost",
+		"username":"postgres",
+		"password":"",
+		"database":"postgres"
+	}
 }
