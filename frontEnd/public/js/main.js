@@ -145,7 +145,7 @@ function createUserContinueBtn(){
       $(`#a${i+1}`).append(`
         <div style="display: inline-flex;">
           <div class="rec-subheader"> Recommended Events </div>
-          <div class="button-pink" style="margin-top: 0px;" id="recBtn${i}"> Recommend </div>
+          <div class="button-pink pink-small" id="recBtn${i}"> Recommend </div>
         </div>
         <div class="events-container" id="c${i+1}"></div>`);
       $(`#recBtn${i}`).on("click", recommendEvents);
@@ -216,15 +216,19 @@ function fadeInAnimate(id){
   $(`#${id}`).addClass('animated fadeInDown');
 }
 
-function testing(){
-  console.log("POOP");
-  console.log(users);
-};
+// function testing(){
+//   console.log("POOP");
+//   console.log(users);
+// };
 
 function recommendEvents(){
   var w = this.id.split("").pop();
   var ids = $.map(users[w]["events"], function(val) { return val.id; });
-  var url = `http://localhost:3001/api/v1/recommend/users?event1=${ids[0]}?event2=${ids[1]}?event3=${ids[2]}`;
+  var url = `http://localhost:3001/api/v1/ContentRecommender/users?event1=${ids[0]}&event2=${ids[1]}&event3=${ids[2]}`;
+  // $.get(url, function(data, status){
+  //       alert("Data: " + data + "\nStatus: " + status);
+  // });
+  console.log(url);
 }
 
 // ==============  GETTERS =======================

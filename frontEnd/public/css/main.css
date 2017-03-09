@@ -83,6 +83,16 @@ h1 {
   font-weight: 700;
 }
 
+.pink-small{
+    margin: 0 auto;
+    padding: 1px;
+    font-size: 10pt;
+    width: 100px;
+    height: 20px;
+    border-radius: 3px;
+    margin-left: 110px;
+}
+
 .button-pink:hover {
   background: #ff376b;
   cursor: pointer;
