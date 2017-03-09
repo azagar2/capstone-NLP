@@ -53,9 +53,10 @@ class ContentRecommender:
                 #     self.user_events = pd.DataFrame(tmp_row)
                 # else:
                 #     self.user_events = self.user_events.append(pd.DataFrame(tmp_row))
-        self.user_events = list(map(int,parsedUserEvents));
+        parsedUserEvents = list(map(int,parsedUserEvents));
         print(self.user_events);
         self.user_events = self.all_user_events[self.all_user_events['id'].isin(parsedUserEvents)]
+        self.user_events = self.user_events.reset_index(drop=True)
         self.num_past_user_events = len(self.user_events.index)
         if (self.num_past_user_events > 0):
             self.user_lat = self.user_events.loc[0].latitude
@@ -168,6 +169,3 @@ class ContentRecommender:
 if __name__ == "__main__":
     recommender = ContentRecommender(["329060","330743","321507"])
     recommender.recommend()
-
-
-
