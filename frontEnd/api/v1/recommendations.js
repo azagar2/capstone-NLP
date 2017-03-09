@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 var adapter = require("../../pythonAdapter.js");
 
-const DEFAULT_NUMBER_OF_RECOMMENDARIONS = 100;
+const DEFAULT_NUMBER_OF_RECOMMENDARIONS = 20;
 
 /**
  * @post impressions/buy
@@ -23,6 +23,7 @@ router.get("/user",function(req, res) {
 	var event1 = req.query.event1 || "None";
 	var event2 = req.query.event2 || "None";
 	var event3 = req.query.event3 || "None";
+	console.log("got here!");
 	adapter.send(adapter.Recommender.USER, event1,event2,event3, (error,response)=>{
 		if(error){
 			return res.json({error});

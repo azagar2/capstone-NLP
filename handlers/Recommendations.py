@@ -19,9 +19,10 @@ class RecommendationHandler(AbstractHandler.Handler):
 		respond([x for (y,x) in sorted(zip(Y,self.events))][:params[0]]);
 
 	def getRecommendations(self,params,respond):
+		self.debug(params);
 		recom = ContentRecommender.ContentRecommender(params)
 		recs = recom.recommend()
-		print(recs)
+		self.debug(recs)
 		respond(recs)
 
 
