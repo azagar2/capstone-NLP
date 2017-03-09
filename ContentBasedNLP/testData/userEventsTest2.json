@@ -1,0 +1,39 @@
+[
+  {
+        "id": "558c1c764545988db60000f0",
+        "city": "San Francisco",
+        "country": "US",
+        "latitude": 43.653226,
+        "longitude": -79.383184,
+        "status": "closed",
+        "start_time": "15-09-12 20:00",
+        "event_end_time (YYYY-MM-DD)": "15-09-12",
+        "title": "Ways Not To Drown (Creating Source Material)",
+        "description": "Ways Not To Drown(Creating Source Material)physical theater workshops for artists of all disciplines\n\nSecond Saturday of each monthSeptember 12, October 10, and November 1410 to 1 pmWe highly encourage you to do all three, as each will build upon the last, but you can also drop-in.Are you looking for new ways to create source material?\nHow do you locate source material?\nHow do you transform it into your art form?\nHow do you translate it for an audience?\n\n2015 Della Davidson Prize recipient Deborah Slater will draw on her 30 years of experience to address these questions, providing structure, guidance and support for you to learn new ways of creating work for audiences. You will use tools of writing, moving and vocalization to:\ncreate new material\ngain specific, repeatable tasks to use in your own creative process \ndo experiments you never thought to try \nend up somewhere you didn’t expect to be\nLet’s experiment together. It is fun and focused. We will think through questions together, playing and creating.",
+        "category": "other"
+    },
+      {
+        "id": "578d19c62d84910024b2c0cd",
+        "city": "Denver",
+        "country": "US",
+        "status": "closed",
+        "start_time": "16-07-23 4:00",
+        "event_end_time (YYYY-MM-DD)": "16-07-23",
+        "title": "Rocky Mountain Pro LIVE Pro Wrestling in Denver",
+        "description": "NWA Rocky Mountain Pro brings you LIVE Pro Wrestling from Rackhouse Pub in Denver! Come out to this 21 and up event to see Rocky Mountain Pro like never before! The talent of RMP take the gloves off and give you uncencored and untamed professional wrestling while you enjoy many of Rackhouse's amazing brews!Tickets available online, inside Mercury Pro Wrestling Academy, or by calling 720-347-3892.",
+        "category": "sports"
+      },
+  {
+        "id": "5445e8a8e9919516a5000236",
+        "city": "Ottawa",
+        "country": "CA",
+        "latitude": 45.421530,
+        "longitude": -75.697193,
+        "status": "closed",
+        "start_time": "14-11-15 20:30",
+        "event_end_time (YYYY-MM-DD)": "14-11-15",
+        "title": "6th SMASH Volleyball Tournament - SOLD OUT",
+        "description": "uOttawa Team Diabetes presents its 6th Bi-Annual SMASH Volleyball Tournament to be held on NOVEMBER 15 at the University of Ottawa. Help block glucose spikes and kill diabetes! All proceeds go to supporting runners participating in the Tamarack Ottawa Race Weekend Marathon and are donated to the Canadian Diabetes Association to help in the fight against Diabetes.Update on November 5 2014: All tickets sold! Thanks for all your wonderful support!",
+        "category": "sports"
+    }
+]
