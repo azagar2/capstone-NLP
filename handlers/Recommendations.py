@@ -22,7 +22,7 @@ class RecommendationHandler(AbstractHandler.Handler):
 		print(params)
 		recom = ContentRecommender.ContentRecommender(params)
 		recs = recom.recommend()
-		print(recs)
+		respond(recs)
 
 
 	# load recommenders based on existing data.

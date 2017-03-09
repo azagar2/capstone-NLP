@@ -109,11 +109,10 @@ PythonAdapter.prototype.Biases = {
 }
 
 PythonAdapter.prototype.Recommender = {
-	ANONYMOUS:'getAnonymousRecommendations',
-	USER:"getRecommendations"
+	ANONYMOUS:'getAnonymousRecommendations'
 }
 
-module.exports = (function() {  
+module.exports = (function() {
 	// Singleton instance goes into this variable
 	var instance;
 
