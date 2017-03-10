@@ -110,9 +110,9 @@ function createUserContinueBtn(){
   <div class="recommend-events-background">
     <h1 class='page-title white'> Recommend Events </h1>
 
-    <div class="ryan-row" style='margin-top: 50px;'>
+    <div class="ryan-row" style=''>
       <div class="col-10 offset-1">
-        <div class="col-2">
+        <div class="col-2" style="margin-top: 50px;">
           <ul class="nav nav-tabs">
             <li class="active tab-item"><a href="#a1" data-toggle="tab"> ${users[0].name}</a></li>`
 
@@ -125,11 +125,12 @@ function createUserContinueBtn(){
       </div>
       <div class="tab-content col-10">
         <div class="rec-subheader col-2"> Past Events</div>
-        <div class="col-2 offset-6" id="theRecBtn"> Recommend </div>`);
+        <div class="col-2 offset-7" id="theRecBtn"> Recommend </div>`);
+
 
   for(var i = 0; i<=users.length-1; i++){
     recPage = recPage.concat(`<div class="tab-pane" id="a${i+1}">
-    <div class="events-container" id="b${i+1}"></div></div>`);
+    <div class="events-container" style="width:90%; height: 260px;" id="b${i+1}"></div></div>`);
   }
 
   recPage = recPage.concat(`</div> </div> </div> </div> </div> </div>`);
@@ -144,14 +145,9 @@ function createUserContinueBtn(){
         numEvents++;
       }
       $(`#a${i+1}`).append(`
-        <!--<div class="rec-container" style="display: inline-flex;">
-          <div class="rec-subheader"> Recommended Events </div>
-          <div class="button-pink pink-small" id="recBtn${i+1}"> Recommend </div>
-        </div>-->
-        <div class="events-container" style="margin-top:20px;" id="c${i+1}"></div>`);
-      // $(`#recBtn${i+1}`).on("click", recommendEvents);
+        <hr class="horizontal-line col-6 offset-3" style="padding: 0px;"/>
+        <div class="events-container" style="width:100%; height: 260px;" id="c${i+1}"></div>`);
     }
-    // $('#test').on("click", testing);
   }
 
   $('html, body').animate({
@@ -178,7 +174,6 @@ function createEventButton(){
 
   $(`#eventButtonCard${row}`).on("click", eventButtonCardFn);
 
-  //TODO: push full event not just title
   if(users[row]){
     users[row]["events"].push(eventData);
     numEvents++;

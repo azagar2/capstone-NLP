@@ -38,11 +38,20 @@ body {
 #theRecBtn{
   color:white;
   font-weight: 500;
+  background: #FF5984;
+  text-align: center;
+  border-radius: 3px;
+  font-family: brandon-grotesque, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  padding: 5px;
+  width: 120px;
 }
 
 #theRecBtn:hover{
   color: #ccc;
   cursor: pointer;
+  background: #ff376b;
 }
 
 h1 {
@@ -87,13 +96,13 @@ h1 {
   display: block;
   padding: 5px;
   text-align: center;
-  font-weight: 500;
-  font-size: 12pt;
+  /*font-weight: 500;*/
+  /*font-size: 12pt;*/
   width: 120px;
-  height: 30px;
+  /*height: 30px;*/
   background: #FF5984;
   color: white;
-  border-radius: 4px;
+  border-radius: 3px;
   /*font-family: FaktSoftPro;*/
   font-family: brandon-grotesque, sans-serif;
   font-style: normal;
