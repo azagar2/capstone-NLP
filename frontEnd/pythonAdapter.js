@@ -71,11 +71,11 @@ PythonAdapter.prototype = {
 			this.commandBuffer.push(commandString);
 			return;
 		}
-		this.debug((now - this.lastTimeStamp));
 		if((now - this.lastTimeStamp) < RATE_LIMIT){
 			this.debounceActive = true;
 			this.commandBuffer.push(commandString);
 			this.rateLimit();
+			console.log("WARNING:MEDIUM LOAD:"+now);
 			return;
 		}
 		this.lastTimeStamp = now;
@@ -89,7 +89,6 @@ PythonAdapter.prototype = {
 				clearInterval(this.debounceClear);
 				return;
 			}
-			console.log(this.commandBuffer.length);
 			this.client.write(this.commandBuffer.shift());
 		},RATE_LIMIT);
 	},
@@ -98,7 +97,7 @@ PythonAdapter.prototype = {
 		control = data.substr(0,data.indexOf("|"));
 		data = data.substr(data.indexOf("|")+1);
 		control = control.split(":");
-		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
+		//this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
 		// single frame message or error message
 		if(control[0] == "e" || control[2] == "1"){
 			return this.gotMessage(JSON.parse(data));
