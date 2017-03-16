@@ -1,9 +1,14 @@
 var net = require("net");
 
 const BLUE_SHIFT_ADAPTER = '/tmp/blue-shift-adapter';
+const REQUESTS_PER_SECOND = 5;
+const RATE_LIMIT = 1000/5;
 
 function PythonAdapter(){
+	this.lastTimeStamp = Date.now();
+	this.debounceActive = false;
 	this.commandId = 1;
+	this.commandBuffer = [];
 	this.buffer = {};
 	this.callbacks ={};
 	this.error = console.log.bind(this,"PYTHON::ERROR::");
@@ -50,6 +55,7 @@ PythonAdapter.prototype = {
 	 * NOTE: last param must be callback
 	 */
 	send: function(){
+		var now = Date.now();
 		var params = Array.prototype.slice.call(arguments);
 		// don't make me check this.
 		var command = params.shift();
@@ -59,7 +65,33 @@ PythonAdapter.prototype = {
 		// NOTE: if multiple servers are deployed, this will need to be adjusted.
 		var id = this.commandId++;
 		this.callbacks[id] = callback;
-		this.client.write(JSON.stringify({command,params,id}));
+		var commandString = JSON.stringify({command,params,id});
+		// debounce code
+		if(this.debounceActive){
+			this.commandBuffer.push(commandString);
+			return;
+		}
+		this.debug((now - this.lastTimeStamp));
+		if((now - this.lastTimeStamp) < RATE_LIMIT){
+			this.debounceActive = true;
+			this.commandBuffer.push(commandString);
+			this.rateLimit();
+			return;
+		}
+		this.lastTimeStamp = now;
+		this.client.write(commandString);
+	},
+
+	rateLimit(){
+		this.debounceClear = setInterval(()=>{
+			if(!this.commandBuffer.length){
+				this.debounceActive = false;
+				clearInterval(this.debounceClear);
+				return;
+			}
+			console.log(this.commandBuffer.length);
+			this.client.write(this.commandBuffer.shift());
+		},RATE_LIMIT);
 	},
 
 	assembleMessage: function(data){
@@ -126,11 +158,6 @@ PythonAdapter.prototype.Recommender = {
 module.exports = (function() {  
 	// Singleton instance goes into this variable
 	var instance;
-
-	// Singleton factory method
-	function factory() {
-		return Math.random();
-	}
 
 	// Singleton instance getter
 	function getInstance() {
