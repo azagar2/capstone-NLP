@@ -3,18 +3,23 @@ var router = express.Router()
 var adapter = require("../../pythonAdapter.js");
 
 const DEFAULT_NUMBER_OF_RECOMMENDARIONS = 20;
-
+const RESPONSE_DELAY_WARNING = 2000;
 /**
  * @post impressions/buy
  * Post a buy impression
  * @body {userId:{int}}
  */
 router.get("/anonymous",function(req, res) {
+	var messageRecievedTime = Date.now();
 	var count = parseInt(req.query.count) || DEFAULT_NUMBER_OF_RECOMMENDARIONS;
 	console.log("JUST AN I GOT HERE");
 	adapter.send(adapter.Recommender.ANONYMOUS, count, (error,response)=>{
 		if(error){
 			return res.json({error});
+		}
+		var now = Date.now()
+		if(now - messageRecievedTime > RESPONSE_DELAY_WARNING){
+			console.log("WARNING:HIGH LOAD:"+now);
 		}
 		res.json(response);
 	});
