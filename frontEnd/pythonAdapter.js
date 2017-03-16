@@ -2,7 +2,7 @@ var net = require("net");
 
 const BLUE_SHIFT_ADAPTER = '/tmp/blue-shift-adapter';
 const REQUESTS_PER_SECOND = 5;
-const RATE_LIMIT = 1000/5;
+const RATE_LIMIT = 1000/REQUESTS_PER_SECOND;
 
 function PythonAdapter(){
 	this.lastTimeStamp = Date.now();
