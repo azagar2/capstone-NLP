@@ -20,46 +20,18 @@ function PythonAdapter(){
 	});
 	this.client.on('data', (data) => {
 		data = data.toString();
-		control = data.substr(0,data.indexOf("|"));
-		data = data.substr(data.indexOf("|")+1);
-		control = control.split(":");
-		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
-		// single frame message or error message
-		if(control[0] == "e" || control[2] == "1"){
-			data = JSON.parse(data);
-			if(data.error){
-				this.error(data.error);
-				this.callbacks[data.id](data.error)
-				if(data.id !== undefined) delete this.callbacks[data.id];
-			} else {
-				this.callbacks[data.id](null,data.response);
-			}
-			delete this.callbacks[data.id];
-			return;
+		data = data.split("&&");
+		var lastDatagram = data.pop();
+		// reconstruct overflow
+		if(this.overflow){
+			data[0] = this.overflow + data[0];
+			this.overflow = false;
 		}
-		// message incomplete, wait for the rest
-		if(!this.buffer[control[0]]){
-			this.buffer[control[0]] = {remaining:control[2]};
+		// more overflow
+		if(lastDatagram != ""){
+			this.overflow = lastDatagram;
 		}
-		this.buffer[control[0]][control[1]] = data;
-		if(this.buffer[control[0]].remaining-- !== 0){
-			return
-		}
-		// message complete, assemble it.
-		var buffer = "";
-		for (var i = 0; i <= control[2]; i++) {
-			buffer+= this.buffer[control[0]][i];
-			delete this.buffer[control[0]][i];
-		}
-		data = JSON.parse(buffer);
-		if(data.error){
-			this.error(data.error);
-			if(data.id !== undefined) delete this.callbacks[data.id];
-			return
-		}
-		this.callbacks[data.id](null,data.response);
-		delete this.callbacks[data.id];
-		delete this.buffer[control[0]];
+		data.forEach(this.assembleMessage.bind(this));
 	});
 	this.client.on('end', () => {
 		this.error('disconnected from server');
@@ -88,6 +60,44 @@ PythonAdapter.prototype = {
 		var id = this.commandId++;
 		this.callbacks[id] = callback;
 		this.client.write(JSON.stringify({command,params,id}));
+	},
+
+	assembleMessage: function(data){
+		control = data.substr(0,data.indexOf("|"));
+		data = data.substr(data.indexOf("|")+1);
+		control = control.split(":");
+		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
+		// single frame message or error message
+		if(control[0] == "e" || control[2] == "1"){
+			return this.gotMessage(JSON.parse(data));
+		}
+		// message incomplete, wait for the rest
+		if(!this.buffer[control[0]]){
+			this.buffer[control[0]] = {remaining:control[2]};
+		}
+		this.buffer[control[0]][control[1]] = data;
+		if(this.buffer[control[0]].remaining-- !== 0){
+			return
+		}
+		// message complete, assemble it.
+		var buffer = "";
+		for (var i = 0; i <= control[2]; i++) {
+			buffer+= this.buffer[control[0]][i];
+			delete this.buffer[control[0]][i];
+		}
+		delete this.buffer[control[0]]
+		return this.gotMessage(JSON.parse(buffer));
+	},
+
+	gotMessage: function(message){
+		if(message.error){
+			this.error(message.error);
+			this.callbacks[message.id](message.error)
+			if(message.id !== undefined) delete this.callbacks[message.id];
+		} else {
+			this.callbacks[message.id](null,message.response);
+		}
+		delete this.callbacks[message.id];
 	},
 
 	close: function(){
