@@ -71,6 +71,7 @@ PythonAdapter.prototype = {
 			this.commandBuffer.push(commandString);
 			return;
 		}
+		// start debounce, too many consecutive messages
 		if((now - this.lastTimeStamp) < RATE_LIMIT){
 			this.debounceActive = true;
 			this.commandBuffer.push(commandString);
@@ -78,10 +79,16 @@ PythonAdapter.prototype = {
 			console.log("WARNING:MEDIUM LOAD:"+now);
 			return;
 		}
+		// update
 		this.lastTimeStamp = now;
 		this.client.write(commandString);
 	},
 
+	/**
+	 * Rate Limit
+	 * High load! python server can only handle a
+	 * certain number requests/second.
+	 */
 	rateLimit(){
 		this.debounceClear = setInterval(()=>{
 			if(!this.commandBuffer.length){
@@ -93,6 +100,12 @@ PythonAdapter.prototype = {
 		},RATE_LIMIT);
 	},
 
+	/**
+	 * Assemble Message
+	 * Assemble message from message datagrams
+	 * and parse it into a message
+	 * @param {String} data
+	 */
 	assembleMessage: function(data){
 		control = data.substr(0,data.indexOf("|"));
 		data = data.substr(data.indexOf("|")+1);
@@ -120,6 +133,11 @@ PythonAdapter.prototype = {
 		return this.gotMessage(JSON.parse(buffer));
 	},
 
+	/**
+	 * Got Message
+	 * got a complete message from the server
+	 * @param {json object} message
+	 */
 	gotMessage: function(message){
 		if(message.error){
 			this.error(message.error);
@@ -131,6 +149,10 @@ PythonAdapter.prototype = {
 		delete this.callbacks[message.id];
 	},
 
+	/**
+	 * Close
+	 * Lost connection to python :(
+	 */
 	close: function(){
 		this.error("shutting down");
 		this.client.destroy();
