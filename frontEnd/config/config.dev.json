@@ -9,5 +9,8 @@
 		"username":"postgres",
 		"password":"",
 		"database":"postgres"
+	},
+	"mlEngine":{
+		"cache":false
 	}
 }
