@@ -4,13 +4,27 @@ import os;
 
 class Config:
 	class __Config:
-		DEBUG = False;
 		data = {};
 		# Singleton used to access the database
 		# @param {String} connection configuration text
 		def __init__(self,config):
 			self.data = config;
 
+		# Basic caching check
+		# with guards incase of config errors.
+		def cache(self):
+			if not "mlEngine" in self.data:
+				return False;
+			if not "cache" in self.data["mlEngine"]:
+				return False;
+			return self.data["mlEngine"]["cache"];
+
+		def heuristics(self):
+			if not "mlEngine" in self.data:
+				return {};
+			if not "heuristics" in self.data["mlEngine"]:
+				return {};
+			return self.data["mlEngine"]["heuristics"];
 	# instance of singleton
 	instance = None
 
