@@ -13,7 +13,8 @@ from utils import database
 class Crawler:
     APIS = {
         'universe': 'https://discover.universe.com/api/v2/discover_events?',
-        'ticketmaster': 'https://app.ticketmaster.com/discovery/v2/events.json?'
+        'ticketmaster': 'https://app.ticketmaster.com/discovery/v2/events.json?',
+        'listings': 'https://www.universe.com/api/v2/listings/'
     }
 
     # General constants
@@ -190,26 +191,28 @@ class Crawler:
         return mapping
 
     # write the parsed events to the output file
-    def outputEvents(self, fileName, output):
-        for event in output:
-            self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",[
-                event.get("source_type"),
-                event.get("currency"),
-                event.get("category"),
-                event.get("start_time"),
-                event.get("event_end_time"),
-                event.get("id"),
-                event.get("price"),
-                event.get("title"),
-                event.get("description"),
-                event.get("longitude"),
-                event.get("latitude"),
-                event.get("api"),
-                event.get("genre"),
-                event.get("subGenre"),
-                event.get("city"),
-                event.get("country")
-            ])
+    def outputEvents(self, fileName, output, sendToDb=True, pastEvent=False):
+        if sendToDb:
+            for event in output:
+                self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",[
+                    event.get("source_type"),
+                    event.get("currency"),
+                    event.get("category"),
+                    event.get("start_time"),
+                    event.get("event_end_time"),
+                    event.get("id"),
+                    event.get("price"),
+                    event.get("title"),
+                    event.get("description"),
+                    event.get("longitude"),
+                    event.get("latitude"),
+                    event.get("api"),
+                    event.get("genre"),
+                    event.get("subGenre"),
+                    event.get("city"),
+                    event.get("country"),
+                    pastEvent
+                ])
         try:
             with open(fileName, 'w') as file:
                 file.write(self.pyToJson(output, True))
@@ -307,6 +310,19 @@ class Crawler:
             self.appendEvents(Crawler.output_file, output)
 
             print('done')
+
+    def listingsRequest(self, listingIds):
+        self.baseUrl = self.APIS['listings']
+
+        mapping = self.loadMapping('listings' + self.SLASH + Crawler.mapping_file)
+
+        if not isinstance(listingIds, list):
+            listingIds = [listingIds]
+
+        for listing in listingIds:
+            response = self.request(listing)
+            output = self.parseEvents([response], mapping)
+            self.outputEvents(Crawler.output_file, output, pastEvent=True)
 
 
 if __name__ == "__main__":

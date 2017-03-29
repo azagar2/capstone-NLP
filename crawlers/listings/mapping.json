@@ -1,0 +1,41 @@
+{
+	"id": "events/id",
+	"city": "listing/city",
+	"country": "listing/country",
+	"status": "status",
+	"start_time": {
+		"path": "events/start_time",
+		"required": true,
+		"type": "unixtime"
+    },
+	"event_end_time": {
+		"path": "events/end_time",
+		"type": "unixtime"
+    },
+	"title": "listing/title",
+	"score": "",
+	"description": "listing/description",
+	"category": {
+		"path": "listing/category_key",
+		"default": "other"
+    },
+	"latitude": {
+		"path": "listing/latitude",
+		"required": true,
+		"type": "float"
+    },
+	"longitude": {
+		"path": "listing/longitude",
+		"required": true,
+		"type": "float"
+    },
+	"source_type": "source_type",
+	"price": {
+		"path": "listing/price",
+		"type": "float",
+		"default": 0
+    },
+	"currency": "listing/base_currency",
+	"cover_photo": "users/cover_photo_url",
+	"image": "users/image_url"
+}

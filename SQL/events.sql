@@ -15,5 +15,6 @@ CREATE TABLE Events(
 	genre varchar,
 	subGenre varchar,
 	city varchar,
-	country varchar
+	country varchar,
+	pastEvent boolean
 );

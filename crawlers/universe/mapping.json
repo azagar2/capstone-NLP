@@ -36,5 +36,7 @@
 		"type": "float",
 		"default": 0
     },
-	"currency": "currency"
+	"currency": "currency",
+	"cover_photo": "cover_photo_url",
+	"image": "image_url"
 }
