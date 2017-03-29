@@ -1,9 +1,14 @@
 var net = require("net");
 
 const BLUE_SHIFT_ADAPTER = '/tmp/blue-shift-adapter';
+const REQUESTS_PER_SECOND = 5;
+const RATE_LIMIT = 1000/REQUESTS_PER_SECOND;
 
 function PythonAdapter(){
+	this.lastTimeStamp = Date.now();
+	this.debounceActive = false;
 	this.commandId = 1;
+	this.commandBuffer = [];
 	this.buffer = {};
 	this.callbacks ={};
 	this.error = console.log.bind(this,"PYTHON::ERROR::");
@@ -20,46 +25,18 @@ function PythonAdapter(){
 	});
 	this.client.on('data', (data) => {
 		data = data.toString();
-		control = data.substr(0,data.indexOf("|"));
-		data = data.substr(data.indexOf("|")+1);
-		control = control.split(":");
-		this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
-		// single frame message or error message
-		if(control[0] == "e" || control[2] == "1"){
-			data = JSON.parse(data);
-			if(data.error){
-				this.error(data.error);
-				this.callbacks[data.id](data.error)
-				if(data.id !== undefined) delete this.callbacks[data.id];
-			} else {
-				this.callbacks[data.id](null,data.response);
-			}
-			delete this.callbacks[data.id];
-			return;
+		data = data.split("&&");
+		var lastDatagram = data.pop();
+		// reconstruct overflow
+		if(this.overflow){
+			data[0] = this.overflow + data[0];
+			this.overflow = false;
 		}
-		// message incomplete, wait for the rest
-		if(!this.buffer[control[0]]){
-			this.buffer[control[0]] = {remaining:control[2]};
+		// more overflow
+		if(lastDatagram != ""){
+			this.overflow = lastDatagram;
 		}
-		this.buffer[control[0]][control[1]] = data;
-		if(this.buffer[control[0]].remaining-- !== 0){
-			return
-		}
-		// message complete, assemble it.
-		var buffer = "";
-		for (var i = 0; i <= control[2]; i++) {
-			buffer+= this.buffer[control[0]][i];
-			delete this.buffer[control[0]][i];
-		}
-		data = JSON.parse(buffer);
-		if(data.error){
-			this.error(data.error);
-			if(data.id !== undefined) delete this.callbacks[data.id];
-			return
-		}
-		this.callbacks[data.id](null,data.response);
-		delete this.callbacks[data.id];
-		delete this.buffer[control[0]];
+		data.forEach(this.assembleMessage.bind(this));
 	});
 	this.client.on('end', () => {
 		this.error('disconnected from server');
@@ -78,6 +55,7 @@ PythonAdapter.prototype = {
 	 * NOTE: last param must be callback
 	 */
 	send: function(){
+		var now = Date.now();
 		var params = Array.prototype.slice.call(arguments);
 		// don't make me check this.
 		var command = params.shift();
@@ -87,9 +65,94 @@ PythonAdapter.prototype = {
 		// NOTE: if multiple servers are deployed, this will need to be adjusted.
 		var id = this.commandId++;
 		this.callbacks[id] = callback;
-		this.client.write(JSON.stringify({command,params,id}));
+		var commandString = JSON.stringify({command,params,id});
+		// debounce code
+		if(this.debounceActive){
+			this.commandBuffer.push(commandString);
+			return;
+		}
+		// start debounce, too many consecutive messages
+		if((now - this.lastTimeStamp) < RATE_LIMIT){
+			this.debounceActive = true;
+			this.commandBuffer.push(commandString);
+			this.rateLimit();
+			console.log("WARNING:MEDIUM LOAD:"+now);
+			return;
+		}
+		// update
+		this.lastTimeStamp = now;
+		this.client.write(commandString);
 	},
 
+	/**
+	 * Rate Limit
+	 * High load! python server can only handle a
+	 * certain number requests/second.
+	 */
+	rateLimit(){
+		this.debounceClear = setInterval(()=>{
+			if(!this.commandBuffer.length){
+				this.debounceActive = false;
+				clearInterval(this.debounceClear);
+				return;
+			}
+			this.client.write(this.commandBuffer.shift());
+		},RATE_LIMIT);
+	},
+
+	/**
+	 * Assemble Message
+	 * Assemble message from message datagrams
+	 * and parse it into a message
+	 * @param {String} data
+	 */
+	assembleMessage: function(data){
+		control = data.substr(0,data.indexOf("|"));
+		data = data.substr(data.indexOf("|")+1);
+		control = control.split(":");
+		//this.debug("response "+control[0]+ ": got message "+(parseInt(control[1])+1)+" of "+(parseInt(control[2])+1));
+		// single frame message or error message
+		if(control[0] == "e" || control[2] == "1"){
+			return this.gotMessage(JSON.parse(data));
+		}
+		// message incomplete, wait for the rest
+		if(!this.buffer[control[0]]){
+			this.buffer[control[0]] = {remaining:control[2]};
+		}
+		this.buffer[control[0]][control[1]] = data;
+		if(this.buffer[control[0]].remaining-- !== 0){
+			return
+		}
+		// message complete, assemble it.
+		var buffer = "";
+		for (var i = 0; i <= control[2]; i++) {
+			buffer+= this.buffer[control[0]][i];
+			delete this.buffer[control[0]][i];
+		}
+		delete this.buffer[control[0]]
+		return this.gotMessage(JSON.parse(buffer));
+	},
+
+	/**
+	 * Got Message
+	 * got a complete message from the server
+	 * @param {json object} message
+	 */
+	gotMessage: function(message){
+		if(message.error){
+			this.error(message.error);
+			this.callbacks[message.id](message.error)
+			if(message.id !== undefined) delete this.callbacks[message.id];
+		} else {
+			this.callbacks[message.id](null,message.response);
+		}
+		delete this.callbacks[message.id];
+	},
+
+	/**
+	 * Close
+	 * Lost connection to python :(
+	 */
 	close: function(){
 		this.error("shutting down");
 		this.client.destroy();
@@ -116,11 +179,6 @@ PythonAdapter.prototype.Recommender = {
 module.exports = (function() {
 	// Singleton instance goes into this variable
 	var instance;
-
-	// Singleton factory method
-	function factory() {
-		return Math.random();
-	}
 
 	// Singleton instance getter
 	function getInstance() {

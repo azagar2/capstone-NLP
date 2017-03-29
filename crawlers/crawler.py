@@ -4,6 +4,9 @@ import json
 import sys
 import argparse
 import iso8601
+import os
+
+from utils import database
 
 # Ticketmaster: Ry4V2S9yfBqhz1MFpeRJnEbAxcp0nSGQ
 
@@ -23,6 +26,7 @@ class Crawler:
     TYPE = 'type'
     API = 'api'
     DEFAULT = 'default'
+    CRAWLERS = 'crawlers'
 
     # Type constants
     STRING = 'string'
@@ -37,6 +41,7 @@ class Crawler:
 
 
     def __init__(self, api='universe'):
+        self.DB = database.DB()
         self.baseUrl = self.APIS[api]
 
     # Makes an HTTP request
@@ -83,7 +88,7 @@ class Crawler:
                     path = value
                     required = False
                     outputType = self.STRING
-                    default = ''
+                    default = None
 
                     if isinstance(value, dict):
                         path = value[self.PATH]
@@ -98,7 +103,7 @@ class Crawler:
                     if feature is '':
                         feature = default
 
-                    if feature is '' and required:
+                    if feature is None and required:
                         print('Skipping')
                         skip = True
                         break
@@ -160,11 +165,17 @@ class Crawler:
         except TypeError as error:
             print("Type Error: " + str(error))
 
-        return ''
+        return None
 
     # reads the file that indicates the mapping for how information is parsed from the response
     def loadMapping(self, fileName):
         try:
+            fileDir = os.path.dirname(os.path.realpath('__file__'))
+            if self.CRAWLERS in fileDir:
+                fileName = os.path.join(fileDir, fileName)
+            else:
+                fileName = os.path.join(fileDir, self.CRAWLERS, fileName)
+
             with open(fileName, 'r') as file:
                 content = self.jsonToPy(file.read())
         except IOError:
@@ -180,6 +191,25 @@ class Crawler:
 
     # write the parsed events to the output file
     def outputEvents(self, fileName, output):
+        for event in output:
+            self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",[
+                event.get("source_type"),
+                event.get("currency"),
+                event.get("category"),
+                event.get("start_time"),
+                event.get("event_end_time"),
+                event.get("id"),
+                event.get("price"),
+                event.get("title"),
+                event.get("description"),
+                event.get("longitude"),
+                event.get("latitude"),
+                event.get("api"),
+                event.get("genre"),
+                event.get("subGenre"),
+                event.get("city"),
+                event.get("country")
+            ])
         try:
             with open(fileName, 'w') as file:
                 file.write(self.pyToJson(output, True))
@@ -236,6 +266,12 @@ class Crawler:
 
     # Opens the file with the JSON that specifics the parameters of the request
     def readRequestFile(self, fileName):
+        fileDir = os.path.dirname(os.path.realpath('__file__'))
+        if self.CRAWLERS in fileDir:
+            fileName = os.path.join(fileDir, fileName)
+        else:
+            fileName = os.path.join(fileDir, self.CRAWLERS, fileName)
+
         try:
             with open(fileName, 'r') as file:
                 content = self.jsonToPy(file.read())
@@ -245,7 +281,6 @@ class Crawler:
         except json.JSONDecodeError:
             print('Invalid input options')
             sys.exit()
-
         return content
 
     # basic execution of the script
