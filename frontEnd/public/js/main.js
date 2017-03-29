@@ -145,7 +145,8 @@ function createUserContinueBtn(){
         numEvents++;
       }
       $(`#a${i+1}`).append(`
-        <hr class="horizontal-line col-6 offset-3" style="padding: 0px;"/>
+        <hr class="horizontal-line col-8 offset-2" style="padding: 0px;"/>
+        <div class="rec-subheader col-12"> Recommended Events </div>
         <div class="events-container" style="width:100%; height: 260px;" id="c${i+1}"></div>`);
     }
   }
