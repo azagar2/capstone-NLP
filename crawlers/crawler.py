@@ -54,7 +54,7 @@ class Crawler:
             results = urllib.request.urlopen(url).read()
         except urllib.error.HTTPError as error:
             print(error)
-            sys.exit()
+            return None
 
         decoded = str(results, 'utf-8')
 
@@ -319,10 +319,14 @@ class Crawler:
         if not isinstance(listingIds, list):
             listingIds = [listingIds]
 
+        output = []
+
         for listing in listingIds:
             response = self.request(listing)
-            output = self.parseEvents([response], mapping)
-            self.outputEvents(Crawler.output_file, output, pastEvent=True)
+            if response is not None:
+                output += self.parseEvents([response], mapping)
+
+        self.outputEvents(Crawler.output_file, output, False, pastEvent=True)
 
 
 if __name__ == "__main__":

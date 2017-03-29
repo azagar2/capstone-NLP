@@ -1,6 +1,4 @@
 {
-  "latitude": 49.2578263,
-  "longitude": -123.1939438,
-  "limit": 100,
+  "limit": 5000,
   "page": 1
 }
