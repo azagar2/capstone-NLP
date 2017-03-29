@@ -1,6 +1,7 @@
 import psycopg2;
 import json;
 import os;
+import sys
 
 class DB:
 	class __DB:

@@ -193,8 +193,11 @@ class Crawler:
     # write the parsed events to the output file
     def outputEvents(self, fileName, output, sendToDb=True, pastEvent=False):
         if sendToDb:
+            i = 0
             for event in output:
-                self.DB.run("INSERT INTO Events VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",[
+                i += 1
+                print(str(i))
+                self.DB.run("INSERT INTO events_and_listings VALUES (DEFAULT,%s,%s,%s,to_timestamp(%s),to_timestamp(%s),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",[
                     event.get("source_type"),
                     event.get("currency"),
                     event.get("category"),
@@ -320,13 +323,15 @@ class Crawler:
             listingIds = [listingIds]
 
         output = []
-
+        i = 0
         for listing in listingIds:
+            i += 1
+            print(str(i))
             response = self.request(listing)
             if response is not None:
                 output += self.parseEvents([response], mapping)
 
-        self.outputEvents(Crawler.output_file, output, False, pastEvent=True)
+        self.outputEvents(Crawler.output_file, output, pastEvent=True)
 
 
 if __name__ == "__main__":

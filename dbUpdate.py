@@ -4,18 +4,14 @@ from utils import database
 # Past events
 db = database.DB()
 
-SQL = 'SELECT listingid FROM universe'
+SQL = 'SELECT listingid FROM universe OFFSET 5000 LIMIT 100000'
 listingIds = db.get(SQL,[])
-
-# listingIds = [
-#     '5193948268eacb41f7000fa0',
-#     '4f1794782078f9444100004b', # this one fails
-#     '566b4f2969c81c84a600000e'
-# ]
+listingIds = list(k[0] for k in listingIds)
+listingIds = list(set(listingIds))
 
 c = crawler.Crawler()
 c.listingsRequest(listingIds)
 
-
 # Future events
+c.baseUrl = crawler.Crawler.APIS['universe']
 c.run()

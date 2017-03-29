@@ -1,0 +1,20 @@
+CREATE TABLE events_and_listings(
+	id serial primary key,
+	type varchar,
+	currency varchar,
+	category varchar NOT NULL,
+	startTime timestamp default NULL,
+	endTime timestamp default NULL,
+	eventId varchar NOT NULL,
+	price float,
+	title text,
+	description text,
+	longitude Double Precision,
+	latitude Double Precision,
+	api varchar,
+	genre varchar,
+	subGenre varchar,
+	city varchar,
+	country varchar,
+	pastEvent boolean
+);
