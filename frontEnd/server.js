@@ -17,7 +17,7 @@ var CURRENT_VERSION = config.version || 1;
  */
 var app = express();
 if(config.isDev){
-	app.use(logger("dev"));	
+	app.use(logger("dev"));
 }
 app.use(bodyParser.json())
 

@@ -1,7 +1,9 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from math import radians, cos, sin, asin, sqrt
+from math import radians, cos, sin, asin, sqrt, log
+import os
+from utils import config;
 #from utils import database
 
 """ Denver: 39.739236, -104.990251 """
@@ -25,13 +27,15 @@ class ContentRecommender:
     nlp_data = ''
 
     # File paths for user and future data
-    future_event_data_file = "ContentBasedNLP/testData/futureEvents.json"
-    user_data_file = "ContentBasedNLP/testData/pastEvents.json"
-
-
+    src = os.path.dirname(os.path.realpath('__file__'));
+    future_event_data_file = os.path.join(src, 'ContentBasedNLP','testData','futureEvents.json');
+    user_data_file = os.path.join(src, 'ContentBasedNLP','testData','pastEvents.json');
+    print(future_event_data_file);
+    print(user_data_file);
 
     def __init__(self, userEvents):
 
+        self.heuristics = config.Config().heuristics();
         #self.db = database.DB()
 
         # first grab top 3 events from the user using userID
@@ -44,18 +48,23 @@ class ContentRecommender:
         self.user_events = pd.DataFrame
 
         # print(self.all_user_events)
+        found = False;
         parsedUserEvents = [];
         for i in range(0,len(userEvents)):
             if userEvents[i] != "None":
                 parsedUserEvents.append(int(userEvents[i]));
+                found = True;
                 #tmp_row = self.all_user_events.loc[self.all_user_events['id'] == userEvents[i]]
                 # if i == 0:
                 #     self.user_events = pd.DataFrame(tmp_row)
                 # else:
                 #     self.user_events = self.user_events.append(pd.DataFrame(tmp_row))
-        self.user_events = list(map(int,parsedUserEvents));
+        parsedUserEvents = list(map(int,parsedUserEvents));
+        if not found:
+            print("ERROR:events not found");
         print(self.user_events);
         self.user_events = self.all_user_events[self.all_user_events['id'].isin(parsedUserEvents)]
+        self.user_events = self.user_events.reset_index(drop=True)
         self.num_past_user_events = len(self.user_events.index)
         if (self.num_past_user_events > 0):
             self.user_lat = self.user_events.loc[0].latitude
@@ -79,12 +88,76 @@ class ContentRecommender:
             pieces[idx+1] = filtered
         ds = pd.DataFrame(pd.concat(pieces))
         ds.drop_duplicates(subset='id',inplace=False)
-
+        print(ds);
         """ PRE-PROCESSING FOR NLP """
         self.nlp_data = self.preProcessNLP(ds)
         self.nlp_data = self.nlp_data.drop_duplicates(subset='id',inplace=False)
         #print(nlp_data)
+        self.heuristicRecommendations = self.analyseHeuristics(ds);
 
+    def analyseHeuristics(self,events):
+        self.user_events["hour_of_day"] = self.user_events["start_time"].dt.hour;
+        self.user_events["day_of_week"] = self.user_events["start_time"].dt.dayofweek;
+        events["hour_of_day"] = events["start_time"].dt.hour;
+        events["day_of_week"] = events["start_time"].dt.dayofweek;
+        for idx, event in self.user_events.iterrows():
+            events[("_hscore"+str(idx))] = events.apply(lambda row: self.scoreEvent(
+                row['distance'],
+                row['category'],
+                row['price'],
+                row['hour_of_day'],
+                row['day_of_week'],
+                event),axis=1);
+        sum_of_weights = 0;
+        events["_score"] = 0;
+        event_weights = self.heuristics["split"][(len(self.user_events)-1)];
+        idx = 0;
+        for weight in event_weights:
+            sum_of_weights += weight;
+            events["_score"] += weight*events[("_hscore"+str(idx))];
+            idx+=1;
+        events["_score"] = events["_score"]/sum_of_weights;
+        print(events);
+
+    def scoreEvent(self,dist,category,price,hour,day,event):
+        score = -log(dist+1) * self.heuristics["distance"];
+        category = self.__getCategory(category);
+        event_category = self.__getCategory(event.category);
+        if category == event_category:
+            score += self.heuristics["categories_match"];
+        elif abs(category - event_category) == 1:
+            score += self.heuristics["categories_near"];
+        else :
+            score += self.heuristics["categories_miss"];
+        score += (abs(log(price+1) - log(event.price+1))*self.heuristics["price"]);
+        if day < 4:
+            if event.day_of_week < 4:
+                score += self.heuristics["day_match"];
+            else:
+                score += self.heuristics["day_miss"];
+        else:
+            if event.day_of_week < 4:
+                score += self.heuristics["day_miss"];
+            else:
+                score += self.heuristics["day_match"];
+        score += abs(hour - event.hour_of_day)*self.heuristics["hour_of_day"];
+        return score;
+
+    def __getCategory(self, category):
+        return {
+            'sports': 0,
+            'performing-arts': 1,
+            'music':2,
+            'comedy':3,
+            'fashion':4,
+            'film':5,
+            'other':6,
+            'crafts':7,
+            'food-drink':8,
+            'social':9,
+            'business':10,
+            'tech':11
+        }.get(category, 6);
 
     def haversine(self, lon1, lat1, lon2, lat2):
         """ Calculate the great circle distance between two points on the earth (specified in decimal degrees) """
@@ -164,10 +237,7 @@ class ContentRecommender:
             if (idx == self.num_past_user_events-1):
                 return(ret_df)
 
-
+# for testing purposes only.
 if __name__ == "__main__":
     recommender = ContentRecommender(["329060","330743","321507"])
     recommender.recommend()
-
-
-

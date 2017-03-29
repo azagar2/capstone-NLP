@@ -1,6 +1,7 @@
 import psycopg2;
 import json;
 import os;
+from utils import config;
 
 class DB:
 	class __DB:
@@ -91,23 +92,8 @@ class DB:
 	# singleton constructor
 	def __init__(self):
 		if not DB.instance:
-			fileDir = os.path.dirname(os.path.realpath('__file__'));
-			fileName = os.path.join(fileDir, 'frontEnd','config','config.live.json');
-			try:
-				with open(fileName) as data_file:
-					config_data = json.load(data_file);
-			except IOError:
-				fileName = os.path.join(fileDir, 'frontEnd','config','config.dev.json');
-				try:
-					with open(fileName) as data_file:
-						config_data = json.load(data_file);
-				except IOError:
-					print("no config file found");
-					sys.exit();
-			except json.JSONDecodeError:
-				print('Invalid output content')
-				sys.exit()
-			DB.instance = DB.__DB(config_data["pgsql"]);
+			conf = config.Config();
+			DB.instance = DB.__DB(conf.data["pgsql"]);
 
 	# proxy function
 	def __getattr__(self, name):

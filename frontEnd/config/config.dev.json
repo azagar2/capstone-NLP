@@ -9,5 +9,19 @@
 		"username":"postgres",
 		"password":"",
 		"database":"postgres"
+	},
+	"mlEngine":{
+		"cache":false,
+		"heuristics":{
+			"distance":100,
+			"categories_match":100,
+			"categories_near":50,
+			"categories_miss":0,
+			"price":-25,
+			"day_match":25,
+			"day_miss":0,
+			"hour_of_day":10,
+			"split":[[1],[6,4],[5,3,2]]
+		}
 	}
 }
