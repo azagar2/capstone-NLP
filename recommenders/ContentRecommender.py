@@ -254,27 +254,24 @@ class ContentRecommender:
         new_df = new_df.append(self.nlp_data, ignore_index=True)
         result = self.generateNLPRecommendations(new_df)
 
-
         # need to eliminate any instance of old events in recommendations
         for idx, row in self.user_events.iterrows():
             result = result.drop(result[result.id == row.id].index)
 
         # then group by id and add weights
         result['_score'] = min_max_scaler.fit_transform(result['_score'])
-        result.groupby(by=['id'], sort=False)['_score'].sum()
+        grouped = result.groupby(by=['id','title'], sort=False)['_score'].sum()
+        result = grouped.reset_index()
         result['_score'] = result['_score'] * self.weights["nlp"];
         result.sort_values(by='_score', inplace=True, ascending=False)
 
         """ CONCAT OTHER AND NLP RECOMMENDATIONS """
-        #print(result)
-        #print(self.heuristicRecommendations)
         result = result.ix[:,['id','title','_score']]
         final_result = pd.DataFrame(pd.concat([result, self.heuristicRecommendations]))
-
-        final_result.groupby(by=['id'], sort=False)['_score'].sum()
-        final_result = final_result.sort_values(by='_score', ascending=0)
+        final_grouped = final_result.groupby(by=['id','title'], sort=False)['_score'].sum()
+        final_result = final_grouped.reset_index()
+        final_result.sort_values(by='_score', inplace=True, ascending=0)
         final_result = final_result[0:50]
-        #print(final_result)
 
         return([final_result['id'].tolist(),final_result['_score'].tolist()])
 
