@@ -7,10 +7,11 @@ if __name__ == '__main__':
 	connector = NetworkAdapter();
 
 	#add handlers for adding impressions
+	biases = BiasHandler()
 	handlers = [
 		ImpressionsHandler(),
-		BiasHandler(),
-		RecommendationHandler()
+		biases,
+		RecommendationHandler(biases)
 	];
 	for handler in handlers:
 		handler.register(connector);
