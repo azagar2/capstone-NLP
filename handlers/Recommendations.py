@@ -34,12 +34,12 @@ class RecommendationHandler(AbstractHandler.Handler):
 	def getRecommendations(self,params,respond):
 		self.debug(params);
 		anon_recs = self.__getAnonymousRecommendations();
-		recom = ContentRecommender.ContentRecommender(params)
-		recs = recom.recommend()
+		recommendations = self.recommenders[1].recommend();
+
 		# TODO: filter from biases
 		# recs = self.biases.filter();
 		# self.debug(recs)
-		respond(recs)
+		respond(recommendations[0])
 
 
 	# load recommenders based on existing data.
@@ -48,5 +48,5 @@ class RecommendationHandler(AbstractHandler.Handler):
 		DB = database.DB();
 		self.events = DB.get("SELECT * FROM Events;",[]);
 
-		self.recommenders = [GeneralRecommender.GeneralRecommender()];
+		self.recommenders = [GeneralRecommender.GeneralRecommender(),ContentRecommender.ContentRecommender()];
 		self.debug("Recommenders initialized");

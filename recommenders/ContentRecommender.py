@@ -34,14 +34,13 @@ class ContentRecommender:
 
 
 
-    def __init__(self, userEvents):
+    def __init__(self):
 
         # Config and database setup
         configData = config.Config();
         self.heuristics = configData.heuristics()
         self.weights = configData.weights()
         self.db = database.DB()
-        self.event_ids_passed = userEvents
 
         # Columns
         col_list = ['category','start_time','id','price','title','description','longitude','latitude']
@@ -226,7 +225,8 @@ class ContentRecommender:
             self.user_long = self.user_events.loc[0].longitude
 
 
-    def recommend(self):
+    def recommend(self,userEvents):
+        self.event_ids_passed = userEvents;
 
         """ MIN-MAX SCALER"""
         min_max_scaler = preprocessing.MinMaxScaler()
@@ -282,5 +282,5 @@ class ContentRecommender:
 
 # for testing purposes only.
 if __name__ == "__main__":
-    recommender = ContentRecommender(["570886fa20f2560034344767", "53c808be8707752c2700051e", "56f2fe57082e7e0018000087"])
-    recommender.recommend()
+    recommender = ContentRecommender()
+    recommender.recommend(["570886fa20f2560034344767", "53c808be8707752c2700051e", "56f2fe57082e7e0018000087"]);
