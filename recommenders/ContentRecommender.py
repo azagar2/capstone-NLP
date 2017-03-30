@@ -69,16 +69,22 @@ class ContentRecommender:
         # weighting to add
         weight = 0
 
+        min_max_scaler = preprocessing.MinMaxScaler()
         """ ITERATE THROUGH PANDAS DATAFRAME """
         for idx, row in ds.iterrows():
             similar_indices = cosine_similarities[idx].argsort()[:-200:-1]
             similar_items = [{'id': ds['id'][i],'title': ds['title'][i], '_score': cosine_similarities[idx][i]+weight} for i in similar_indices]
             if (idx == 0):
-                ret_df = pd.DataFrame(similar_items[1:])
+                newDf = pd.DataFrame(similar_items[1:])
+                newDf['_score'] = min_max_scaler.fit_transform(newDf['_score'])
+                ret_df = newDf
             else:
-                ret_df = ret_df.append(pd.DataFrame(similar_items[1:]))
+                newDf = pd.DataFrame(similar_items[1:])
+                newDf['_score'] = min_max_scaler.fit_transform(newDf['_score'])
+                ret_df = ret_df.append(newDf)
             if (idx == self.num_past_user_events-1):
                 return(ret_df)
+
 
 
     def analyseHeuristics(self,events):
@@ -198,7 +204,7 @@ class ContentRecommender:
             filtered = self.filterLocations(df, event.latitude, event.longitude)
             pieces[idx+1] = filtered
         # Check if pieces if empty
-
+        #print(pieces)
         if not pieces:
             print("Pieces is empty!")
         ds = pd.DataFrame(pd.concat(pieces))
@@ -248,7 +254,6 @@ class ContentRecommender:
         self.heuristicRecommendations = self.heuristicRecommendations.sort_values(by='_score', ascending=0)
         self.heuristicRecommendations = self.heuristicRecommendations[0:150]
 
-
         """ GENERATE NLP RECOMMENDATIONS """
         new_df = self.user_events.copy().filter(self.nlp_features, axis=1)
         new_df = new_df.append(self.nlp_data, ignore_index=True)
@@ -257,13 +262,13 @@ class ContentRecommender:
         # need to eliminate any instance of old events in recommendations
         for idx, row in self.user_events.iterrows():
             result = result.drop(result[result.id == row.id].index)
-
         # then group by id and add weights
-        result['_score'] = min_max_scaler.fit_transform(result['_score'])
+        #result['_score'] = min_max_scaler.fit_transform(result['_score'])
         grouped = result.groupby(by=['id','title'], sort=False)['_score'].sum()
         result = grouped.reset_index()
         result['_score'] = result['_score'] * self.weights["nlp"];
         result.sort_values(by='_score', inplace=True, ascending=False)
+        #print(result)
 
         """ CONCAT OTHER AND NLP RECOMMENDATIONS """
         result = result.ix[:,['id','title','_score']]
@@ -272,7 +277,10 @@ class ContentRecommender:
         final_result = final_grouped.reset_index()
         final_result.sort_values(by='_score', inplace=True, ascending=0)
         final_result = final_result[0:50]
-
+        #print(self.user_events)
+        #print(self.heuristicRecommendations)
+        #print(result)
+        #print(final_result)
         return([final_result['id'].tolist(),final_result['_score'].tolist()])
 
 
@@ -280,4 +288,5 @@ class ContentRecommender:
 # for testing purposes only.
 if __name__ == "__main__":
     recommender = ContentRecommender()
-    recommender.recommend(["570886fa20f2560034344767", "53c808be8707752c2700051e", "56f2fe57082e7e0018000087"]);
+    #recommender.recommend(["570886fa20f2560034344767", "53c808be8707752c2700051e", "56f2fe57082e7e0018000087"]);
+    recommender.recommend(["56c9eeb3e2f02f2efb000c7a", "5657d26aa32f3b94580017a4", "551aa4a08707751f7d0001b8"]);
