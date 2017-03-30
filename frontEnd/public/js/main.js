@@ -42,7 +42,7 @@ function createUserButton(){
       <img src="../images/user_icon_${users.length + 1}.png" alt="${userName}" class="circle-image"/>
       <hr class="horizontal-line"/>
       <div> ${userName} </div>
-      <div> ${userLocation} </div>
+      <!--<div> ${userLocation} </div>-->
       <div><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></div>
     </div>
   </div>
@@ -187,6 +187,11 @@ function searchEvents(){
   var row = this.id.split("").pop();
   var searchVal = $(`#event-search${row}`).val().toUpperCase();
   $(`#eventSearchContainer${row}`).empty();
+  var baseUrl = "http://localhost:3001/api/v1/events";
+
+  // $.get(url, function(data, status){
+      // var items = [];
+  // });
 
   $.getJSON( "../data/pastEvents.json", function( data ) {
     var items = [];
@@ -215,16 +220,13 @@ function fadeInAnimate(id){
 
 function recommendEvents(){
   var w = $(".tab-pane.active").attr("id").split("").pop();
-  // var w = this.id.split("").pop();
   var ids = $.map(users[w-1]["events"], function(val) { return val.id; });
   if(ids[0]) var e1 = `event1=${ids[0]}`;
   if(ids[1]) var e2 = `&event2=${ids[1]}`;
   if(ids[2]) var e3 = `&event3=${ids[2]}`;
 
   var url = `http://localhost:3001/api/v1/recommendations/user?${e1 || ""}${e2 || ""}${e3 || ""}`;
-  console.log(url);
   $.get(url, function(data, status){
-    // console.log(data);
     $.each(data[0].slice(0,9), function(j){
       $.getJSON("../data/futureEvents.json", function(json){
         $.each(json, function(k, v){
@@ -313,7 +315,7 @@ function getUserFormCard(l){
         <form action="">
           <input class="input-field" type="text" placeholder="User ${l}" id="userNameField">
 
-          <div class="select-style">
+          <div class="select-style" style="display: none;">
             <select id="userLocationField">
               <option value="Location 1">Location 1</option>
               <option value="Location 2">Location 2</option>
