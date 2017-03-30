@@ -1,6 +1,7 @@
 import psycopg2;
 import json;
 import os;
+import sys;
 
 class Config:
 	class __Config:
@@ -25,6 +26,13 @@ class Config:
 			if not "heuristics" in self.data["mlEngine"]:
 				return {};
 			return self.data["mlEngine"]["heuristics"];
+
+		def weights(self):
+			if not "mlEngine" in self.data:
+				return {};
+			if not "weights" in self.data["mlEngine"]:
+				return {};
+			return self.data["mlEngine"]["weights"];
 	# instance of singleton
 	instance = None
 
