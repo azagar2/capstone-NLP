@@ -11,9 +11,9 @@ $(document).ready(function(){
   $('#createUserContinueBtn').on("click", createUserContinueBtn);
 
   // Handle window resizing
-  $(window).resize(function() {
-    console.log($(window).width());
-  });
+  // $(window).resize(function() {
+  //   console.log($(window).width());
+  // });
 });
 
 // =======================================================================================================
@@ -42,7 +42,7 @@ function createUserButton(){
       <img src="../images/user_icon_${users.length + 1}.png" alt="${userName}" class="circle-image"/>
       <hr class="horizontal-line"/>
       <div> ${userName} </div>
-      <div> ${userLocation} </div>
+      <!-- <div> ${userLocation} </div> -->
       <div><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></div>
     </div>
   </div>
@@ -67,7 +67,7 @@ function createUserButton(){
   var newUserRow = `
     <hr class="horizontal-line" style="width: 50%;"/>
       <div class="ryan-row" id="userRow${users.length}">
-        <div class="col-6 events-container" id="eventContainer${users.length}">
+        <div class="col-6 events-container flexcroll" id="eventContainer${users.length}">
         </div>
       </div>
   `;
@@ -130,7 +130,7 @@ function createUserContinueBtn(){
 
   for(var i = 0; i<=users.length-1; i++){
     recPage = recPage.concat(`<div class="tab-pane" id="a${i+1}">
-    <div class="events-container" style="width:90%; height: 260px;" id="b${i+1}"></div></div>`);
+    <div class="events-container flexcroll" style="width:90%; height: 260px;" id="b${i+1}"></div></div>`);
   }
 
   recPage = recPage.concat(`</div> </div> </div> </div> </div> </div>`);
@@ -147,7 +147,7 @@ function createUserContinueBtn(){
       $(`#a${i+1}`).append(`
         <hr class="horizontal-line col-8 offset-2" style="padding: 0px;"/>
         <div class="rec-subheader col-12"> Recommended Events </div>
-        <div class="events-container" style="width:100%; height: 260px;" id="c${i+1}"></div>`);
+        <div class="events-container flexcroll" style="width:100%; height: 260px; overflow-y: hidden;" id="c${i+1}"></div>`);
     }
   }
 
@@ -188,9 +188,12 @@ function searchEvents(){
   var searchVal = $(`#event-search${row}`).val().toUpperCase();
   $(`#eventSearchContainer${row}`).empty();
 
-  $.getJSON( "../data/pastEvents.json", function( data ) {
+  $.getJSON( "../data/pastEvents2.json", function( data ) {
     var items = [];
     $.each( data, function(k,v) {
+      v.title = v.title || "";
+      v.description = v.description || "";
+      v.category = v.category || "";
       if(v.title.toUpperCase().includes(searchVal) || v.description.toUpperCase().includes(searchVal) || v.category.toUpperCase().includes(searchVal)){
         items.push( `<div data-row="${row}" data-description="${v.description}" data-category="${v.category}"
           data-price="${v.price}" data-image="${v.image}" data-cover_photo="${v.cover_photo}" class="event-listing" id="${v.id}"> ${v.title} </div>` );
@@ -216,6 +219,7 @@ function fadeInAnimate(id){
 function recommendEvents(){
   var w = $(".tab-pane.active").attr("id").split("").pop();
   // var w = this.id.split("").pop();
+  console.log(users);
   var ids = $.map(users[w-1]["events"], function(val) { return val.id; });
   if(ids[0]) var e1 = `event1=${ids[0]}`;
   if(ids[1]) var e2 = `&event2=${ids[1]}`;
@@ -224,11 +228,11 @@ function recommendEvents(){
   var url = `http://localhost:3001/api/v1/recommendations/user?${e1 || ""}${e2 || ""}${e3 || ""}`;
   console.log(url);
   $.get(url, function(data, status){
-    // console.log(data);
-    $.each(data[0].slice(0,9), function(j){
-      $.getJSON("../data/futureEvents.json", function(json){
+    $.each($.unique(data).slice(0,19), function(j){
+      $.getJSON("../data/futureEvents2.json", function(json){
+        // console.log(json);
         $.each(json, function(k, v){
-          if(v.id == data[0][j]){
+          if(v.id == data[j]){
             getEventCard(v, `c${w}`);
             numEvents++;
           }
@@ -241,6 +245,8 @@ function recommendEvents(){
 
 // ==============  GETTERS =======================
 function getEventCard(eventObject, id){
+  eventObject.cover_photo = eventObject.cover_photo || "../images/default-cover.png";
+  eventObject.image = eventObject.image || "../images/default-image.png";
   $(`#${id}`).append(`
        <div class="col-5 remove-padding" id="eventCard${numEvents}">
          <div class="card event-card">
@@ -313,7 +319,7 @@ function getUserFormCard(l){
         <form action="">
           <input class="input-field" type="text" placeholder="User ${l}" id="userNameField">
 
-          <div class="select-style">
+          <div class="select-style" style="display:none;">
             <select id="userLocationField">
               <option value="Location 1">Location 1</option>
               <option value="Location 2">Location 2</option>

@@ -18,5 +18,6 @@
 .events-container {
   display: inline-flex;
   overflow-x: scroll;
+  overflow-y: hidden;
   white-space: nowrap;
 }
