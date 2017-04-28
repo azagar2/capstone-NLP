@@ -175,25 +175,42 @@ h1 {
 
 .tab-content > .active {
   width: 100%;
-  overflow-x: scroll;
+  /*overflow-x: scroll;*/
 }
 
-/*.tab-pane.active {
-  background: #eee;
-}*/
 
-/*.tab-item {
-  width: 100%;
-}*/
 
-/*.tab-item:hover {
-  background: grey;
+
+.flexcroll {
+    overflow-x: scroll;
+}
+.flexcroll {
+    scrollbar-face-color: #367CD2;
+    scrollbar-shadow-color: #FFFFFF;
+    scrollbar-highlight-color: #FFFFFF;
+    scrollbar-3dlight-color: #FFFFFF;
+    scrollbar-darkshadow-color: #FFFFFF;
+    scrollbar-track-color: #FFFFFF;
+    scrollbar-arrow-color: #FFFFFF;
 }
 
-.tab-item>a:hover {
-  background: grey;
-}*/
-/*
-.nav-tabs>li.active>a {
-  border: 1px;
-}*/
+/* Let's get this party started */
+.flexcroll::-webkit-scrollbar {
+    width: .5em;
+    height: .5em
+}
+
+/* Track */
+.flexcroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+.flexcroll::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: grey;
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);*/
+}

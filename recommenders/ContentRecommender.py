@@ -104,12 +104,14 @@ class ContentRecommender:
         events["_score"] = 0;
         event_weights = self.heuristics["split"][(len(self.user_events)-1)];
         idx = 0;
+        min_max_scaler = preprocessing.MinMaxScaler();
         for weight in event_weights:
             sum_of_weights += weight;
+            events[("_hscore"+str(idx))] = min_max_scaler.fit_transform(events[("_hscore"+str(idx))])
             events["_score"] += weight*events[("_hscore"+str(idx))];
             idx+=1;
         events["_score"] = events["_score"]/sum_of_weights;
-
+        print(events);
         return(events)
 
 
@@ -217,7 +219,8 @@ class ContentRecommender:
         """ USER DATA SOURCE """
         # assume that index 1 indicates most recently purchased event, then increases with past purchases
         self.user_events = (self.past_events[self.past_events['id'].isin(self.event_ids_passed)])
-
+        print(self.user_events);
+        print(len(self.user_events));
         # make sure it finds the event(s)
         # MAKE THIS CHECK TO SEE IF ELIMINATING THE BAD EVENT COULD WORK
         if (self.user_events.empty):
@@ -234,6 +237,8 @@ class ContentRecommender:
     def recommend(self,userEvents):
         self.event_ids_passed = userEvents;
 
+        print(self.weights);
+        print(self.heuristics);
         """ MIN-MAX SCALER"""
         min_max_scaler = preprocessing.MinMaxScaler()
 
@@ -252,7 +257,7 @@ class ContentRecommender:
         self.heuristicRecommendations['_score'] = min_max_scaler.fit_transform(self.heuristicRecommendations['_score'])
         self.heuristicRecommendations = self.heuristicRecommendations.filter(['id','title','_score'], axis=1)
         self.heuristicRecommendations = self.heuristicRecommendations.sort_values(by='_score', ascending=0)
-        self.heuristicRecommendations = self.heuristicRecommendations[0:150]
+        #self.heuristicRecommendations = self.heuristicRecommendations[0:150]
 
         """ GENERATE NLP RECOMMENDATIONS """
         new_df = self.user_events.copy().filter(self.nlp_features, axis=1)
